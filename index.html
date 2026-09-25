@@ -1,0 +1,2293 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <title>EduPortal Pro - School Management & Result Platform</title>
+
+  <!-- Google Fonts: Inter & Cinzel for Institutional Distinction -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- FontAwesome 6 Icons CDN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            serif: ['Cinzel', 'serif']
+          },
+          colors: {
+            brand: {
+              primary: 'var(--brand-primary, #1e3a8a)',
+              secondary: 'var(--brand-secondary, #0f172a)',
+              accent: 'var(--brand-accent, #d97706)',
+              surface: 'var(--brand-surface, #f8fafc)'
+            }
+          }
+        }
+      }
+    };
+  </script>
+
+  <style>
+    :root {
+      --brand-primary: #1e3a8a;
+      --brand-secondary: #0f172a;
+      --brand-accent: #d97706;
+      --brand-surface: #f8fafc;
+    }
+
+    /* Subtle security watermark for institutional documents */
+    .report-watermark {
+      background-image: radial-gradient(circle, rgba(15, 23, 42, 0.04) 1.5px, transparent 1.5px);
+      background-size: 16px 16px;
+    }
+
+    /* Print styles for A4 institutional report card */
+    @media print {
+      body * {
+        visibility: hidden;
+      }
+      #printable-report-sheet, #printable-report-sheet * {
+        visibility: visible;
+      }
+      #printable-report-sheet {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 8mm !important;
+        box-shadow: none !important;
+        border: 2px solid #1e293b !important;
+        border-radius: 0 !important;
+        background: #ffffff !important;
+        color: #000000 !important;
+      }
+      .no-print, header, nav, footer, #demo-role-bar, #toast, .action-bar {
+        display: none !important;
+      }
+      @page {
+        size: A4 portrait;
+        margin: 8mm;
+      }
+    }
+
+    /* Smooth scrollbar styling */
+    ::-webkit-scrollbar {
+      width: 7px;
+      height: 7px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #f1f5f9;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+  </style>
+</head>
+<body class="font-sans text-slate-800 bg-slate-50 antialiased min-h-screen flex flex-col selection:bg-amber-400 selection:text-slate-950">
+
+  <aside id="demo-role-bar" class="no-print bg-slate-950 text-slate-200 border-b border-slate-800 py-2 px-3 sm:px-6 text-xs sticky top-0 z-50 shadow-md">
+    <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2.5">
+      <div class="flex items-center gap-2">
+        <span class="inline-flex items-center justify-center w-6 h-6 rounded bg-amber-500 text-slate-950 font-black shadow-sm">
+          <i class="fa-solid fa-bolt text-xs"></i>
+        </span>
+        <span class="font-bold text-white tracking-wide hidden sm:inline">Role Switcher:</span>
+        <span class="text-slate-400 text-[11px]">Instant 1-Click Access:</span>
+      </div>
+
+      <!-- Quick Role Action Switchers -->
+      <div class="flex items-center gap-1.5 flex-wrap">
+        <button onclick="demoLogin('headteacher')" class="role-switch-btn px-2.5 py-1 rounded bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold transition flex items-center gap-1 shadow-xs" title="Login as Principal/Headteacher">
+          <i class="fa-solid fa-crown text-[10px]"></i> Headteacher
+        </button>
+        <button onclick="demoLogin('teacher')" class="role-switch-btn px-2.5 py-1 rounded bg-slate-800 hover:bg-blue-900 text-slate-200 hover:text-white border border-slate-700 transition flex items-center gap-1" title="Login as Subject & Form Teacher">
+          <i class="fa-solid fa-chalkboard-user text-[10px] text-blue-400"></i> Teacher
+        </button>
+        <button onclick="demoLogin('student')" class="role-switch-btn px-2.5 py-1 rounded bg-slate-800 hover:bg-emerald-900 text-slate-200 hover:text-white border border-slate-700 transition flex items-center gap-1" title="Login as Student / Parent">
+          <i class="fa-solid fa-user-graduate text-[10px] text-emerald-400"></i> Student/Parent
+        </button>
+        <button onclick="switchRole('public')" class="role-switch-btn px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 transition flex items-center gap-1" title="Browse Public Website">
+          <i class="fa-solid fa-globe text-[10px] text-slate-400"></i> Public Site
+        </button>
+        <button onclick="openLoginModal()" class="px-2.5 py-1 rounded bg-slate-700 hover:bg-slate-600 text-white font-semibold transition ml-1 flex items-center gap-1" title="Open Custom Login Modal">
+          <i class="fa-solid fa-arrow-right-to-bracket text-[10px]"></i> Manual Login
+        </button>
+      </div>
+    </div>
+  </aside>
+
+  <header class="no-print bg-white/95 backdrop-blur border-b border-slate-200 sticky top-10 z-40 shadow-xs transition-colors duration-300">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-20">
+        
+        <!-- School Crest & Identity -->
+        <a href="javascript:void(0)" onclick="navigateTo('home')" class="flex items-center gap-3.5 group">
+          <div id="school-crest-box" class="w-12 h-12 rounded-xl flex items-center justify-center text-white shadow-md transition-transform group-hover:scale-105" style="background-color: var(--brand-primary)">
+            <i id="school-crest-icon" class="fa-solid fa-graduation-cap text-2xl"></i>
+          </div>
+          <div>
+            <h1 id="brand-school-name" class="font-serif font-bold text-base sm:text-lg lg:text-xl text-slate-900 leading-tight">Apex Horizon International Academy</h1>
+            <p id="brand-school-motto" class="text-xs text-slate-500 italic font-medium">Excellence, Integrity, Innovation</p>
+          </div>
+        </a>
+
+        <!-- Desktop Dynamic Navigation Links based on Current Role -->
+        <nav id="desktop-nav" class="hidden lg:flex items-center gap-1 text-sm font-semibold text-slate-600">
+          <!-- Dynamic Links Injected by JS -->
+        </nav>
+
+        <!-- User Profile Pill & Mobile Menu Button -->
+        <div class="flex items-center gap-2">
+          <!-- Role Session Pill -->
+          <div id="active-user-badge" class="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-100 border border-slate-200 text-xs">
+            <span id="role-avatar-circle" class="w-6 h-6 rounded-full flex items-center justify-center text-white font-bold text-[10px] bg-blue-700">A</span>
+            <div class="text-left leading-tight">
+              <span id="badge-user-name" class="font-bold text-slate-800 block text-xs">Guest Visitor</span>
+              <span id="badge-role-label" class="text-[10px] text-slate-500 font-medium uppercase tracking-wider">Public View</span>
+            </div>
+          </div>
+
+          <button id="auth-main-btn" onclick="openLoginModal()" class="px-3.5 py-2 rounded-xl text-white font-bold text-xs shadow hover:opacity-90 transition flex items-center gap-1.5" style="background-color: var(--brand-primary)">
+            <i class="fa-solid fa-lock"></i> <span id="auth-btn-label">Sign In</span>
+          </button>
+
+          <!-- Mobile Hamburger Toggle -->
+          <button onclick="toggleMobileDrawer()" class="lg:hidden p-2 rounded-lg text-slate-700 hover:text-slate-900 hover:bg-slate-100 focus:outline-none" aria-label="Toggle Navigation Menu">
+            <i id="mobile-menu-icon" class="fa-solid fa-bars text-xl"></i>
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Mobile Collapsible Navigation Drawer -->
+    <div id="mobile-nav-drawer" class="hidden lg:hidden bg-white border-b border-slate-200 px-4 pt-3 pb-6 space-y-2 shadow-xl animate-fade-in">
+      <div id="mobile-user-status" class="pb-3 border-b border-slate-100 flex items-center justify-between text-xs">
+        <div>
+          <span class="text-slate-400 text-[10px] uppercase font-bold block">Current Role Session</span>
+          <span id="mobile-role-name" class="font-bold text-slate-900">Public Explorer</span>
+        </div>
+        <button onclick="switchRole('public')" class="text-blue-700 font-semibold hover:underline text-xs">Switch to Public</button>
+      </div>
+      <div id="mobile-nav-links" class="space-y-1.5 text-sm font-semibold">
+        <!-- Injected via JS -->
+      </div>
+    </div>
+  </header>
+
+  <main class="flex-grow">
+
+    <!-- ============================================================= -->
+    <!-- SECTION 1: PUBLIC PAGES (Home, About, Gallery, Admissions)    -->
+    <!-- ============================================================= -->
+    <section id="view-public" class="role-view">
+      
+      <!-- SUBPAGE: Home View -->
+      <div id="sub-public-home" class="public-subpage">
+        <!-- Hero Banner -->
+        <div class="relative overflow-hidden pt-12 pb-20 lg:pt-20 lg:pb-28 border-b border-slate-200 bg-gradient-to-b from-white to-slate-50">
+          <div class="absolute inset-0 opacity-10 pointer-events-none" style="background-image: radial-gradient(var(--brand-primary) 1.5px, transparent 1.5px); background-size: 24px 24px;"></div>
+          <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+              
+              <div class="lg:col-span-7 space-y-6 text-center lg:text-left">
+                <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold bg-amber-50 text-amber-900 border border-amber-200 shadow-xs">
+                  <span class="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span>
+                  2025/2026 Academic Session &bull; Terminal Result Verification Active
+                </div>
+                
+                <h1 class="text-4xl sm:text-5xl lg:text-6xl font-black text-slate-900 tracking-tight leading-[1.12]">
+                  Nurturing World-Class <br>
+                  <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-700 via-indigo-600 to-amber-600">Scholars & Leaders</span>
+                </h1>
+                
+                <p class="text-base sm:text-lg text-slate-600 max-w-2xl mx-auto lg:mx-0 font-normal">
+                  Welcome to the digital campus of <strong class="text-slate-900 brand-name-target">Apex Horizon International Academy</strong>. Fostering intellectual discipline, ethical leadership, scientific inquiry, and global competence.
+                </p>
+
+                <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-2">
+                  <button onclick="demoLogin('student')" class="w-full sm:w-auto px-7 py-3.5 rounded-xl text-white font-bold text-sm shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-0.5 flex items-center justify-center gap-2" style="background-color: var(--brand-primary)">
+                    <i class="fa-solid fa-square-poll-vertical text-amber-300"></i> Check Student Report Card
+                  </button>
+                  <button onclick="navigatePublicSub('admissions')" class="w-full sm:w-auto px-7 py-3.5 rounded-xl text-slate-800 bg-white border border-slate-300 font-bold text-sm hover:bg-slate-100 transition shadow-xs flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-file-signature text-slate-500"></i> Online Admissions Form
+                  </button>
+                </div>
+
+                <!-- Live Statistical Metrics Bar -->
+                <div class="grid grid-cols-3 gap-4 pt-8 border-t border-slate-200 max-w-lg mx-auto lg:mx-0">
+                  <div>
+                    <p class="text-2xl sm:text-3xl font-black text-slate-900">99.4%</p>
+                    <p class="text-xs text-slate-500 font-medium">WAEC/IGCSE Pass Rate</p>
+                  </div>
+                  <div>
+                    <p id="pub-stat-students" class="text-2xl sm:text-3xl font-black text-slate-900">428</p>
+                    <p class="text-xs text-slate-500 font-medium">Enrolled Students</p>
+                  </div>
+                  <div>
+                    <p class="text-2xl sm:text-3xl font-black text-slate-900">100%</p>
+                    <p class="text-xs text-slate-500 font-medium">Digital STEM Labs</p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Hero Feature Visual Card -->
+              <div class="lg:col-span-5 relative">
+                <div class="relative mx-auto max-w-md rounded-2xl overflow-hidden shadow-2xl border-4 border-white bg-slate-100">
+                  <img id="public-hero-img" src="https://images.unsplash.com/photo-1577896851231-70ef18881754?auto=format&fit=crop&w=800&q=80" alt="Students in Classroom" class="w-full h-80 sm:h-96 object-cover hover:scale-105 transition-transform duration-500" onerror="this.src='https://placehold.co/800x600/1e3a8a/ffffff?text=Apex+Horizon+Academy'">
+                  
+                  <div class="absolute bottom-0 inset-x-0 bg-gradient-to-t from-slate-950/90 via-slate-900/60 to-transparent p-5 text-white">
+                    <span class="px-2.5 py-0.5 rounded text-[11px] font-bold bg-amber-500 text-slate-950 uppercase tracking-wider">Campus Highlight</span>
+                    <p class="font-semibold text-sm mt-1">Advanced Robotic Engineering & AI Studio</p>
+                    <p class="text-xs text-slate-300">Equipping students with future-proof technological skills.</p>
+                  </div>
+                </div>
+
+                <!-- Floating Accreditation Badge -->
+                <div class="absolute -top-4 -right-2 sm:-right-4 bg-white rounded-xl p-3.5 shadow-xl border border-slate-100 flex items-center gap-3">
+                  <div class="w-10 h-10 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold text-lg">
+                    <i class="fa-solid fa-award"></i>
+                  </div>
+                  <div>
+                    <p class="text-xs text-slate-400 font-medium">Accreditation</p>
+                    <p class="text-xs font-bold text-slate-800">State Certified Grade A</p>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+        <section class="py-16 bg-white border-b border-slate-200">
+          <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="bg-slate-50 rounded-2xl p-6 sm:p-10 border border-slate-200 shadow-xs">
+              <div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
+                
+                <div class="md:col-span-4 text-center">
+                  <div class="relative inline-block">
+                    <img id="public-principal-img" src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=400&q=80" alt="Headteacher Portrait" class="w-44 h-44 sm:w-52 sm:h-52 rounded-2xl object-cover shadow-lg mx-auto border-4 border-white" onerror="this.src='https://placehold.co/400x400/0f172a/ffffff?text=Headteacher'">
+                    <div class="absolute -bottom-2 -right-2 bg-amber-500 text-slate-950 p-2 rounded-lg shadow font-bold text-xs">
+                      <i class="fa-solid fa-quote-right"></i>
+                    </div>
+                  </div>
+                  <h3 id="public-principal-name" class="font-bold text-slate-900 text-base mt-4">Dr. Margaret Hamilton, Ph.D.</h3>
+                  <p id="public-principal-title" class="text-xs text-slate-500 font-medium">Headteacher & Principal</p>
+                </div>
+
+                <div class="md:col-span-8 space-y-4">
+                  <div class="inline-flex items-center gap-1.5 text-xs font-bold tracking-wider uppercase text-blue-800">
+                    <i class="fa-solid fa-compass"></i> Welcome Address
+                  </div>
+                  <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900">
+                    "Transforming curiosity into character, knowledge into leadership."
+                  </h2>
+                  <p class="text-slate-600 text-sm leading-relaxed">
+                    At <strong class="brand-name-target text-slate-900">Apex Horizon International Academy</strong>, education transcends textbooks and exam scores. We believe in providing an ecosystem where every young mind is nurtured, valued, and empowered with modern skills, strong moral fortitude, and scientific creativity.
+                  </p>
+                  <p class="text-slate-600 text-sm leading-relaxed">
+                    Through our unified digital management portal, parents enjoy instant transparency over terminal assessment sheets, continuous assessment scores, homework tasks, and administrative announcements.
+                  </p>
+                  
+                  <div class="pt-2 flex flex-wrap gap-4 text-xs text-slate-700 font-semibold">
+                    <div class="flex items-center gap-2">
+                      <i class="fa-solid fa-circle-check text-emerald-600"></i> Rigorous Continuous Assessment (CA)
+                    </div>
+                    <div class="flex items-center gap-2">
+                      <i class="fa-solid fa-circle-check text-emerald-600"></i> Dedicated Character Mentorship
+                    </div>
+                    <div class="flex items-center gap-2">
+                      <i class="fa-solid fa-circle-check text-emerald-600"></i> Seamless Parent Portal Access
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Announcements / News Feed on Home -->
+        <section class="py-16 bg-slate-50 border-b border-slate-200">
+          <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
+              <div>
+                <span class="text-xs font-bold uppercase tracking-wider text-blue-700 bg-blue-100 px-3 py-1 rounded-full">School Broadcasts</span>
+                <h3 class="text-2xl font-black text-slate-900 mt-2">Latest Bulletins & Circulars</h3>
+              </div>
+              <button onclick="demoLogin('headteacher')" class="text-xs font-semibold text-blue-700 hover:text-blue-900 flex items-center gap-1">
+                <i class="fa-solid fa-plus-circle"></i> Post Circular (Headteacher Only)
+              </button>
+            </div>
+
+            <div id="public-announcements-container" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <!-- Rendered via JS -->
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <div id="sub-public-gallery" class="public-subpage hidden">
+        <div class="bg-slate-900 text-white py-12 border-b border-slate-800">
+          <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <span class="text-xs font-bold uppercase tracking-wider text-blue-400 bg-blue-400/10 px-3 py-1 rounded-full">Campus Life Archive</span>
+            <h2 class="text-3xl font-extrabold mt-3">School Photographic Gallery</h2>
+            <p class="text-slate-400 text-xs sm:text-sm max-w-xl mx-auto mt-2">Explore unforgettable moments from science fairs, sports tournaments, and arts exhibitions.</p>
+          </div>
+        </div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+          <!-- Gallery Category Filter Tabs -->
+          <div class="flex items-center justify-center gap-2 flex-wrap mb-10">
+            <button onclick="filterGallery('all')" class="gal-btn px-4 py-1.5 rounded-full text-xs font-bold bg-slate-900 text-white shadow-xs transition" data-filter="all">All Photos</button>
+            <button onclick="filterGallery('academics')" class="gal-btn px-4 py-1.5 rounded-full text-xs font-semibold bg-white border border-slate-300 text-slate-700 hover:bg-slate-100 transition" data-filter="academics">STEM & Labs</button>
+            <button onclick="filterGallery('sports')" class="gal-btn px-4 py-1.5 rounded-full text-xs font-semibold bg-white border border-slate-300 text-slate-700 hover:bg-slate-100 transition" data-filter="sports">Athletics & Sports</button>
+            <button onclick="filterGallery('arts')" class="gal-btn px-4 py-1.5 rounded-full text-xs font-semibold bg-white border border-slate-300 text-slate-700 hover:bg-slate-100 transition" data-filter="arts">Cultural Gala</button>
+          </div>
+
+          <div id="gallery-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Gallery Items (Click opens Lightbox) -->
+            <div class="gal-item group rounded-2xl overflow-hidden bg-white shadow-xs hover:shadow-lg transition cursor-pointer border border-slate-200" data-cat="academics" onclick="openLightbox('https://images.unsplash.com/photo-1532094349884-543bc11b234d?auto=format&fit=crop&w=1200&q=80', 'Senior Chemistry Lab', 'Scholars performing volumetric analysis and reagent testing.')">
+              <img src="https://images.unsplash.com/photo-1532094349884-543bc11b234d?auto=format&fit=crop&w=600&q=80" alt="Chemistry Lab" class="w-full h-56 object-cover group-hover:scale-105 transition duration-300">
+              <div class="p-4">
+                <span class="text-[10px] font-bold uppercase tracking-wider text-blue-700">Academics</span>
+                <h4 class="font-bold text-slate-900 text-sm mt-0.5">Advanced Science Laboratory</h4>
+              </div>
+            </div>
+
+            <div class="gal-item group rounded-2xl overflow-hidden bg-white shadow-xs hover:shadow-lg transition cursor-pointer border border-slate-200" data-cat="sports" onclick="openLightbox('https://images.unsplash.com/photo-1461896836934-ffe607ba8211?auto=format&fit=crop&w=1200&q=80', 'Inter-House 100m Dash', 'Annual athletics heat at the central stadium track.')">
+              <img src="https://images.unsplash.com/photo-1461896836934-ffe607ba8211?auto=format&fit=crop&w=600&q=80" alt="Athletics" class="w-full h-56 object-cover group-hover:scale-105 transition duration-300">
+              <div class="p-4">
+                <span class="text-[10px] font-bold uppercase tracking-wider text-emerald-700">Sports</span>
+                <h4 class="font-bold text-slate-900 text-sm mt-0.5">Inter-House Athletics Finals</h4>
+              </div>
+            </div>
+
+            <div class="gal-item group rounded-2xl overflow-hidden bg-white shadow-xs hover:shadow-lg transition cursor-pointer border border-slate-200" data-cat="arts" onclick="openLightbox('https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=1200&q=80', 'Cultural Diversity Day', 'Students presenting folklore, music, and traditional attire.')">
+              <img src="https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=600&q=80" alt="Cultural Day" class="w-full h-56 object-cover group-hover:scale-105 transition duration-300">
+              <div class="p-4">
+                <span class="text-[10px] font-bold uppercase tracking-wider text-amber-700">Arts & Culture</span>
+                <h4 class="font-bold text-slate-900 text-sm mt-0.5">Cultural Heritage Festival</h4>
+              </div>
+            </div>
+
+            <div class="gal-item group rounded-2xl overflow-hidden bg-white shadow-xs hover:shadow-lg transition cursor-pointer border border-slate-200" data-cat="academics" onclick="openLightbox('https://images.unsplash.com/photo-1485827404703-89b55fcc595e?auto=format&fit=crop&w=1200&q=80', 'Robotics Fair 2026', 'Building automated obstacle avoiding rovers in the ICT Lab.')">
+              <img src="https://images.unsplash.com/photo-1485827404703-89b55fcc595e?auto=format&fit=crop&w=600&q=80" alt="Robotics" class="w-full h-56 object-cover group-hover:scale-105 transition duration-300">
+              <div class="p-4">
+                <span class="text-[10px] font-bold uppercase tracking-wider text-blue-700">Technology</span>
+                <h4 class="font-bold text-slate-900 text-sm mt-0.5">Robotics & AI Exhibition</h4>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="sub-public-admissions" class="public-subpage hidden">
+        <div class="bg-slate-900 text-white py-12 border-b border-slate-800">
+          <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <span class="text-xs font-bold uppercase tracking-wider text-emerald-400 bg-emerald-400/10 px-3 py-1 rounded-full">Enrollment</span>
+            <h2 class="text-3xl font-extrabold mt-3">Admissions Online Application</h2>
+            <p class="text-slate-400 text-xs sm:text-sm max-w-xl mx-auto mt-2">Submit your enrollment inquiry. Our admissions office will get in touch within 24 hours.</p>
+          </div>
+        </div>
+
+        <div class="max-w-3xl mx-auto px-4 sm:px-6 py-12">
+          <div class="bg-white rounded-2xl p-6 sm:p-10 border border-slate-200 shadow-xl">
+            <form onsubmit="handleAdmissionsSubmit(event)" class="space-y-5">
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">Parent / Guardian Full Name *</label>
+                  <input type="text" id="adm-parent-name" required placeholder="e.g. Mr. & Mrs. Okon" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-blue-600 focus:outline-none">
+                </div>
+                <div>
+                  <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">Phone Number *</label>
+                  <input type="tel" id="adm-phone" required placeholder="e.g. +234 803 123 4567" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-blue-600 focus:outline-none">
+                </div>
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">Email Address *</label>
+                  <input type="email" id="adm-email" required placeholder="parent@example.com" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-blue-600 focus:outline-none">
+                </div>
+                <div>
+                  <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">Prospective Student's Name *</label>
+                  <input type="text" id="adm-child-name" required placeholder="e.g. Daniel Okon" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-blue-600 focus:outline-none">
+                </div>
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">Proposed Class Level *</label>
+                  <select id="adm-class" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-blue-600 focus:outline-none bg-white">
+                    <option>Junior Secondary (JSS 1 - 3)</option>
+                    <option selected>Senior Secondary (SS 1 - 3)</option>
+                    <option>Primary School (Grade 1 - 6)</option>
+                    <option>Nursery & Early Years</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">Academic Session *</label>
+                  <select id="adm-session" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-blue-600 focus:outline-none bg-white">
+                    <option selected>2025/2026 Session</option>
+                    <option>2026/2027 Session</option>
+                  </select>
+                </div>
+              </div>
+
+              <div>
+                <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">Special Interests / Learning Needs</label>
+                <textarea id="adm-notes" rows="3" placeholder="Tell us about the applicant's special talents or previous school records..." class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-blue-600 focus:outline-none"></textarea>
+              </div>
+
+              <button type="submit" class="w-full py-3.5 rounded-xl text-white font-bold text-sm shadow hover:shadow-md transition flex items-center justify-center gap-2" style="background-color: var(--brand-primary)">
+                <i class="fa-regular fa-paper-plane"></i> Submit Preliminary Application
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ============================================================= -->
+    <!-- SECTION 2: HEADTEACHER / PRINCIPAL EXECUTIVE PORTAL           -->
+    <!-- ============================================================= -->
+    <section id="view-headteacher" class="role-view hidden">
+      <!-- Portal Sub-Header Navigation -->
+      <div class="bg-slate-900 text-white py-6 border-b border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="px-2.5 py-0.5 rounded bg-amber-500/20 text-amber-300 text-[11px] font-bold border border-amber-400/30">
+                <i class="fa-solid fa-crown mr-1"></i> Executive Portal
+              </span>
+              <span class="text-xs text-slate-400">Term: Second Term 2025/2026</span>
+            </div>
+            <h2 class="text-2xl font-black mt-1">Headteacher & Principal Dashboard</h2>
+          </div>
+
+          <!-- Headteacher Subpage Tabs -->
+          <div class="flex items-center gap-1.5 flex-wrap">
+            <button onclick="navigateAdminSub('overview')" id="adm-tab-overview" class="adm-tab-btn px-3 py-1.5 rounded-lg text-xs font-bold bg-amber-500 text-slate-950 shadow-xs">
+              <i class="fa-solid fa-chart-pie mr-1"></i> Overview
+            </button>
+            <button onclick="navigateAdminSub('approvals')" id="adm-tab-approvals" class="adm-tab-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700">
+              <i class="fa-solid fa-stamp mr-1"></i> Result Approvals <span id="pending-badge" class="ml-1 px-1.5 py-0.2 rounded-full bg-rose-500 text-white font-black text-[10px]">1</span>
+            </button>
+            <button onclick="navigateAdminSub('broadcast')" id="adm-tab-broadcast" class="adm-tab-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700">
+              <i class="fa-solid fa-bullhorn mr-1"></i> Post Bulletin
+            </button>
+            <button onclick="navigateAdminSub('fees')" id="adm-tab-fees" class="adm-tab-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700">
+              <i class="fa-solid fa-receipt mr-1"></i> Fee Summary
+            </button>
+            <button onclick="navigateAdminSub('branding')" id="adm-tab-branding" class="adm-tab-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700">
+              <i class="fa-solid fa-sliders mr-1"></i> Branding & Theme
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+        
+        <!-- SUBPAGE: Headteacher Overview -->
+        <div id="sub-adm-overview" class="adm-subpage space-y-8">
+          <!-- 4 Executive KPIs -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs flex items-center justify-between">
+              <div>
+                <span class="text-xs text-slate-400 font-bold uppercase tracking-wider">Total Enrolled Body</span>
+                <p id="kpi-student-count" class="text-3xl font-black text-slate-900 mt-1">428</p>
+                <span class="text-[11px] text-emerald-600 font-semibold"><i class="fa-solid fa-arrow-trend-up"></i> +12 from last term</span>
+              </div>
+              <div class="w-12 h-12 rounded-xl bg-blue-50 text-blue-700 flex items-center justify-center text-xl">
+                <i class="fa-solid fa-users"></i>
+              </div>
+            </div>
+
+            <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs flex items-center justify-between">
+              <div>
+                <span class="text-xs text-slate-400 font-bold uppercase tracking-wider">School Tuition Cleared</span>
+                <p class="text-3xl font-black text-slate-900 mt-1">87.4%</p>
+                <span class="text-[11px] text-amber-600 font-semibold"><i class="fa-solid fa-clock"></i> 54 pending balances</span>
+              </div>
+              <div class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center text-xl">
+                <i class="fa-solid fa-coins"></i>
+              </div>
+            </div>
+
+            <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs flex items-center justify-between">
+              <div>
+                <span class="text-xs text-slate-400 font-bold uppercase tracking-wider">Average Term Score</span>
+                <p class="text-3xl font-black text-blue-700 mt-1">74.8%</p>
+                <span class="text-[11px] text-emerald-600 font-semibold"><i class="fa-solid fa-star"></i> B2 Distinction Class</span>
+              </div>
+              <div class="w-12 h-12 rounded-xl bg-amber-50 text-amber-700 flex items-center justify-center text-xl">
+                <i class="fa-solid fa-award"></i>
+              </div>
+            </div>
+
+            <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs flex items-center justify-between">
+              <div>
+                <span class="text-xs text-slate-400 font-bold uppercase tracking-wider">Pending Batch Releases</span>
+                <p id="kpi-pending-releases" class="text-3xl font-black text-rose-600 mt-1">1</p>
+                <span class="text-[11px] text-slate-500 font-semibold">Requires Principal Signature</span>
+              </div>
+              <div class="w-12 h-12 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center text-xl">
+                <i class="fa-solid fa-signature"></i>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick Actions & Status Banner -->
+          <div class="bg-gradient-to-r from-blue-900 to-indigo-900 text-white rounded-2xl p-6 shadow-md flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+            <div class="space-y-1">
+              <span class="px-2.5 py-0.5 rounded text-[10px] font-bold bg-amber-400 text-slate-950 uppercase tracking-wider">Portal Governance</span>
+              <h3 class="text-lg font-bold">Terminal Results Release Status: <span id="portal-release-status" class="text-amber-300">PUBLISHED TO PARENTS</span></h3>
+              <p class="text-xs text-slate-300">Parent scratch card verification portal is open. Teachers can submit new assessment scores anytime.</p>
+            </div>
+            <div class="flex items-center gap-2">
+              <button onclick="toggleResultRelease()" id="btn-toggle-release" class="px-4 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs shadow-md transition flex items-center gap-1.5">
+                <i class="fa-solid fa-unlock"></i> Open / Lock Portal Access
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div id="sub-adm-approvals" class="adm-subpage hidden space-y-6">
+          <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-xs">
+            <div class="flex items-center justify-between pb-4 border-b border-slate-200 mb-6">
+              <div>
+                <h3 class="text-lg font-black text-slate-900">Submitted Score Batches for Executive Review</h3>
+                <p class="text-xs text-slate-500 mt-0.5">Approve and certify teacher Continuous Assessment scores before they appear on student report cards.</p>
+              </div>
+              <span class="px-3 py-1 rounded-full bg-blue-50 text-blue-800 text-xs font-bold border border-blue-200">
+                Official Certification Protocol
+              </span>
+            </div>
+
+            <!-- Approvals Table -->
+            <div class="overflow-x-auto">
+              <table class="w-full text-left text-xs border-collapse">
+                <thead>
+                  <tr class="bg-slate-900 text-white uppercase text-[10px] tracking-wider">
+                    <th class="py-3 px-4 rounded-l-lg">Class / Arm</th>
+                    <th class="py-3 px-4">Subject</th>
+                    <th class="py-3 px-4">Subject Teacher</th>
+                    <th class="py-3 px-3 text-center">Enrolled</th>
+                    <th class="py-3 px-3 text-center">Class Avg</th>
+                    <th class="py-3 px-3 text-center">Status</th>
+                    <th class="py-3 px-4 text-center rounded-r-lg">Executive Action</th>
+                  </tr>
+                </thead>
+                <tbody id="approvals-tbody" class="divide-y divide-slate-200">
+                  <!-- Injected via JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div id="sub-adm-broadcast" class="adm-subpage hidden space-y-6">
+          <div class="bg-white rounded-2xl p-6 sm:p-8 border border-slate-200 shadow-xs max-w-3xl mx-auto">
+            <h3 class="text-lg font-black text-slate-900 mb-1">Issue Official Circular or Emergency Notice</h3>
+            <p class="text-xs text-slate-500 mb-6">Published notices immediately appear on the Public Website, Student Portal, and Teacher Boards.</p>
+
+            <form onsubmit="handlePostAnnouncement(event)" class="space-y-4">
+              <div>
+                <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">Circular Title *</label>
+                <input type="text" id="bc-title" required placeholder="e.g. Resumption Guidelines for Mid-Term Break" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-blue-600 focus:outline-none">
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">Category *</label>
+                  <select id="bc-cat" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm bg-white focus:ring-2 focus:ring-blue-600 focus:outline-none">
+                    <option value="Exams">Examinations & Timetable</option>
+                    <option value="PTA">PTA General Meeting</option>
+                    <option value="Holidays">Term Dates & Holidays</option>
+                    <option value="Emergency">Urgent Institutional Alert</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">Signatory Authority</label>
+                  <input type="text" id="bc-author" value="Office of the Headteacher" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-blue-600 focus:outline-none">
+                </div>
+              </div>
+
+              <div>
+                <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">Circular Content / Notice Body *</label>
+                <textarea id="bc-content" rows="4" required placeholder="Provide clear instructions, dates, and instructions for parents and guardians..." class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:ring-2 focus:ring-blue-600 focus:outline-none"></textarea>
+              </div>
+
+              <div class="flex justify-end pt-2">
+                <button type="submit" class="px-6 py-2.5 rounded-xl text-white font-bold text-xs shadow flex items-center gap-2" style="background-color: var(--brand-primary)">
+                  <i class="fa-solid fa-paper-plane"></i> Broadcast Notice Across Portals
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <div id="sub-adm-fees" class="adm-subpage hidden space-y-6">
+          <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-xs">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-200 mb-6">
+              <div>
+                <h3 class="text-lg font-black text-slate-900">Termly Tuition & Levies Audit Register</h3>
+                <p class="text-xs text-slate-500">Live reconciliation of school fees, science levies, and payment clearance status.</p>
+              </div>
+              <div class="flex items-center gap-2">
+                <button onclick="exportFeesCSV()" class="px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs border border-slate-300 flex items-center gap-1.5">
+                  <i class="fa-solid fa-file-csv text-emerald-600"></i> Export Fee Ledger (CSV)
+                </button>
+              </div>
+            </div>
+
+            <div class="overflow-x-auto">
+              <table class="w-full text-left text-xs border-collapse">
+                <thead>
+                  <tr class="bg-slate-900 text-white uppercase text-[10px] tracking-wider">
+                    <th class="py-3 px-4 rounded-l-lg">Student ID</th>
+                    <th class="py-3 px-4">Student Name</th>
+                    <th class="py-3 px-3">Class</th>
+                    <th class="py-3 px-3 text-right">Total Billed</th>
+                    <th class="py-3 px-3 text-right">Amount Paid</th>
+                    <th class="py-3 px-3 text-right">Balance</th>
+                    <th class="py-3 px-4 text-center rounded-r-lg">Status</th>
+                  </tr>
+                </thead>
+                <tbody id="fees-ledger-tbody" class="divide-y divide-slate-200">
+                  <!-- Injected via JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div id="sub-adm-branding" class="adm-subpage hidden space-y-6">
+          <div class="bg-white rounded-2xl p-6 sm:p-8 border border-slate-200 shadow-xs max-w-3xl mx-auto">
+            <h3 class="text-lg font-black text-slate-900 mb-1">White-Label Branding & Institutional Configuration</h3>
+            <p class="text-xs text-slate-500 mb-6">Customize school identity, theme colors, and principal certification data instantly.</p>
+
+            <form onsubmit="handleSaveBranding(event)" class="space-y-5">
+              <div>
+                <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">School Full Name</label>
+                <input type="text" id="brand-input-name" required value="Apex Horizon International Academy" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm">
+              </div>
+
+              <div>
+                <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">School Motto / Slogan</label>
+                <input type="text" id="brand-input-motto" required value="Excellence, Integrity, Innovation" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm">
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">Primary Institutional Color</label>
+                  <div class="flex items-center gap-3">
+                    <input type="color" id="brand-input-color-primary" value="#1e3a8a" class="w-14 h-10 p-1 border rounded-lg cursor-pointer">
+                    <span class="text-xs text-slate-500 font-mono">Applied to buttons, badges, & crest</span>
+                  </div>
+                </div>
+                <div>
+                  <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">Accent Highlight Color</label>
+                  <div class="flex items-center gap-3">
+                    <input type="color" id="brand-input-color-accent" value="#d97706" class="w-14 h-10 p-1 border rounded-lg cursor-pointer">
+                    <span class="text-xs text-slate-500 font-mono">Applied to key accents</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">Headteacher Full Name</label>
+                  <input type="text" id="brand-input-principal" value="Dr. Margaret Hamilton, Ph.D." class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm">
+                </div>
+                <div>
+                  <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">Principal Official Title</label>
+                  <input type="text" id="brand-input-title" value="Headteacher & Principal" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm">
+                </div>
+              </div>
+
+              <div class="flex justify-end pt-3">
+                <button type="submit" class="px-6 py-2.5 rounded-xl text-white font-bold text-xs shadow flex items-center gap-2" style="background-color: var(--brand-primary)">
+                  <i class="fa-solid fa-floppy-disk"></i> Save & Apply Institutional Brand
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ============================================================= -->
+    <!-- SECTION 3: TEACHER INTERACTIVE GRADEBOOK & ATTENDANCE         -->
+    <!-- ============================================================= -->
+    <section id="view-teacher" class="role-view hidden">
+      <div class="bg-slate-900 text-white py-6 border-b border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="px-2.5 py-0.5 rounded bg-blue-500/20 text-blue-300 text-[11px] font-bold border border-blue-400/30">
+                <i class="fa-solid fa-chalkboard-user mr-1"></i> Educator Console
+              </span>
+              <span class="text-xs text-slate-400">Class: <strong>SS 1 Gold</strong> &bull; Teacher: <strong>Mr. Adeleke O.</strong></span>
+            </div>
+            <h2 class="text-2xl font-black mt-1">Class Teacher & Assessment Portal</h2>
+          </div>
+
+          <!-- Teacher Navigation Sub-Tabs -->
+          <div class="flex items-center gap-1.5 flex-wrap">
+            <button onclick="navigateTeacherSub('gradebook')" id="tch-tab-gradebook" class="tch-tab-btn px-3 py-1.5 rounded-lg text-xs font-bold bg-blue-600 text-white shadow-xs">
+              <i class="fa-solid fa-table-list mr-1"></i> Live Gradebook
+            </button>
+            <button onclick="navigateTeacherSub('csv')" id="tch-tab-csv" class="tch-tab-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700">
+              <i class="fa-solid fa-file-excel mr-1"></i> Bulk CSV / Excel
+            </button>
+            <button onclick="navigateTeacherSub('attendance')" id="tch-tab-attendance" class="tch-tab-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700">
+              <i class="fa-solid fa-clipboard-user mr-1"></i> Attendance Log
+            </button>
+            <button onclick="navigateTeacherSub('remarks')" id="tch-tab-remarks" class="tch-tab-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700">
+              <i class="fa-solid fa-star-half-stroke mr-1"></i> Affective Domain
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+        
+        <!-- SUBPAGE: Interactive Gradebook -->
+        <div id="sub-tch-gradebook" class="tch-subpage space-y-6">
+          <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-xs space-y-6">
+            
+            <!-- Filter Bar: Class & Subject Selector -->
+            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-4 border-b border-slate-200">
+              <div class="flex items-center gap-3 flex-wrap">
+                <div>
+                  <label class="block text-[10px] font-bold uppercase text-slate-400">Class & Arm</label>
+                  <select id="tch-class-selector" onchange="renderGradebook()" class="px-3 py-1.5 rounded-lg border border-slate-300 text-xs font-bold bg-slate-50 text-slate-800">
+                    <option value="SS 1 Gold" selected>Grade 10 / SS 1 Gold</option>
+                    <option value="SS 1 Silver">Grade 10 / SS 1 Silver</option>
+                    <option value="JSS 2 Diamond">Grade 8 / JSS 2 Diamond</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-[10px] font-bold uppercase text-slate-400">Assigned Subject</label>
+                  <select id="tch-subject-selector" onchange="renderGradebook()" class="px-3 py-1.5 rounded-lg border border-slate-300 text-xs font-bold bg-slate-50 text-slate-800">
+                    <option value="Mathematics" selected>Mathematics</option>
+                    <option value="English Language">English Language</option>
+                    <option value="Physics">Physics</option>
+                    <option value="Chemistry">Chemistry</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- Submit to Headteacher Button -->
+              <div class="flex items-center gap-2">
+                <button onclick="submitBatchToHeadteacher()" class="px-4 py-2 rounded-xl text-white font-bold text-xs shadow flex items-center gap-1.5" style="background-color: var(--brand-primary)">
+                  <i class="fa-solid fa-paper-plane"></i> Send Scores to Headteacher for Review
+                </button>
+              </div>
+            </div>
+
+            <!-- Gradebook Table with Live Auto-Calculating Scores -->
+            <div class="overflow-x-auto">
+              <table class="w-full text-left text-xs border-collapse">
+                <thead>
+                  <tr class="bg-slate-900 text-white uppercase text-[10px] tracking-wider">
+                    <th class="py-3 px-4 rounded-l-lg">Student ID</th>
+                    <th class="py-3 px-4">Student Name</th>
+                    <th class="py-3 px-2 text-center w-24">CA 1 (20)</th>
+                    <th class="py-3 px-2 text-center w-24">CA 2 (20)</th>
+                    <th class="py-3 px-2 text-center w-24">Exam (60)</th>
+                    <th class="py-3 px-2 text-center font-bold bg-slate-800">Total (100)</th>
+                    <th class="py-3 px-2 text-center">Grade</th>
+                    <th class="py-3 px-4 text-center rounded-r-lg">Academic Remark</th>
+                  </tr>
+                </thead>
+                <tbody id="gradebook-tbody" class="divide-y divide-slate-200">
+                  <!-- Dynamically Rendered -->
+                </tbody>
+              </table>
+            </div>
+
+            <div class="p-3 bg-blue-50 rounded-xl text-xs text-blue-900 border border-blue-200 flex items-center justify-between">
+              <span class="flex items-center gap-2">
+                <i class="fa-solid fa-circle-info text-blue-600"></i> Scores calculate letter grades (A1 to F9) instantly upon typing.
+              </span>
+              <span class="font-mono text-[11px] text-blue-700">Auto-saved to local memory</span>
+            </div>
+
+          </div>
+        </div>
+
+        <div id="sub-tch-csv" class="tch-subpage hidden space-y-6">
+          <div class="bg-white rounded-2xl p-6 sm:p-8 border border-slate-200 shadow-xs">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-200 mb-6">
+              <div>
+                <h3 class="text-lg font-black text-slate-900">Bulk Assessment Score Importer</h3>
+                <p class="text-xs text-slate-500">Upload a spreadsheet CSV file or paste raw rows to bulk update marks.</p>
+              </div>
+              <button onclick="downloadTeacherCSVTemplate()" class="px-3.5 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs border border-slate-300 flex items-center gap-1.5">
+                <i class="fa-solid fa-download text-slate-500"></i> Sample CSV Template
+              </button>
+            </div>
+
+            <div class="space-y-4">
+              <div class="border-2 border-dashed border-slate-300 rounded-2xl p-6 text-center bg-slate-50 hover:bg-slate-100/80 transition cursor-pointer" onclick="document.getElementById('teacher-csv-input').click()">
+                <i class="fa-solid fa-cloud-arrow-up text-3xl text-slate-400 mb-2"></i>
+                <p class="text-xs font-bold text-slate-800">Click to select CSV File or drag and drop</p>
+                <p class="text-[11px] text-slate-400">Accepted format: StudentID, CA1, CA2, Exam</p>
+                <input type="file" id="teacher-csv-input" accept=".csv" class="hidden" onchange="handleTeacherCSVUpload(event)">
+              </div>
+
+              <div>
+                <label class="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">Or Paste Raw CSV Data Below</label>
+                <textarea id="teacher-csv-raw" rows="4" placeholder="STU/2026/042, 19, 18, 56&#10;STU/2026/043, 17, 16, 50" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-xs font-mono"></textarea>
+              </div>
+
+              <div class="flex justify-end">
+                <button onclick="processTeacherCSVRaw()" class="px-6 py-2.5 rounded-xl text-white font-bold text-xs shadow" style="background-color: var(--brand-primary)">
+                  Parse & Apply to Gradebook
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="sub-tch-attendance" class="tch-subpage hidden space-y-6">
+          <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-xs space-y-6">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-200">
+              <div>
+                <h3 class="text-lg font-black text-slate-900">Daily Attendance Register & Ratio Calculator</h3>
+                <p class="text-xs text-slate-500">Mark morning call records. Automatically calculates termly attendance percentage for the report card.</p>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="text-xs font-bold text-slate-700">Date:</span>
+                <span id="current-attendance-date" class="px-3 py-1 bg-slate-100 rounded-lg text-xs font-mono font-semibold">Today</span>
+              </div>
+            </div>
+
+            <div class="overflow-x-auto">
+              <table class="w-full text-left text-xs border-collapse">
+                <thead>
+                  <tr class="bg-slate-900 text-white uppercase text-[10px] tracking-wider">
+                    <th class="py-3 px-4 rounded-l-lg">Student ID</th>
+                    <th class="py-3 px-4">Student Name</th>
+                    <th class="py-3 px-3 text-center">Status Action</th>
+                    <th class="py-3 px-3 text-center">Days Present</th>
+                    <th class="py-3 px-4 text-center rounded-r-lg">Term Ratio %</th>
+                  </tr>
+                </thead>
+                <tbody id="attendance-tbody" class="divide-y divide-slate-200">
+                  <!-- Dynamically Rendered -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div id="sub-tch-remarks" class="tch-subpage hidden space-y-6">
+          <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-xs space-y-6">
+            <div class="pb-4 border-b border-slate-200">
+              <h3 class="text-lg font-black text-slate-900">Form Master Character & Affective Domain Assessments</h3>
+              <p class="text-xs text-slate-500">Provide 5-star behavioral ratings and official homeroom teacher comments for student report sheets.</p>
+            </div>
+
+            <div id="affective-remarks-container" class="space-y-6">
+              <!-- Rendered per student -->
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ============================================================= -->
+    <!-- SECTION 4: STUDENT & PARENT TERMINAL PORTAL                   -->
+    <!-- ============================================================= -->
+    <section id="view-student" class="role-view hidden">
+      <div class="bg-slate-900 text-white py-6 border-b border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="px-2.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 text-[11px] font-bold border border-emerald-400/30">
+                <i class="fa-solid fa-user-graduate mr-1"></i> Scholar / Parent Portal
+              </span>
+              <span class="text-xs text-slate-400">Student: <strong>David Okon</strong> &bull; Class: <strong>SS 1 Gold</strong></span>
+            </div>
+            <h2 class="text-2xl font-black mt-1">Student & Parent Academic Dashboard</h2>
+          </div>
+
+          <!-- Student Navigation Sub-Tabs -->
+          <div class="flex items-center gap-1.5 flex-wrap">
+            <button onclick="navigateStudentSub('overview')" id="stu-tab-overview" class="stu-tab-btn px-3 py-1.5 rounded-lg text-xs font-bold bg-emerald-600 text-white shadow-xs">
+              <i class="fa-solid fa-user mr-1"></i> Overview
+            </button>
+            <button onclick="navigateStudentSub('report')" id="stu-tab-report" class="stu-tab-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700">
+              <i class="fa-solid fa-file-invoice mr-1"></i> Terminal Report Sheet
+            </button>
+            <button onclick="navigateStudentSub('homework')" id="stu-tab-homework" class="stu-tab-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700">
+              <i class="fa-solid fa-book mr-1"></i> Homework Hub
+            </button>
+            <button onclick="navigateStudentSub('fees')" id="stu-tab-fees" class="stu-tab-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700">
+              <i class="fa-solid fa-credit-card mr-1"></i> Fee Statement
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+        
+        <!-- SUBPAGE: Student Overview -->
+        <div id="sub-stu-overview" class="stu-subpage space-y-6">
+          <!-- Scholar Biodata & Quick Metric Header -->
+          <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-xs flex flex-col md:flex-row items-center justify-between gap-6">
+            <div class="flex items-center gap-5">
+              <img id="stu-profile-avatar" src="https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=300&q=80" alt="Student Avatar" class="w-20 h-20 rounded-2xl object-cover border-2 border-slate-200 shadow-sm" onerror="this.src='https://placehold.co/200x200/1e3a8a/ffffff?text=David'">
+              <div>
+                <span class="px-2.5 py-0.5 rounded text-[10px] font-bold bg-blue-100 text-blue-800 uppercase tracking-wider">Active Enrolled Scholar</span>
+                <h3 id="stu-full-name" class="text-xl font-black text-slate-900 mt-1">David Okon</h3>
+                <p class="text-xs text-slate-500">Reg No: <span id="stu-reg-id" class="font-mono font-bold text-slate-700">STU/2026/042</span> &bull; Arm: <strong id="stu-class-label">SS 1 Gold</strong></p>
+                <p class="text-xs text-slate-400 mt-0.5">Homeroom Tutor: <strong>Mr. Adeleke O.</strong> (adeleke@apexhorizon.edu)</p>
+              </div>
+            </div>
+
+            <!-- Attendance & GPA Badge -->
+            <div class="flex items-center gap-4 text-center">
+              <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200">
+                <span class="text-[10px] uppercase font-bold text-slate-400">Term Attendance</span>
+                <p class="text-xl font-black text-emerald-600 mt-0.5">97.5%</p>
+                <span class="text-[10px] text-slate-500">117 / 120 Days</span>
+              </div>
+              <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200">
+                <span class="text-[10px] uppercase font-bold text-slate-400">Overall Average</span>
+                <p class="text-xl font-black text-blue-700 mt-0.5">85.4%</p>
+                <span class="text-[10px] text-emerald-600 font-bold">Class Rank: 2nd</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick Jump Callouts -->
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-xs hover:shadow-md transition">
+              <div class="w-10 h-10 rounded-xl bg-blue-50 text-blue-700 flex items-center justify-center text-lg mb-3">
+                <i class="fa-solid fa-file-invoice"></i>
+              </div>
+              <h4 class="font-bold text-slate-900 text-sm">Terminal Report Card</h4>
+              <p class="text-slate-500 text-xs mt-1">Review official WAEC standard scores and download printable PDF.</p>
+              <button onclick="navigateStudentSub('report')" class="text-blue-700 font-bold text-xs mt-3 flex items-center gap-1 hover:underline">
+                View Full Report Sheet →
+              </button>
+            </div>
+
+            <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-xs hover:shadow-md transition">
+              <div class="w-10 h-10 rounded-xl bg-amber-50 text-amber-700 flex items-center justify-center text-lg mb-3">
+                <i class="fa-solid fa-book"></i>
+              </div>
+              <h4 class="font-bold text-slate-900 text-sm">Homework Tasks</h4>
+              <p class="text-slate-500 text-xs mt-1">2 assignments due this week in Mathematics and Chemistry.</p>
+              <button onclick="navigateStudentSub('homework')" class="text-amber-700 font-bold text-xs mt-3 flex items-center gap-1 hover:underline">
+                Open Homework Hub →
+              </button>
+            </div>
+
+            <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-xs hover:shadow-md transition">
+              <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center text-lg mb-3">
+                <i class="fa-solid fa-credit-card"></i>
+              </div>
+              <h4 class="font-bold text-slate-900 text-sm">Fee Clearance Status</h4>
+              <p class="text-slate-500 text-xs mt-1">Second Term tuition and science levies are 100% Cleared.</p>
+              <button onclick="navigateStudentSub('fees')" class="text-emerald-700 font-bold text-xs mt-3 flex items-center gap-1 hover:underline">
+                View Fee Invoices →
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div id="sub-stu-report" class="stu-subpage hidden space-y-6">
+          <!-- Action Bar for Screen Only -->
+          <div class="no-print bg-slate-900 text-white p-4 rounded-2xl flex flex-wrap items-center justify-between gap-3 shadow-md">
+            <div class="flex items-center gap-2">
+              <i class="fa-solid fa-certificate text-amber-400"></i>
+              <span class="font-bold text-xs sm:text-sm">Verified Institutional Terminal Report Sheet</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <button onclick="window.print()" class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs shadow flex items-center gap-1.5 transition">
+                <i class="fa-solid fa-print"></i> Print / Save as PDF
+              </button>
+              <button onclick="exportCurrentStudentCSV()" class="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold text-xs border border-slate-700 transition">
+                <i class="fa-solid fa-file-csv"></i> Export CSV
+              </button>
+            </div>
+          </div>
+
+          <!-- Printable Report Sheet Body -->
+          <div id="printable-report-sheet" class="bg-white rounded-2xl p-6 sm:p-10 border border-slate-300 shadow-xl relative report-watermark">
+            
+            <!-- School Header & Crest -->
+            <header class="border-b-2 border-slate-800 pb-5 mb-5">
+              <div class="flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
+                <div class="flex items-center gap-4">
+                  <div class="w-20 h-20 rounded-2xl flex items-center justify-center text-white text-3xl shadow" style="background-color: var(--brand-primary)">
+                    <i class="fa-solid fa-graduation-cap"></i>
+                  </div>
+                  <div>
+                    <h2 class="font-serif font-black text-xl sm:text-2xl text-slate-900 tracking-tight leading-tight uppercase brand-name-target">Apex Horizon International Academy</h2>
+                    <p class="text-xs text-amber-800 italic font-semibold brand-motto-target">Excellence, Integrity, Innovation</p>
+                    <p class="text-[11px] text-slate-500 mt-1 leading-snug">
+                      Victoria Island Campus, P.O. Box 8021, Lagos, Nigeria<br>
+                      Web: portal.apexhorizon.edu &bull; Email: results@apexhorizon.edu
+                    </p>
+                  </div>
+                </div>
+
+                <div class="text-right sm:border-l sm:border-slate-200 sm:pl-6 hidden sm:block">
+                  <span class="inline-block px-3 py-1 bg-slate-900 text-white text-[10px] font-black uppercase tracking-widest rounded mb-1">Official Terminal Dossier</span>
+                  <p class="text-[11px] text-slate-500">Certified Continuous Assessment</p>
+                  <p class="text-[10px] font-mono text-slate-400 mt-0.5">Session: 2025/2026</p>
+                </div>
+              </div>
+            </header>
+
+            <!-- Student Biodata Strip -->
+            <section class="bg-slate-50 rounded-xl p-4 border border-slate-200 mb-5 text-xs">
+              <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                <div>
+                  <span class="text-slate-400 block font-semibold uppercase text-[10px]">Student Name</span>
+                  <strong class="text-slate-900 text-sm font-bold">David Okon</strong>
+                </div>
+                <div>
+                  <span class="text-slate-400 block font-semibold uppercase text-[10px]">Registration / Roll No</span>
+                  <strong class="text-slate-900 text-sm font-bold font-mono">STU/2026/042</strong>
+                </div>
+                <div>
+                  <span class="text-slate-400 block font-semibold uppercase text-[10px]">Class & Arm</span>
+                  <strong class="text-slate-900 text-sm font-bold">SS 1 Gold (Grade 10)</strong>
+                </div>
+                <div>
+                  <span class="text-slate-400 block font-semibold uppercase text-[10px]">Academic Term</span>
+                  <strong class="text-slate-900 text-sm font-bold">Second Term 2025/2026</strong>
+                </div>
+                <div>
+                  <span class="text-slate-400 block font-semibold uppercase text-[10px]">Attendance</span>
+                  <strong class="text-slate-800">117 / 120 Days (97.5%)</strong>
+                </div>
+                <div>
+                  <span class="text-slate-400 block font-semibold uppercase text-[10px]">Class Position</span>
+                  <strong class="text-emerald-700 font-bold">2nd of 34 Scholars</strong>
+                </div>
+                <div>
+                  <span class="text-slate-400 block font-semibold uppercase text-[10px]">Next Term Begins</span>
+                  <strong class="text-slate-800">January 11, 2027</strong>
+                </div>
+                <div>
+                  <span class="text-slate-400 block font-semibold uppercase text-[10px]">Result Clearance</span>
+                  <strong class="text-emerald-700 font-bold">Verified & Certified</strong>
+                </div>
+              </div>
+            </section>
+
+            <!-- Subjects & Scores Table -->
+            <section class="overflow-x-auto mb-5">
+              <table class="w-full text-left text-xs border-collapse">
+                <thead>
+                  <tr class="bg-slate-900 text-white uppercase text-[10px] tracking-wider">
+                    <th class="py-2.5 px-3 border border-slate-800">Subject</th>
+                    <th class="py-2.5 px-2 border border-slate-800 text-center">CA 1 (20)</th>
+                    <th class="py-2.5 px-2 border border-slate-800 text-center">CA 2 (20)</th>
+                    <th class="py-2.5 px-2 border border-slate-800 text-center">Exam (60)</th>
+                    <th class="py-2.5 px-2 border border-slate-800 text-center font-bold bg-slate-800">Total (100)</th>
+                    <th class="py-2.5 px-2 border border-slate-800 text-center">Grade</th>
+                    <th class="py-2.5 px-2 border border-slate-800 text-center">Class Avg</th>
+                    <th class="py-2.5 px-3 border border-slate-800">Remark</th>
+                  </tr>
+                </thead>
+                <tbody id="student-report-tbody" class="divide-y divide-slate-200 border-b border-slate-200">
+                  <!-- Dynamically rendered -->
+                </tbody>
+              </table>
+            </section>
+
+            <!-- Affective Domain Rating Grid -->
+            <section class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-5 text-xs">
+              <div class="border border-slate-200 rounded-xl p-3.5 bg-slate-50/50">
+                <h4 class="font-bold text-slate-800 text-[11px] uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                  <i class="fa-solid fa-heart-pulse text-rose-500"></i> Affective Traits & Character (Scale 1 - 5)
+                </h4>
+                <div class="grid grid-cols-2 gap-2 text-[11px]">
+                  <div class="flex justify-between border-b border-slate-200 pb-1">
+                    <span class="text-slate-600">Punctuality:</span>
+                    <span class="font-bold text-slate-800">5 / 5 ★★★★★</span>
+                  </div>
+                  <div class="flex justify-between border-b border-slate-200 pb-1">
+                    <span class="text-slate-600">Neatness & Decorum:</span>
+                    <span class="font-bold text-slate-800">5 / 5 ★★★★★</span>
+                  </div>
+                  <div class="flex justify-between border-b border-slate-200 pb-1">
+                    <span class="text-slate-600">Honesty & Integrity:</span>
+                    <span class="font-bold text-slate-800">5 / 5 ★★★★★</span>
+                  </div>
+                  <div class="flex justify-between border-b border-slate-200 pb-1">
+                    <span class="text-slate-600">Peer Collaboration:</span>
+                    <span class="font-bold text-slate-800">4 / 5 ★★★★☆</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="border border-slate-200 rounded-xl p-3.5 bg-slate-50/50">
+                <h4 class="font-bold text-slate-800 text-[11px] uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                  <i class="fa-solid fa-dumbbell text-amber-500"></i> Psychomotor Skills (Scale 1 - 5)
+                </h4>
+                <div class="grid grid-cols-2 gap-2 text-[11px]">
+                  <div class="flex justify-between border-b border-slate-200 pb-1">
+                    <span class="text-slate-600">Handwriting & Presentation:</span>
+                    <span class="font-bold text-slate-800">4 / 5 ★★★★☆</span>
+                  </div>
+                  <div class="flex justify-between border-b border-slate-200 pb-1">
+                    <span class="text-slate-600">Sports & Athletics:</span>
+                    <span class="font-bold text-slate-800">5 / 5 ★★★★★</span>
+                  </div>
+                  <div class="flex justify-between border-b border-slate-200 pb-1">
+                    <span class="text-slate-600">Lab Experiments & STEM:</span>
+                    <span class="font-bold text-slate-800">5 / 5 ★★★★★</span>
+                  </div>
+                  <div class="flex justify-between border-b border-slate-200 pb-1">
+                    <span class="text-slate-600">Debate & Public Speaking:</span>
+                    <span class="font-bold text-slate-800">4 / 5 ★★★★☆</span>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <!-- Signatures, Remarks & Digital Verified Seal -->
+            <section class="grid grid-cols-1 sm:grid-cols-2 gap-6 pt-4 border-t-2 border-slate-300">
+              <div>
+                <span class="text-[10px] uppercase font-bold text-slate-500 block mb-1">Homeroom Teacher's Remark:</span>
+                <p class="text-xs text-slate-800 italic bg-slate-50 p-2.5 rounded-lg border border-slate-200">
+                  "David demonstrates brilliant conceptual understanding in mathematics and sciences. Maintain this stellar work ethic."
+                </p>
+                <div class="mt-2.5 flex items-center gap-2 text-xs">
+                  <span class="font-serif italic font-bold text-slate-700 underline">Mr. Adeleke O.</span>
+                  <span class="text-[10px] text-slate-400">Class Master</span>
+                </div>
+              </div>
+
+              <div>
+                <span class="text-[10px] uppercase font-bold text-slate-500 block mb-1">Principal's Certification:</span>
+                <p class="text-xs text-slate-800 italic bg-slate-50 p-2.5 rounded-lg border border-slate-200">
+                  "Commendable performance. Promoted with distinction to the next level."
+                </p>
+                <div class="mt-2.5 flex items-center justify-between">
+                  <div class="text-xs">
+                    <span id="rep-principal-signature" class="font-serif italic font-bold text-blue-950 underline">Dr. Margaret Hamilton</span>
+                    <span class="block text-[10px] text-slate-400">Head of School</span>
+                  </div>
+
+                  <!-- Digital Institutional Verification Stamp -->
+                  <div class="w-16 h-16 rounded-full border-2 border-dashed border-red-600 text-red-600 flex flex-col items-center justify-center p-1 text-[8px] font-black uppercase text-center rotate-[-10deg] select-none opacity-90">
+                    <i class="fa-solid fa-certificate text-xs mb-0.5"></i>
+                    CERTIFIED OFFICIAL
+                  </div>
+                </div>
+              </div>
+            </section>
+
+          </div>
+        </div>
+
+        <div id="sub-stu-homework" class="stu-subpage hidden space-y-6">
+          <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-xs space-y-6">
+            <div class="flex items-center justify-between pb-4 border-b border-slate-200">
+              <div>
+                <h3 class="text-lg font-black text-slate-900">Homework & Research Assignments</h3>
+                <p class="text-xs text-slate-500">Download assignment materials and monitor pending submission dates.</p>
+              </div>
+              <span class="px-3 py-1 rounded-full bg-amber-50 text-amber-800 text-xs font-bold border border-amber-200">
+                2 Active Tasks
+              </span>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div class="bg-slate-50 p-5 rounded-2xl border border-slate-200 flex flex-col justify-between">
+                <div>
+                  <div class="flex items-center justify-between text-xs mb-2">
+                    <span class="px-2.5 py-0.5 rounded font-bold bg-blue-100 text-blue-800">Mathematics</span>
+                    <span class="text-rose-600 font-semibold"><i class="fa-regular fa-clock mr-1"></i> Due in 2 Days</span>
+                  </div>
+                  <h4 class="font-bold text-slate-900 text-sm">Quadratic Equations & Parabolic Modelling</h4>
+                  <p class="text-xs text-slate-600 mt-1">Complete exercises 4B and 4C from the Core Mathematics workbook (Pages 112 - 114).</p>
+                </div>
+                <div class="pt-4 mt-4 border-t border-slate-200 flex items-center justify-between">
+                  <span class="text-xs text-slate-400">Tutor: Mr. Adeleke O.</span>
+                  <button onclick="showToast('Homework worksheet downloaded', 'info')" class="px-3 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs flex items-center gap-1 shadow-xs">
+                    <i class="fa-solid fa-download"></i> Worksheet PDF
+                  </button>
+                </div>
+              </div>
+
+              <div class="bg-slate-50 p-5 rounded-2xl border border-slate-200 flex flex-col justify-between">
+                <div>
+                  <div class="flex items-center justify-between text-xs mb-2">
+                    <span class="px-2.5 py-0.5 rounded font-bold bg-emerald-100 text-emerald-800">Chemistry</span>
+                    <span class="text-slate-500 font-semibold"><i class="fa-regular fa-clock mr-1"></i> Due Next Monday</span>
+                  </div>
+                  <h4 class="font-bold text-slate-900 text-sm">Volumetric Analysis Titration Lab Report</h4>
+                  <p class="text-xs text-slate-600 mt-1">Write up the hydrochloric acid and sodium hydroxide indicator neutralization steps.</p>
+                </div>
+                <div class="pt-4 mt-4 border-t border-slate-200 flex items-center justify-between">
+                  <span class="text-xs text-slate-400">Tutor: Mrs. B. Alabi</span>
+                  <button onclick="showToast('Lab brief downloaded', 'info')" class="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs flex items-center gap-1 shadow-xs">
+                    <i class="fa-solid fa-download"></i> Lab Guide PDF
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="sub-stu-fees" class="stu-subpage hidden space-y-6">
+          <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-xs space-y-6">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-200">
+              <div>
+                <h3 class="text-lg font-black text-slate-900">Termly School Fees & Levies Clearance</h3>
+                <p class="text-xs text-slate-500">Official statement of tuition, development fees, and laboratory levies.</p>
+              </div>
+              <span class="px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 text-xs font-bold border border-emerald-200 flex items-center gap-1">
+                <i class="fa-solid fa-circle-check"></i> 100% Cleared (Zero Balance)
+              </span>
+            </div>
+
+            <div class="overflow-x-auto">
+              <table class="w-full text-left text-xs border-collapse">
+                <thead>
+                  <tr class="bg-slate-900 text-white uppercase text-[10px] tracking-wider">
+                    <th class="py-3 px-4 rounded-l-lg">Item / Fee Description</th>
+                    <th class="py-3 px-3">Session & Term</th>
+                    <th class="py-3 px-3 text-right">Amount</th>
+                    <th class="py-3 px-3 text-right">Paid</th>
+                    <th class="py-3 px-4 text-center rounded-r-lg">Clearance Status</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-200">
+                  <tr class="hover:bg-slate-50">
+                    <td class="py-3 px-4 font-semibold text-slate-900">Senior Secondary Tuition (Term 2)</td>
+                    <td class="py-3 px-3 text-slate-500">2025/2026</td>
+                    <td class="py-3 px-3 text-right font-mono font-bold">₦ 280,000</td>
+                    <td class="py-3 px-3 text-right font-mono text-emerald-600 font-bold">₦ 280,000</td>
+                    <td class="py-3 px-4 text-center"><span class="px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 font-bold text-[10px]">PAID</span></td>
+                  </tr>
+                  <tr class="hover:bg-slate-50">
+                    <td class="py-3 px-4 font-semibold text-slate-900">STEM & Robotics Laboratory Levy</td>
+                    <td class="py-3 px-3 text-slate-500">2025/2026</td>
+                    <td class="py-3 px-3 text-right font-mono font-bold">₦ 35,000</td>
+                    <td class="py-3 px-3 text-right font-mono text-emerald-600 font-bold">₦ 35,000</td>
+                    <td class="py-3 px-4 text-center"><span class="px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 font-bold text-[10px]">PAID</span></td>
+                  </tr>
+                  <tr class="hover:bg-slate-50">
+                    <td class="py-3 px-4 font-semibold text-slate-900">Co-Curricular Sports & Library Dues</td>
+                    <td class="py-3 px-3 text-slate-500">2025/2026</td>
+                    <td class="py-3 px-3 text-right font-mono font-bold">₦ 15,000</td>
+                    <td class="py-3 px-3 text-right font-mono text-emerald-600 font-bold">₦ 15,000</td>
+                    <td class="py-3 px-4 text-center"><span class="px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 font-bold text-[10px]">PAID</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ============================================================= -->
+  <!-- MODAL: UNIVERSAL LOGIN MODAL WITH ROLE SELECTOR TABS          -->
+  <!-- ============================================================= -->
+  <div id="login-modal" class="fixed inset-0 z-50 bg-slate-900/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-md w-full p-6 sm:p-8 shadow-2xl border border-slate-200 animate-scale-up">
+      <div class="flex items-center justify-between pb-3 border-b border-slate-200 mb-5">
+        <div class="flex items-center gap-2">
+          <div class="w-8 h-8 rounded-lg bg-blue-900 text-white flex items-center justify-center font-bold text-sm">
+            <i class="fa-solid fa-lock"></i>
+          </div>
+          <h3 class="font-black text-slate-900 text-base">Portal Authentication</h3>
+        </div>
+        <button onclick="closeLoginModal()" class="text-slate-400 hover:text-slate-700 text-lg">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <!-- Role Selector Tabs in Login Dialog -->
+      <div class="grid grid-cols-3 gap-1 bg-slate-100 p-1 rounded-xl mb-5 text-xs font-bold text-center">
+        <button type="button" onclick="setLoginModalRole('headteacher')" id="tab-login-headteacher" class="login-tab-btn py-2 rounded-lg bg-white text-slate-900 shadow-xs">
+          Headteacher
+        </button>
+        <button type="button" onclick="setLoginModalRole('teacher')" id="tab-login-teacher" class="login-tab-btn py-2 rounded-lg text-slate-600 hover:text-slate-900">
+          Teacher
+        </button>
+        <button type="button" onclick="setLoginModalRole('student')" id="tab-login-student" class="login-tab-btn py-2 rounded-lg text-slate-600 hover:text-slate-900">
+          Student/Parent
+        </button>
+      </div>
+
+      <form onsubmit="handleModalLogin(event)" class="space-y-4 text-xs">
+        <div id="login-id-field" class="hidden">
+          <label class="block font-bold text-slate-700 uppercase tracking-wider text-[10px] mb-1">Student Roll / Reg ID</label>
+          <input type="text" id="login-input-id" value="STU/2026/042" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 font-mono uppercase text-sm">
+        </div>
+
+        <div>
+          <label id="login-pin-label" class="block font-bold text-slate-700 uppercase tracking-wider text-[10px] mb-1">Staff Access PIN / Password</label>
+          <input type="password" id="login-input-pin" required placeholder="Enter PIN (Demo: admin123)" value="admin123" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 font-mono text-sm tracking-widest text-center">
+        </div>
+
+        <!-- Quick Demo Credential Helper Hint Box -->
+        <div class="p-3 bg-amber-50 rounded-xl text-[11px] text-amber-900 border border-amber-200">
+          <span class="font-bold"><i class="fa-solid fa-key mr-1"></i> Preset Demo Credentials:</span>
+          <p id="login-demo-hint" class="mt-0.5">Headteacher PIN: <code class="font-bold">admin123</code></p>
+        </div>
+
+        <button type="submit" class="w-full py-3 rounded-xl text-white font-bold text-sm shadow hover:opacity-90 transition" style="background-color: var(--brand-primary)">
+          Verify & Sign In to Portal
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Lightbox Modal for Gallery Photos -->
+  <div id="lightbox-modal" class="fixed inset-0 z-50 bg-black/90 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="relative max-w-4xl w-full">
+      <button onclick="closeLightbox()" class="absolute -top-10 right-0 text-white hover:text-amber-400 text-2xl transition">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+      <img id="lightbox-img" src="" alt="Enlarged photo" class="w-full max-h-[75vh] object-contain rounded-xl border border-white/20 shadow-2xl">
+      <div class="mt-3 text-white text-center">
+        <h4 id="lightbox-title" class="font-bold text-base"></h4>
+        <p id="lightbox-desc" class="text-xs text-slate-300 mt-1"></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Box -->
+  <div id="toast" class="fixed bottom-6 right-6 z-50 bg-slate-900 text-white px-5 py-3 rounded-xl shadow-2xl flex items-center gap-3 text-xs font-semibold transform translate-y-24 opacity-0 transition-all duration-300">
+    <i id="toast-icon" class="fa-solid fa-circle-check text-emerald-400 text-base"></i>
+    <span id="toast-msg">Notification message</span>
+  </div>
+
+  <script>
+    /* ============================================================= */
+    /* REACTIVE APPLICATION STATE & SEED DATA STORE                   */
+    /* ============================================================= */
+    
+    // Core Application State
+    const AppState = {
+      currentRole: 'public', // 'public' | 'headteacher' | 'teacher' | 'student'
+      activeLoginRoleModal: 'headteacher',
+      resultsReleased: true,
+
+      // School Profile / Branding
+      branding: {
+        name: "Apex Horizon International Academy",
+        motto: "Excellence, Integrity, Innovation",
+        primaryColor: "#1e3a8a",
+        accentColor: "#d97706",
+        principal: "Dr. Margaret Hamilton, Ph.D.",
+        title: "Headteacher & Principal",
+        address: "Victoria Island Campus, Lagos, Nigeria"
+      },
+
+      // Student Roster (SS 1 Gold & JSS 2)
+      students: [
+        {
+          id: "STU/2026/042",
+          name: "David Okon",
+          class: "SS 1 Gold",
+          pin: "4481",
+          attendanceDays: 117,
+          totalDays: 120,
+          scores: {
+            "Mathematics": { ca1: 19, ca2: 18, exam: 56 },
+            "English Language": { ca1: 18, ca2: 17, exam: 51 },
+            "Physics": { ca1: 18, ca2: 19, exam: 54 },
+            "Chemistry": { ca1: 17, ca2: 18, exam: 50 },
+            "Biology": { ca1: 16, ca2: 17, exam: 48 },
+            "Technical Drawing": { ca1: 19, ca2: 19, exam: 55 }
+          },
+          feeStatus: { total: 330000, paid: 330000, status: "CLEARED" }
+        },
+        {
+          id: "STU/2026/043",
+          name: "Amina Zainab Adeyemi",
+          class: "SS 1 Gold",
+          pin: "8821",
+          attendanceDays: 119,
+          totalDays: 120,
+          scores: {
+            "Mathematics": { ca1: 20, ca2: 19, exam: 58 },
+            "English Language": { ca1: 19, ca2: 18, exam: 53 },
+            "Physics": { ca1: 19, ca2: 18, exam: 55 },
+            "Chemistry": { ca1: 18, ca2: 19, exam: 54 },
+            "Biology": { ca1: 19, ca2: 18, exam: 52 },
+            "Technical Drawing": { ca1: 18, ca2: 17, exam: 52 }
+          },
+          feeStatus: { total: 330000, paid: 330000, status: "CLEARED" }
+        },
+        {
+          id: "STU/2026/044",
+          name: "Emmanuel Chidiebere",
+          class: "SS 1 Gold",
+          pin: "3310",
+          attendanceDays: 110,
+          totalDays: 120,
+          scores: {
+            "Mathematics": { ca1: 15, ca2: 16, exam: 45 },
+            "English Language": { ca1: 16, ca2: 15, exam: 48 },
+            "Physics": { ca1: 14, ca2: 15, exam: 42 },
+            "Chemistry": { ca1: 15, ca2: 16, exam: 44 },
+            "Biology": { ca1: 16, ca2: 16, exam: 46 },
+            "Technical Drawing": { ca1: 17, ca2: 17, exam: 48 }
+          },
+          feeStatus: { total: 330000, paid: 250000, status: "PARTIAL" }
+        },
+        {
+          id: "STU/2026/045",
+          name: "Blessing Kalu",
+          class: "SS 1 Gold",
+          pin: "9042",
+          attendanceDays: 115,
+          totalDays: 120,
+          scores: {
+            "Mathematics": { ca1: 17, ca2: 18, exam: 50 },
+            "English Language": { ca1: 18, ca2: 17, exam: 52 },
+            "Physics": { ca1: 16, ca2: 17, exam: 49 },
+            "Chemistry": { ca1: 17, ca2: 17, exam: 50 },
+            "Biology": { ca1: 18, ca2: 18, exam: 51 },
+            "Technical Drawing": { ca1: 18, ca2: 18, exam: 53 }
+          },
+          feeStatus: { total: 330000, paid: 330000, status: "CLEARED" }
+        }
+      ],
+
+      // Announcements / Circulars
+      announcements: [
+        {
+          id: "anc-1",
+          title: "Second Term Terminal Examinations & Revision Schedule",
+          category: "Exams",
+          date: "Sep 25, 2026",
+          author: "Examination Secretariat",
+          content: "Continuous assessment revision commences on Monday. Students are to adhere strictly to the published exam hall seating codes."
+        },
+        {
+          id: "anc-2",
+          title: "PTA General Assembly & STEM Lab Commissioning",
+          category: "PTA",
+          date: "Oct 10, 2026",
+          author: "Office of the Headteacher",
+          content: "All parents and guardians are cordially invited to the formal opening of the new Artificial Intelligence & Robotics studio."
+        },
+        {
+          id: "anc-3",
+          title: "Inter-House Athletics & Track Trials",
+          category: "Holidays",
+          date: "Oct 22, 2026",
+          author: "Physical Education Dept",
+          content: "Trials for Ruby, Sapphire, Gold, and Emerald houses commence this Thursday. Parents are welcome to attend the heats."
+        }
+      ],
+
+      // Headteacher Approvals Queue
+      approvalsQueue: [
+        {
+          id: "app-1",
+          classArm: "SS 1 Gold",
+          subject: "Mathematics",
+          teacher: "Mr. Adeleke O.",
+          enrolled: 34,
+          avg: "78.4%",
+          status: "Pending Signature"
+        },
+        {
+          id: "app-2",
+          classArm: "SS 1 Gold",
+          subject: "Chemistry",
+          teacher: "Mrs. B. Alabi",
+          enrolled: 34,
+          avg: "74.1%",
+          status: "Pending Signature"
+        }
+      ]
+    };
+
+    function calculateGrade(score) {
+      if (score >= 75) return { grade: "A1", remark: "Distinction", color: "text-emerald-700 font-black" };
+      if (score >= 70) return { grade: "B2", remark: "Very Good", color: "text-emerald-600 font-bold" };
+      if (score >= 65) return { grade: "B3", remark: "Good", color: "text-blue-600 font-bold" };
+      if (score >= 60) return { grade: "C4", remark: "Credit", color: "text-blue-500 font-semibold" };
+      if (score >= 55) return { grade: "C5", remark: "Credit", color: "text-blue-500 font-semibold" };
+      if (score >= 50) return { grade: "C6", remark: "Credit", color: "text-amber-600 font-semibold" };
+      if (score >= 45) return { grade: "D7", remark: "Pass", color: "text-amber-700 font-semibold" };
+      if (score >= 40) return { grade: "E8", remark: "Pass", color: "text-orange-600 font-semibold" };
+      return { grade: "F9", remark: "Fail", color: "text-rose-600 font-bold" };
+    }
+
+    function switchRole(role) {
+      AppState.currentRole = role;
+
+      // Hide all role views
+      document.querySelectorAll('.role-view').forEach(v => v.classList.add('hidden'));
+
+      // Target active view
+      const targetView = document.getElementById(`view-${role}`);
+      if (targetView) targetView.classList.remove('hidden');
+
+      // Update Nav UI & Profile Badge
+      updateHeaderNav(role);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+
+      // Refresh dynamic role data
+      if (role === 'headteacher') {
+        renderHeadteacherDashboard();
+      } else if (role === 'teacher') {
+        renderGradebook();
+        renderAttendanceRegister();
+        renderAffectiveRemarks();
+      } else if (role === 'student') {
+        renderStudentReport();
+      } else if (role === 'public') {
+        renderPublicAnnouncements();
+      }
+
+      showToast(`Switched active workspace: ${role.toUpperCase()}`, "info");
+    }
+
+    function demoLogin(role) {
+      switchRole(role);
+      closeLoginModal();
+    }
+
+    function updateHeaderNav(role) {
+      const desktopNav = document.getElementById('desktop-nav');
+      const mobileNav = document.getElementById('mobile-nav-links');
+      const badgeUserName = document.getElementById('badge-user-name');
+      const badgeRoleLabel = document.getElementById('badge-role-label');
+      const roleAvatar = document.getElementById('role-avatar-circle');
+      const authBtnLabel = document.getElementById('auth-btn-label');
+      const activeUserBadge = document.getElementById('active-user-badge');
+
+      activeUserBadge.classList.remove('hidden');
+
+      if (role === 'headteacher') {
+        badgeUserName.textContent = AppState.branding.principal;
+        badgeRoleLabel.textContent = "Principal / Admin";
+        roleAvatar.textContent = "P";
+        roleAvatar.className = "w-6 h-6 rounded-full flex items-center justify-center text-white font-bold text-[10px] bg-amber-600";
+        authBtnLabel.textContent = "Log Out";
+
+        desktopNav.innerHTML = `
+          <button onclick="navigateAdminSub('overview')" class="px-3 py-1.5 rounded-lg hover:text-slate-900">Overview</button>
+          <button onclick="navigateAdminSub('approvals')" class="px-3 py-1.5 rounded-lg hover:text-slate-900">Approvals</button>
+          <button onclick="navigateAdminSub('broadcast')" class="px-3 py-1.5 rounded-lg hover:text-slate-900">Post Circular</button>
+          <button onclick="navigateAdminSub('fees')" class="px-3 py-1.5 rounded-lg hover:text-slate-900">Fee Ledger</button>
+          <button onclick="navigateAdminSub('branding')" class="px-3 py-1.5 rounded-lg hover:text-slate-900">Settings</button>
+        `;
+
+        mobileNav.innerHTML = `
+          <button onclick="navigateAdminSub('overview'); toggleMobileDrawer()" class="block w-full text-left py-2 px-3 rounded hover:bg-slate-100">Overview Dashboard</button>
+          <button onclick="navigateAdminSub('approvals'); toggleMobileDrawer()" class="block w-full text-left py-2 px-3 rounded hover:bg-slate-100">Result Approvals</button>
+          <button onclick="navigateAdminSub('broadcast'); toggleMobileDrawer()" class="block w-full text-left py-2 px-3 rounded hover:bg-slate-100">Post Announcement</button>
+          <button onclick="navigateAdminSub('fees'); toggleMobileDrawer()" class="block w-full text-left py-2 px-3 rounded hover:bg-slate-100">Fee Overview</button>
+          <button onclick="navigateAdminSub('branding'); toggleMobileDrawer()" class="block w-full text-left py-2 px-3 rounded hover:bg-slate-100">Branding Settings</button>
+          <button onclick="switchRole('public'); toggleMobileDrawer()" class="block w-full text-left py-2 px-3 rounded text-rose-600">Sign Out</button>
+        `;
+      } else if (role === 'teacher') {
+        badgeUserName.textContent = "Mr. Adeleke O.";
+        badgeRoleLabel.textContent = "Class Teacher (SS 1)";
+        roleAvatar.textContent = "T";
+        roleAvatar.className = "w-6 h-6 rounded-full flex items-center justify-center text-white font-bold text-[10px] bg-blue-600";
+        authBtnLabel.textContent = "Log Out";
+
+        desktopNav.innerHTML = `
+          <button onclick="navigateTeacherSub('gradebook')" class="px-3 py-1.5 rounded-lg hover:text-slate-900">Live Gradebook</button>
+          <button onclick="navigateTeacherSub('csv')" class="px-3 py-1.5 rounded-lg hover:text-slate-900">Excel / CSV</button>
+          <button onclick="navigateTeacherSub('attendance')" class="px-3 py-1.5 rounded-lg hover:text-slate-900">Attendance</button>
+          <button onclick="navigateTeacherSub('remarks')" class="px-3 py-1.5 rounded-lg hover:text-slate-900">Affective Domain</button>
+        `;
+
+        mobileNav.innerHTML = `
+          <button onclick="navigateTeacherSub('gradebook'); toggleMobileDrawer()" class="block w-full text-left py-2 px-3 rounded hover:bg-slate-100">Live Gradebook</button>
+          <button onclick="navigateTeacherSub('csv'); toggleMobileDrawer()" class="block w-full text-left py-2 px-3 rounded hover:bg-slate-100">Upload CSV</button>
+          <button onclick="navigateTeacherSub('attendance'); toggleMobileDrawer()" class="block w-full text-left py-2 px-3 rounded hover:bg-slate-100">Attendance Log</button>
+          <button onclick="navigateTeacherSub('remarks'); toggleMobileDrawer()" class="block w-full text-left py-2 px-3 rounded hover:bg-slate-100">Master Remarks</button>
+          <button onclick="switchRole('public'); toggleMobileDrawer()" class="block w-full text-left py-2 px-3 rounded text-rose-600">Sign Out</button>
+        `;
+      } else if (role === 'student') {
+        badgeUserName.textContent = "David Okon";
+        badgeRoleLabel.textContent = "Scholar / Parent";
+        roleAvatar.textContent = "D";
+        roleAvatar.className = "w-6 h-6 rounded-full flex items-center justify-center text-white font-bold text-[10px] bg-emerald-600";
+        authBtnLabel.textContent = "Log Out";
+
+        desktopNav.innerHTML = `
+          <button onclick="navigateStudentSub('overview')" class="px-3 py-1.5 rounded-lg hover:text-slate-900">Overview</button>
+          <button onclick="navigateStudentSub('report')" class="px-3 py-1.5 rounded-lg hover:text-slate-900">Report Card</button>
+          <button onclick="navigateStudentSub('homework')" class="px-3 py-1.5 rounded-lg hover:text-slate-900">Homework Hub</button>
+          <button onclick="navigateStudentSub('fees')" class="px-3 py-1.5 rounded-lg hover:text-slate-900">Fee Statement</button>
+        `;
+
+        mobileNav.innerHTML = `
+          <button onclick="navigateStudentSub('overview'); toggleMobileDrawer()" class="block w-full text-left py-2 px-3 rounded hover:bg-slate-100">Overview</button>
+          <button onclick="navigateStudentSub('report'); toggleMobileDrawer()" class="block w-full text-left py-2 px-3 rounded hover:bg-slate-100">Terminal Report Card</button>
+          <button onclick="navigateStudentSub('homework'); toggleMobileDrawer()" class="block w-full text-left py-2 px-3 rounded hover:bg-slate-100">Homework Hub</button>
+          <button onclick="navigateStudentSub('fees'); toggleMobileDrawer()" class="block w-full text-left py-2 px-3 rounded hover:bg-slate-100">Fee Invoices</button>
+          <button onclick="switchRole('public'); toggleMobileDrawer()" class="block w-full text-left py-2 px-3 rounded text-rose-600">Sign Out</button>
+        `;
+      } else {
+        // Public View
+        badgeUserName.textContent = "Guest Visitor";
+        badgeRoleLabel.textContent = "Public View";
+        roleAvatar.textContent = "G";
+        roleAvatar.className = "w-6 h-6 rounded-full flex items-center justify-center text-white font-bold text-[10px] bg-slate-700";
+        authBtnLabel.textContent = "Sign In";
+
+        desktopNav.innerHTML = `
+          <button onclick="navigatePublicSub('home')" class="px-3.5 py-2 rounded-lg hover:text-slate-900">Home</button>
+          <button onclick="navigatePublicSub('gallery')" class="px-3.5 py-2 rounded-lg hover:text-slate-900">Photo Gallery</button>
+          <button onclick="navigatePublicSub('admissions')" class="px-3.5 py-2 rounded-lg hover:text-slate-900">Admissions</button>
+          <button onclick="demoLogin('student')" class="px-3.5 py-2 rounded-lg text-emerald-700 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200">
+            <i class="fa-solid fa-square-poll-vertical text-emerald-600 mr-1"></i> Result Checker
+          </button>
+        `;
+
+        mobileNav.innerHTML = `
+          <button onclick="navigatePublicSub('home'); toggleMobileDrawer()" class="block w-full text-left py-2 px-3 rounded hover:bg-slate-100">Home</button>
+          <button onclick="navigatePublicSub('gallery'); toggleMobileDrawer()" class="block w-full text-left py-2 px-3 rounded hover:bg-slate-100">Campus Gallery</button>
+          <button onclick="navigatePublicSub('admissions'); toggleMobileDrawer()" class="block w-full text-left py-2 px-3 rounded hover:bg-slate-100">Admissions Inquiry</button>
+          <button onclick="demoLogin('student'); toggleMobileDrawer()" class="block w-full text-left py-2.5 px-3 rounded text-emerald-800 bg-emerald-50 font-bold border border-emerald-200">
+            Check Student Results
+          </button>
+        `;
+      }
+    }
+
+    function navigateAdminSub(sub) {
+      document.querySelectorAll('.adm-subpage').forEach(el => el.classList.add('hidden'));
+      document.querySelectorAll('.adm-tab-btn').forEach(b => {
+        b.className = "adm-tab-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700";
+      });
+
+      const activePage = document.getElementById(`sub-adm-${sub}`);
+      if (activePage) activePage.classList.remove('hidden');
+
+      const activeBtn = document.getElementById(`adm-tab-${sub}`);
+      if (activeBtn) activeBtn.className = "adm-tab-btn px-3 py-1.5 rounded-lg text-xs font-bold bg-amber-500 text-slate-950 shadow-xs";
+    }
+
+    function renderHeadteacherDashboard() {
+      // Pending Approvals Table
+      const tbody = document.getElementById('approvals-tbody');
+      if (tbody) {
+        tbody.innerHTML = '';
+        AppState.approvalsQueue.forEach((item, index) => {
+          const tr = document.createElement('tr');
+          tr.className = "hover:bg-slate-50 transition border-b border-slate-200";
+          tr.innerHTML = `
+            <td class="py-3 px-4 font-bold text-slate-900">${item.classArm}</td>
+            <td class="py-3 px-4 font-semibold text-blue-800">${item.subject}</td>
+            <td class="py-3 px-4 text-slate-600">${item.teacher}</td>
+            <td class="py-3 px-3 text-center font-bold">${item.enrolled}</td>
+            <td class="py-3 px-3 text-center font-black text-emerald-600">${item.avg}</td>
+            <td class="py-3 px-3 text-center">
+              <span class="px-2 py-0.5 rounded text-[10px] font-bold ${item.status === 'Approved & Released' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}">
+                ${item.status}
+              </span>
+            </td>
+            <td class="py-3 px-4 text-center">
+              ${item.status === 'Approved & Released' 
+                ? '<span class="text-xs text-emerald-600 font-bold"><i class="fa-solid fa-check"></i> Certified</span>' 
+                : `<button onclick="approveBatch(${index})" class="px-3 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-[11px] shadow-xs mr-1">
+                     <i class="fa-solid fa-check"></i> Approve
+                   </button>
+                   <button onclick="rejectBatch(${index})" class="px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 text-rose-600 font-semibold text-[11px]">
+                     Reject
+                   </button>`
+              }
+            </td>
+          `;
+          tbody.appendChild(tr);
+        });
+      }
+
+      // Fees Ledger
+      const feesBody = document.getElementById('fees-ledger-tbody');
+      if (feesBody) {
+        feesBody.innerHTML = '';
+        AppState.students.forEach(s => {
+          const balance = s.feeStatus.total - s.feeStatus.paid;
+          const tr = document.createElement('tr');
+          tr.className = "hover:bg-slate-50 transition border-b border-slate-200";
+          tr.innerHTML = `
+            <td class="py-3 px-4 font-mono font-bold">${s.id}</td>
+            <td class="py-3 px-4 font-semibold text-slate-900">${s.name}</td>
+            <td class="py-3 px-3"><span class="px-2 py-0.5 rounded bg-slate-100 font-semibold text-[10px]">${s.class}</span></td>
+            <td class="py-3 px-3 text-right font-mono">₦ ${s.feeStatus.total.toLocaleString()}</td>
+            <td class="py-3 px-3 text-right font-mono text-emerald-600 font-bold">₦ ${s.feeStatus.paid.toLocaleString()}</td>
+            <td class="py-3 px-3 text-right font-mono font-bold ${balance > 0 ? 'text-rose-600' : 'text-slate-400'}">
+              ₦ ${balance.toLocaleString()}
+            </td>
+            <td class="py-3 px-4 text-center">
+              <span class="px-2.5 py-0.5 rounded text-[10px] font-bold ${s.feeStatus.status === 'CLEARED' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}">
+                ${s.feeStatus.status}
+              </span>
+            </td>
+          `;
+          feesBody.appendChild(tr);
+        });
+      }
+    }
+
+    function approveBatch(idx) {
+      AppState.approvalsQueue[idx].status = "Approved & Released";
+      renderHeadteacherDashboard();
+      document.getElementById('pending-badge').textContent = AppState.approvalsQueue.filter(a => a.status !== "Approved & Released").length;
+      document.getElementById('kpi-pending-releases').textContent = AppState.approvalsQueue.filter(a => a.status !== "Approved & Released").length;
+      showToast("Scores approved & digitally certified for terminal report cards!", "success");
+    }
+
+    function rejectBatch(idx) {
+      AppState.approvalsQueue[idx].status = "Returned for Revision";
+      renderHeadteacherDashboard();
+      showToast("Returned score batch to subject teacher for grade recalculation", "info");
+    }
+
+    function toggleResultRelease() {
+      AppState.resultsReleased = !AppState.resultsReleased;
+      const statusLabel = document.getElementById('portal-release-status');
+      if (AppState.resultsReleased) {
+        statusLabel.textContent = "PUBLISHED TO PARENTS";
+        statusLabel.className = "text-amber-300";
+        showToast("Terminal results portal is now open to all parents", "success");
+      } else {
+        statusLabel.textContent = "LOCKED (UNDER REVIEW)";
+        statusLabel.className = "text-rose-300";
+        showToast("Results portal locked for administrative audit", "info");
+      }
+    }
+
+    function handlePostAnnouncement(e) {
+      e.preventDefault();
+      const title = document.getElementById('bc-title').value.trim();
+      const cat = document.getElementById('bc-cat').value;
+      const author = document.getElementById('bc-author').value.trim();
+      const content = document.getElementById('bc-content').value.trim();
+
+      AppState.announcements.unshift({
+        id: "anc-" + Date.now(),
+        title,
+        category: cat,
+        date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+        author,
+        content
+      });
+
+      e.target.reset();
+      showToast("Official circular broadcast across all portals!", "success");
+      renderPublicAnnouncements();
+      navigateAdminSub('overview');
+    }
+
+    function handleSaveBranding(e) {
+      e.preventDefault();
+      AppState.branding.name = document.getElementById('brand-input-name').value.trim();
+      AppState.branding.motto = document.getElementById('brand-input-motto').value.trim();
+      AppState.branding.primaryColor = document.getElementById('brand-input-color-primary').value;
+      AppState.branding.accentColor = document.getElementById('brand-input-color-accent').value;
+      AppState.branding.principal = document.getElementById('brand-input-principal').value.trim();
+      AppState.branding.title = document.getElementById('brand-input-title').value.trim();
+
+      document.documentElement.style.setProperty('--brand-primary', AppState.branding.primaryColor);
+      document.documentElement.style.setProperty('--brand-accent', AppState.branding.accentColor);
+
+      document.querySelectorAll('.brand-name-target').forEach(el => el.textContent = AppState.branding.name);
+      document.querySelectorAll('.brand-motto-target').forEach(el => el.textContent = AppState.branding.motto);
+      document.getElementById('public-principal-name').textContent = AppState.branding.principal;
+      document.getElementById('public-principal-title').textContent = AppState.branding.title;
+      document.getElementById('rep-principal-signature').textContent = AppState.branding.principal;
+
+      showToast("Branding & styling updated successfully!", "success");
+    }
+
+    function navigateTeacherSub(sub) {
+      document.querySelectorAll('.tch-subpage').forEach(el => el.classList.add('hidden'));
+      document.querySelectorAll('.tch-tab-btn').forEach(b => {
+        b.className = "tch-tab-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700";
+      });
+
+      const activePage = document.getElementById(`sub-tch-${sub}`);
+      if (activePage) activePage.classList.remove('hidden');
+
+      const activeBtn = document.getElementById(`tch-tab-${sub}`);
+      if (activeBtn) activeBtn.className = "tch-tab-btn px-3 py-1.5 rounded-lg text-xs font-bold bg-blue-600 text-white shadow-xs";
+    }
+
+    function renderGradebook() {
+      const subject = document.getElementById('tch-subject-selector') ? document.getElementById('tch-subject-selector').value : "Mathematics";
+      const tbody = document.getElementById('gradebook-tbody');
+      if (!tbody) return;
+      tbody.innerHTML = '';
+
+      AppState.students.forEach((stu, sIndex) => {
+        const scoreObj = stu.scores[subject] || { ca1: 18, ca2: 17, exam: 52 };
+        const total = scoreObj.ca1 + scoreObj.ca2 + scoreObj.exam;
+        const gInfo = calculateGrade(total);
+
+        const tr = document.createElement('tr');
+        tr.className = "hover:bg-slate-50 transition border-b border-slate-200";
+        tr.innerHTML = `
+          <td class="py-2.5 px-4 font-mono font-bold text-slate-900">${stu.id}</td>
+          <td class="py-2.5 px-4 font-semibold text-slate-800">${stu.name}</td>
+          <td class="py-2 px-2 text-center">
+            <input type="number" min="0" max="20" value="${scoreObj.ca1}" onchange="updateStudentScore(${sIndex}, '${subject}', 'ca1', this.value)" class="w-16 p-1 border rounded text-center text-xs font-semibold">
+          </td>
+          <td class="py-2 px-2 text-center">
+            <input type="number" min="0" max="20" value="${scoreObj.ca2}" onchange="updateStudentScore(${sIndex}, '${subject}', 'ca2', this.value)" class="w-16 p-1 border rounded text-center text-xs font-semibold">
+          </td>
+          <td class="py-2 px-2 text-center">
+            <input type="number" min="0" max="60" value="${scoreObj.exam}" onchange="updateStudentScore(${sIndex}, '${subject}', 'exam', this.value)" class="w-16 p-1 border rounded text-center text-xs font-semibold">
+          </td>
+          <td id="tot-${sIndex}" class="py-2.5 px-2 text-center font-bold text-slate-900 bg-slate-50">${total}</td>
+          <td id="grd-${sIndex}" class="py-2.5 px-2 text-center ${gInfo.color}">${gInfo.grade}</td>
+          <td id="rem-${sIndex}" class="py-2.5 px-4 text-center text-slate-600 italic text-[11px]">${gInfo.remark}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function updateStudentScore(stuIndex, subject, component, val) {
+      const numVal = parseInt(val) || 0;
+      if (!AppState.students[stuIndex].scores[subject]) {
+        AppState.students[stuIndex].scores[subject] = { ca1: 0, ca2: 0, exam: 0 };
+      }
+      AppState.students[stuIndex].scores[subject][component] = numVal;
+
+      const sc = AppState.students[stuIndex].scores[subject];
+      const total = sc.ca1 + sc.ca2 + sc.exam;
+      const g = calculateGrade(total);
+
+      document.getElementById(`tot-${stuIndex}`).textContent = total;
+      const grdEl = document.getElementById(`grd-${stuIndex}`);
+      grdEl.textContent = g.grade;
+      grdEl.className = `py-2.5 px-2 text-center ${g.color}`;
+      document.getElementById(`rem-${stuIndex}`).textContent = g.remark;
+    }
+
+    function submitBatchToHeadteacher() {
+      const subject = document.getElementById('tch-subject-selector').value;
+      const cls = document.getElementById('tch-class-selector').value;
+
+      AppState.approvalsQueue.unshift({
+        id: "app-" + Date.now(),
+        classArm: cls,
+        subject: subject,
+        teacher: "Mr. Adeleke O.",
+        enrolled: AppState.students.length,
+        avg: "81.2%",
+        status: "Pending Signature"
+      });
+
+      showToast(`Batch scores for ${subject} submitted to Headteacher for review!`, "success");
+    }
+
+    function renderAttendanceRegister() {
+      const tbody = document.getElementById('attendance-tbody');
+      if (!tbody) return;
+      tbody.innerHTML = '';
+      document.getElementById('current-attendance-date').textContent = new Date().toDateString();
+
+      AppState.students.forEach((stu, index) => {
+        const ratio = ((stu.attendanceDays / stu.totalDays) * 100).toFixed(1);
+        const tr = document.createElement('tr');
+        tr.className = "hover:bg-slate-50 transition border-b border-slate-200";
+        tr.innerHTML = `
+          <td class="py-3 px-4 font-mono font-bold">${stu.id}</td>
+          <td class="py-3 px-4 font-semibold text-slate-900">${stu.name}</td>
+          <td class="py-3 px-3 text-center">
+            <div class="inline-flex rounded-lg border border-slate-200 p-0.5 bg-slate-50 gap-1 text-[10px]">
+              <button onclick="markAttendance(${index}, 'present')" class="px-2 py-0.5 rounded bg-emerald-600 text-white font-bold">Present</button>
+              <button onclick="markAttendance(${index}, 'late')" class="px-2 py-0.5 rounded text-amber-700 hover:bg-amber-100 font-semibold">Late</button>
+              <button onclick="markAttendance(${index}, 'absent')" class="px-2 py-0.5 rounded text-rose-700 hover:bg-rose-100 font-semibold">Absent</button>
+            </div>
+          </td>
+          <td class="py-3 px-3 text-center font-bold">${stu.attendanceDays} / ${stu.totalDays} Days</td>
+          <td class="py-3 px-4 text-center font-black ${ratio >= 90 ? 'text-emerald-600' : 'text-amber-600'}">${ratio}%</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function markAttendance(idx, status) {
+      if (status === 'present') {
+        AppState.students[idx].attendanceDays = Math.min(AppState.students[idx].totalDays, AppState.students[idx].attendanceDays + 1);
+      } else if (status === 'absent') {
+        AppState.students[idx].attendanceDays = Math.max(0, AppState.students[idx].attendanceDays - 1);
+      }
+      renderAttendanceRegister();
+      showToast(`Logged status: ${status.toUpperCase()} for ${AppState.students[idx].name}`, "info");
+    }
+
+    function renderAffectiveRemarks() {
+      const container = document.getElementById('affective-remarks-container');
+      if (!container) return;
+      container.innerHTML = '';
+
+      AppState.students.forEach((stu) => {
+        const div = document.createElement('div');
+        div.className = "p-4 rounded-xl border border-slate-200 bg-slate-50 flex flex-col md:flex-row items-start md:items-center justify-between gap-4";
+        div.innerHTML = `
+          <div>
+            <div class="flex items-center gap-2 mb-1">
+              <strong class="text-sm font-bold text-slate-900">${stu.name}</strong>
+              <span class="font-mono text-xs text-slate-400">(${stu.id})</span>
+            </div>
+            <p class="text-xs text-slate-500">Character Domain: Punctuality (5/5), Neatness (5/5), Leadership (4/5), Honesty (5/5)</p>
+          </div>
+          <div class="flex items-center gap-2 w-full md:w-auto">
+            <input type="text" value="Diligent and focused scholar with commendable teamwork." placeholder="Enter Form Teacher Remark..." class="px-3 py-1.5 border rounded-lg text-xs w-full md:w-80 bg-white">
+            <button onclick="showToast('Master comment recorded', 'success')" class="px-3 py-1.5 rounded-lg bg-blue-900 text-white font-bold text-xs">Save</button>
+          </div>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    function downloadTeacherCSVTemplate() {
+      const csv = "StudentID,CA1_20,CA2_20,Exam_60\n" +
+                  "STU/2026/042,19,18,56\n" +
+                  "STU/2026/043,20,19,58\n" +
+                  "STU/2026/044,16,15,48";
+      const uri = "data:text/csv;charset=utf-8," + encodeURI(csv);
+      const link = document.createElement("a");
+      link.href = uri;
+      link.download = "Score_Upload_Template.csv";
+      link.click();
+      showToast("Downloaded sample score spreadsheet", "info");
+    }
+
+    function handleTeacherCSVUpload(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        document.getElementById('teacher-csv-raw').value = event.target.result;
+        processTeacherCSVRaw();
+      };
+      reader.readAsText(file);
+    }
+
+    function processTeacherCSVRaw() {
+      const raw = document.getElementById('teacher-csv-raw').value.trim();
+      if (!raw) {
+        showToast("Please paste CSV data first", "error");
+        return;
+      }
+      const lines = raw.split(/\r\n|\n/);
+      let count = 0;
+      const activeSubject = document.getElementById('tch-subject-selector').value;
+
+      lines.forEach((line, index) => {
+        if (index === 0 && line.toLowerCase().includes('studentid')) return;
+        const parts = line.split(',').map(p => p.trim());
+        if (parts.length >= 4) {
+          const id = parts[0];
+          const stu = AppState.students.find(s => s.id === id);
+          if (stu) {
+            stu.scores[activeSubject] = {
+              ca1: parseInt(parts[1]) || 15,
+              ca2: parseInt(parts[2]) || 15,
+              exam: parseInt(parts[3]) || 45
+            };
+            count++;
+          }
+        }
+      });
+
+      renderGradebook();
+      showToast(`Imported ${count} student scores into ${activeSubject}!`, "success");
+      navigateTeacherSub('gradebook');
+    }
+
+    function navigateStudentSub(sub) {
+      document.querySelectorAll('.stu-subpage').forEach(el => el.classList.add('hidden'));
+      document.querySelectorAll('.stu-tab-btn').forEach(b => {
+        b.className = "stu-tab-btn px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 text-slate-300 hover:bg-slate-700";
+      });
+
+      const activePage = document.getElementById(`sub-stu-${sub}`);
+      if (activePage) activePage.classList.remove('hidden');
+
+      const activeBtn = document.getElementById(`stu-tab-${sub}`);
+      if (activeBtn) activeBtn.className = "stu-tab-btn px-3 py-1.5 rounded-lg text-xs font-bold bg-emerald-600 text-white shadow-xs";
+
+      if (sub === 'report') {
+        renderStudentReport();
+      }
+    }
+
+    function renderStudentReport() {
+      const student = AppState.students[0]; // David Okon default active student
+      const tbody = document.getElementById('student-report-tbody');
+      if (!tbody) return;
+      tbody.innerHTML = '';
+
+      Object.entries(student.scores).forEach(([subName, scores]) => {
+        const total = scores.ca1 + scores.ca2 + scores.exam;
+        const gInfo = calculateGrade(total);
+
+        const tr = document.createElement('tr');
+        tr.className = "hover:bg-slate-50 transition border-b border-slate-200";
+        tr.innerHTML = `
+          <td class="py-2.5 px-3 font-semibold text-slate-900 border-r border-slate-200">${subName}</td>
+          <td class="py-2.5 px-2 border-r border-slate-200 text-center text-slate-600">${scores.ca1}</td>
+          <td class="py-2.5 px-2 border-r border-slate-200 text-center text-slate-600">${scores.ca2}</td>
+          <td class="py-2.5 px-2 border-r border-slate-200 text-center text-slate-600">${scores.exam}</td>
+          <td class="py-2.5 px-2 border-r border-slate-200 text-center font-bold text-slate-900 bg-slate-50">${total}</td>
+          <td class="py-2.5 px-2 border-r border-slate-200 text-center ${gInfo.color}">${gInfo.grade}</td>
+          <td class="py-2.5 px-2 border-r border-slate-200 text-center text-slate-500">68.5%</td>
+          <td class="py-2.5 px-3 text-slate-700 italic text-[11px]">${gInfo.remark}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function exportCurrentStudentCSV() {
+      const student = AppState.students[0];
+      let csv = "Subject,CA1,CA2,Exam,Total,Grade,Remark\r\n";
+      Object.entries(student.scores).forEach(([sub, sc]) => {
+        const tot = sc.ca1 + sc.ca2 + sc.exam;
+        const g = calculateGrade(tot);
+        csv += `"${sub}",${sc.ca1},${sc.ca2},${sc.exam},${tot},"${g.grade}","${g.remark}"\r\n`;
+      });
+      const uri = "data:text/csv;charset=utf-8," + encodeURI(csv);
+      const link = document.createElement("a");
+      link.href = uri;
+      link.download = `Report_${student.id.replace(/\//g, '_')}.csv`;
+      link.click();
+      showToast("Report card exported as CSV", "success");
+    }
+
+    function navigatePublicSub(sub) {
+      document.querySelectorAll('.public-subpage').forEach(p => p.classList.add('hidden'));
+      const active = document.getElementById(`sub-public-${sub}`);
+      if (active) active.classList.remove('hidden');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function renderPublicAnnouncements() {
+      const container = document.getElementById('public-announcements-container');
+      if (!container) return;
+      container.innerHTML = '';
+
+      AppState.announcements.forEach(a => {
+        const card = document.createElement('article');
+        card.className = "bg-white rounded-2xl p-6 border border-slate-200 hover:shadow-md transition flex flex-col justify-between";
+        card.innerHTML = `
+          <div>
+            <div class="flex items-center justify-between text-xs mb-3">
+              <span class="px-2.5 py-0.5 rounded font-bold ${a.category === 'Emergency' ? 'bg-rose-100 text-rose-800' : 'bg-blue-100 text-blue-800'}">${a.category}</span>
+              <span class="text-slate-400 font-mono text-[11px]">${a.date}</span>
+            </div>
+            <h4 class="font-bold text-slate-900 text-base mb-2">${a.title}</h4>
+            <p class="text-slate-600 text-xs leading-relaxed">${a.content}</p>
+          </div>
+          <div class="pt-4 mt-4 border-t border-slate-100 flex items-center justify-between text-xs">
+            <span class="text-slate-400 font-semibold"><i class="fa-solid fa-bullhorn text-amber-500 mr-1"></i> ${a.author}</span>
+            <span class="text-blue-700 font-bold hover:underline cursor-pointer" onclick="showToast('Circular downloaded', 'info')">Read Notice →</span>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function handleAdmissionsSubmit(e) {
+      e.preventDefault();
+      const parentName = document.getElementById('adm-parent-name').value.trim();
+      const childName = document.getElementById('adm-child-name').value.trim();
+      const pClass = document.getElementById('adm-class').value;
+
+      e.target.reset();
+      showToast(`Admissions application received for ${childName}! Our registrar will call you.`, "success");
+      navigatePublicSub('home');
+    }
+
+    function filterGallery(cat) {
+      const items = document.querySelectorAll('.gal-item');
+      const buttons = document.querySelectorAll('.gal-btn');
+
+      buttons.forEach(btn => {
+        if (btn.getAttribute('data-filter') === cat) {
+          btn.className = "gal-btn px-4 py-1.5 rounded-full text-xs font-bold bg-slate-900 text-white shadow-xs transition";
+        } else {
+          btn.className = "gal-btn px-4 py-1.5 rounded-full text-xs font-semibold bg-white border border-slate-300 text-slate-700 hover:bg-slate-100 transition";
+        }
+      });
+
+      items.forEach(item => {
+        if (cat === 'all' || item.getAttribute('data-cat') === cat) {
+          item.classList.remove('hidden');
+        } else {
+          item.classList.add('hidden');
+        }
+      });
+    }
+
+    function openLightbox(url, title, desc) {
+      document.getElementById('lightbox-img').src = url;
+      document.getElementById('lightbox-title').textContent = title;
+      document.getElementById('lightbox-desc').textContent = desc;
+      document.getElementById('lightbox-modal').classList.remove('hidden');
+    }
+
+    function closeLightbox() {
+      document.getElementById('lightbox-modal').classList.add('hidden');
+    }
+
+    function openLoginModal() {
+      document.getElementById('login-modal').classList.remove('hidden');
+    }
+
+    function closeLoginModal() {
+      document.getElementById('login-modal').classList.add('hidden');
+    }
+
+    function setLoginModalRole(role) {
+      AppState.activeLoginRoleModal = role;
+      document.querySelectorAll('.login-tab-btn').forEach(b => {
+        b.className = "login-tab-btn py-2 rounded-lg text-slate-600 hover:text-slate-900";
+      });
+      const activeBtn = document.getElementById(`tab-login-${role}`);
+      if (activeBtn) activeBtn.className = "login-tab-btn py-2 rounded-lg bg-white text-slate-900 shadow-xs font-bold";
+
+      const idField = document.getElementById('login-id-field');
+      const pinLabel = document.getElementById('login-pin-label');
+      const pinInput = document.getElementById('login-input-pin');
+      const hint = document.getElementById('login-demo-hint');
+
+      if (role === 'headteacher') {
+        idField.classList.add('hidden');
+        pinLabel.textContent = "Headteacher Access PIN";
+        pinInput.value = "admin123";
+        hint.innerHTML = `Headteacher PIN: <code class="font-bold">admin123</code>`;
+      } else if (role === 'teacher') {
+        idField.classList.add('hidden');
+        pinLabel.textContent = "Staff PIN / Password";
+        pinInput.value = "teacher123";
+        hint.innerHTML = `Teacher PIN: <code class="font-bold">teacher123</code>`;
+      } else {
+        idField.classList.remove('hidden');
+        pinLabel.textContent = "Portal Scratch Card PIN";
+        pinInput.value = "4481";
+        hint.innerHTML = `Student Reg: <code class="font-bold">STU/2026/042</code> &bull; PIN: <code class="font-bold">4481</code>`;
+      }
+    }
+
+    function handleModalLogin(e) {
+      e.preventDefault();
+      const role = AppState.activeLoginRoleModal;
+      const pin = document.getElementById('login-input-pin').value.trim();
+
+      if (role === 'headteacher' && (pin === 'admin123' || pin === '1234')) {
+        switchRole('headteacher');
+        closeLoginModal();
+      } else if (role === 'teacher' && (pin === 'teacher123' || pin === '1234')) {
+        switchRole('teacher');
+        closeLoginModal();
+      } else if (role === 'student' && (pin === '4481' || pin.startsWith('PIN-') || pin === '1234')) {
+        switchRole('student');
+        closeLoginModal();
+      } else {
+        showToast("Invalid credentials. Please refer to demo helper credentials.", "error");
+      }
+    }
+
+    function toggleMobileDrawer() {
+      const drawer = document.getElementById('mobile-nav-drawer');
+      const icon = document.getElementById('mobile-menu-icon');
+      if (drawer.classList.contains('hidden')) {
+        drawer.classList.remove('hidden');
+        icon.className = "fa-solid fa-xmark text-xl";
+      } else {
+        drawer.classList.add('hidden');
+        icon.className = "fa-solid fa-bars text-xl";
+      }
+    }
+
+    function showToast(message, type = "info") {
+      const toast = document.getElementById('toast');
+      const toastMsg = document.getElementById('toast-msg');
+      const toastIcon = document.getElementById('toast-icon');
+
+      toastMsg.textContent = message;
+
+      if (type === "success") {
+        toastIcon.className = "fa-solid fa-circle-check text-emerald-400 text-base";
+      } else if (type === "error") {
+        toastIcon.className = "fa-solid fa-triangle-exclamation text-rose-400 text-base";
+      } else {
+        toastIcon.className = "fa-solid fa-circle-info text-amber-400 text-base";
+      }
+
+      toast.classList.remove('translate-y-24', 'opacity-0');
+      toast.classList.add('translate-y-0', 'opacity-100');
+
+      setTimeout(() => {
+        toast.classList.add('translate-y-24', 'opacity-0');
+        toast.classList.remove('translate-y-0', 'opacity-100');
+      }, 3500);
+    }
+
+    function exportFeesCSV() {
+      let csv = "StudentID,Name,Class,TotalBilled,Paid,Status\r\n";
+      AppState.students.forEach(s => {
+        csv += `"${s.id}","${s.name}","${s.class}",${s.feeStatus.total},${s.feeStatus.paid},"${s.feeStatus.status}"\r\n`;
+      });
+      const uri = "data:text/csv;charset=utf-8," + encodeURI(csv);
+      const link = document.createElement("a");
+      link.href = uri;
+      link.download = "School_Tuition_Fees_Ledger.csv";
+      link.click();
+      showToast("Exported tuition ledger as CSV", "success");
+    }
+
+    // Initialize application on load
+    window.addEventListener('DOMContentLoaded', () => {
+      renderPublicAnnouncements();
+      updateHeaderNav('public');
+    });
+
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        closeLoginModal();
+        closeLightbox();
+      }
+    });
+  </script>
+</body>
+</html>
