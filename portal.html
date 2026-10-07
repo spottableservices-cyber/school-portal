@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title id="page-title">School Portal | Official Campus Gateway</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <style>
+    :root {
+      --primary: #1e3a8a;
+      --primary-dark: #0f172a;
+      --accent: #d97706;
+    }
+    .portal-hero {
+      background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
+    }
+    @media print {
+      body * { visibility: hidden; }
+      #printable-report, #printable-report * { visibility: visible; }
+      #printable-report {
+        position: absolute; left: 0; top: 0; width: 100%; margin: 0; padding: 0;
+        background: white !important; box-shadow: none !important;
+      }
+      .no-print { display: none !important; }
+    }
+    .custom-scrollbar::-webkit-scrollbar { width: 5px; height: 5px; }
+    .custom-scrollbar::-webkit-scrollbar-track { background: #f8fafc; }
+    .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans min-h-screen flex flex-col antialiased">
+
+  <!-- =================================================================== -->
+  <!-- 1. TOP DEMO SWITCHER & PERSISTENT ROLE BAR (NO-PRINT)               -->
+  <!-- =================================================================== -->
+  <aside aria-label="Demo role switcher" class="no-print bg-slate-950 text-slate-200 text-xs py-2 px-4 border-b border-slate-800 sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2">
+      <div class="flex items-center space-x-2">
+        <span class="inline-block w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></span>
+        <span class="font-bold text-white uppercase tracking-wider text-[11px]">Portal Mode:</span>
+        <span id="active-role-badge" class="bg-blue-600/30 text-blue-300 font-semibold px-2 py-0.5 rounded border border-blue-500/30">Gateway</span>
+      </div>
+      <div class="flex items-center flex-wrap gap-1.5 text-[11px]">
+        <span class="text-slate-400 hidden sm:inline">Role Quick Jump:</span>
+        <button onclick="switchView('gateway')" class="px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-200 transition">Gateway</button>
+        <button onclick="switchView('student')" class="px-2.5 py-1 rounded bg-emerald-950 hover:bg-emerald-900 text-emerald-300 border border-emerald-500/30 transition">Student</button>
+        <button onclick="switchView('parent')" class="px-2.5 py-1 rounded bg-amber-950 hover:bg-amber-900 text-amber-300 border border-amber-500/30 transition">Parent</button>
+        <button onclick="switchView('teacher')" class="px-2.5 py-1 rounded bg-blue-950 hover:bg-blue-900 text-blue-300 border border-blue-500/30 transition">Teacher</button>
+        <button onclick="switchView('admin')" class="px-2.5 py-1 rounded bg-purple-950 hover:bg-purple-900 text-purple-300 border border-purple-500/30 transition">Headteacher</button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- =================================================================== -->
+  <!-- 2. INSTITUTIONAL HEADER & BRANDING                                  -->
+  <!-- =================================================================== -->
+  <header class="no-print bg-white border-b border-slate-200 sticky top-8 z-40 shadow-xs">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+      
+      <!-- School Logo and Name -->
+      <div class="flex items-center space-x-3.5 cursor-pointer" onclick="switchView('gateway')">
+        <div id="school-crest-wrapper" class="w-12 h-12 rounded-xl flex items-center justify-center text-white text-2xl font-black shadow-md transition" style="background-color: var(--primary);">
+          <i id="school-crest-icon" class="fa-solid fa-graduation-cap"></i>
+        </div>
+        <div>
+          <h1 id="school-name-header" class="text-lg sm:text-xl font-black tracking-tight text-slate-900 leading-tight">
+            RUSSELL INTERNATIONAL SCHOOL
+          </h1>
+          <p id="school-motto-header" class="text-xs text-slate-500 font-medium">
+            Building Leaders of Distinction & Academic Excellence
+          </p>
+        </div>
+      </div>
+
+      <!-- Session Indicator & Notice Link -->
+      <div class="hidden md:flex items-center space-x-4 text-xs font-semibold">
+        <div class="text-right">
+          <div class="text-slate-400 font-medium">Academic Session</div>
+          <div id="academic-session-label" class="text-slate-900 font-bold">2026/2027 • Second Term</div>
+        </div>
+        <div class="h-8 w-px bg-slate-200"></div>
+        <button onclick="switchView('gateway')" class="text-slate-600 hover:text-slate-900 flex items-center gap-1.5 bg-slate-100 hover:bg-slate-200 px-3 py-2 rounded-lg transition">
+          <i class="fa-solid fa-house text-slate-500"></i> Campus Desk
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- MAIN VIEW ENGINE -->
+  <main class="flex-grow">
+
+    <!-- =================================================================== -->
+    <!-- VIEW A: THE CAMPUS GATEWAY (Cards like Prodigy / RIS)               -->
+    <!-- =================================================================== -->
+    <div id="view-gateway" class="space-y-10 pb-16">
+      
+      <!-- Hero Banner -->
+      <div class="portal-hero text-white py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6 relative z-10">
+          <div class="space-y-2 text-center md:text-left">
+            <div class="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md px-3 py-1 rounded-full text-xs font-semibold text-amber-300">
+              <i class="fa-solid fa-shield-halved"></i> Official School Portal Gateway
+            </div>
+            <h2 class="text-2xl sm:text-3xl lg:text-4xl font-black tracking-tight">
+              Welcome to the Unified Campus Platform
+            </h2>
+            <p class="text-slate-300 text-sm max-w-xl">
+              Check continuous assessment terminal reports, access student CBT rooms, settle school fees, or submit teacher schemes of work.
+            </p>
+          </div>
+
+          <div class="bg-white/10 backdrop-blur-md border border-white/15 p-4 rounded-2xl flex items-center gap-4 text-xs">
+            <div class="w-10 h-10 rounded-xl bg-amber-400 text-slate-950 flex items-center justify-center text-lg font-bold">
+              <i class="fa-solid fa-headset"></i>
+            </div>
+            <div>
+              <div class="text-slate-300">Portal ICT Support</div>
+              <div id="school-phone-display" class="font-bold text-white text-sm">+234 (0) 803 234 5678</div>
+              <div class="text-[11px] text-slate-300">ictdesk@russellportal.edu.ng</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 6 Gateway Action Cards -->
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-6 relative z-20">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+          <!-- CARD 1: RESULT CHECKER -->
+          <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm hover:shadow-md transition flex flex-col justify-between group">
+            <div class="space-y-3">
+              <div class="w-12 h-12 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center text-2xl font-bold group-hover:scale-105 transition">
+                <i class="fa-solid fa-award"></i>
+              </div>
+              <div>
+                <span class="text-[11px] font-black uppercase tracking-wider text-amber-700 bg-amber-50 px-2.5 py-0.5 rounded-md">Continuous Assessment</span>
+                <h3 class="text-lg font-black text-slate-900 mt-2">Check Terminal Results</h3>
+                <p class="text-xs text-slate-500 leading-relaxed mt-1">
+                  Check, view, and print authenticated terminal report sheets using your Student Admission ID and term token.
+                </p>
+              </div>
+            </div>
+            <button onclick="openModal('result-modal')" class="mt-6 w-full text-white font-bold py-3 rounded-xl text-xs transition shadow-sm flex items-center justify-center gap-2" style="background-color: var(--primary);">
+              <i class="fa-solid fa-magnifying-glass"></i> Check Result Now
+            </button>
+          </div>
+
+          <!-- CARD 2: STUDENT PORTAL & CBT -->
+          <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm hover:shadow-md transition flex flex-col justify-between group">
+            <div class="space-y-3">
+              <div class="w-12 h-12 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center text-2xl font-bold group-hover:scale-105 transition">
+                <i class="fa-solid fa-user-graduate"></i>
+              </div>
+              <div>
+                <span class="text-[11px] font-black uppercase tracking-wider text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-md">Learners & CBT</span>
+                <h3 class="text-lg font-black text-slate-900 mt-2">Student Learning Space</h3>
+                <p class="text-xs text-slate-500 leading-relaxed mt-1">
+                  Access weekly timetables, sit for timed computer-based tests (CBT), and turn in weekly homework assignments.
+                </p>
+              </div>
+            </div>
+            <button onclick="switchView('student')" class="mt-6 w-full bg-emerald-700 hover:bg-emerald-800 text-white font-bold py-3 rounded-xl text-xs transition shadow-sm flex items-center justify-center gap-2">
+              <i class="fa-solid fa-laptop-code"></i> Enter Student Hub
+            </button>
+          </div>
+
+          <!-- CARD 3: PARENT DESK -->
+          <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm hover:shadow-md transition flex flex-col justify-between group">
+            <div class="space-y-3">
+              <div class="w-12 h-12 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center text-2xl font-bold group-hover:scale-105 transition">
+                <i class="fa-solid fa-user-group"></i>
+              </div>
+              <div>
+                <span class="text-[11px] font-black uppercase tracking-wider text-amber-700 bg-amber-50 px-2.5 py-0.5 rounded-md">Guardians</span>
+                <h3 class="text-lg font-black text-slate-900 mt-2">Parent Oversight Portal</h3>
+                <p class="text-xs text-slate-500 leading-relaxed mt-1">
+                  Monitor attendance statistics, verify school fees, settle outstanding balances, and message your child's form master.
+                </p>
+              </div>
+            </div>
+            <button onclick="switchView('parent')" class="mt-6 w-full bg-amber-600 hover:bg-amber-700 text-white font-bold py-3 rounded-xl text-xs transition shadow-sm flex items-center justify-center gap-2">
+              <i class="fa-solid fa-receipt"></i> Open Parent Desk
+            </button>
+          </div>
+
+          <!-- CARD 4: TEACHER WORKSTATION -->
+          <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm hover:shadow-md transition flex flex-col justify-between group">
+            <div class="space-y-3">
+              <div class="w-12 h-12 rounded-xl bg-blue-100 text-blue-700 flex items-center justify-center text-2xl font-bold group-hover:scale-105 transition">
+                <i class="fa-solid fa-chalkboard-user"></i>
+              </div>
+              <div>
+                <span class="text-[11px] font-black uppercase tracking-wider text-blue-700 bg-blue-50 px-2.5 py-0.5 rounded-md">Faculty</span>
+                <h3 class="text-lg font-black text-slate-900 mt-2">Teacher Workstation</h3>
+                <p class="text-xs text-slate-500 leading-relaxed mt-1">
+                  Continuous assessment mark entry with auto-grades (A1–F9), daily morning attendance roll calls, and lesson plan submissions.
+                </p>
+              </div>
+            </div>
+            <button onclick="switchView('teacher')" class="mt-6 w-full bg-blue-700 hover:bg-blue-800 text-white font-bold py-3 rounded-xl text-xs transition shadow-sm flex items-center justify-center gap-2">
+              <i class="fa-solid fa-pen-to-square"></i> Open Gradebook
+            </button>
+          </div>
+
+          <!-- CARD 5: HEADTEACHER CONSOLE -->
+          <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm hover:shadow-md transition flex flex-col justify-between group">
+            <div class="space-y-3">
+              <div class="w-12 h-12 rounded-xl bg-purple-100 text-purple-700 flex items-center justify-center text-2xl font-bold group-hover:scale-105 transition">
+                <i class="fa-solid fa-crown"></i>
+              </div>
+              <div>
+                <span class="text-[11px] font-black uppercase tracking-wider text-purple-700 bg-purple-50 px-2.5 py-0.5 rounded-md">Leadership</span>
+                <h3 class="text-lg font-black text-slate-900 mt-2">Headteacher Console</h3>
+                <p class="text-xs text-slate-500 leading-relaxed mt-1">
+                  Student directory, direct camera/file passport photograph uploader, tuition clearance audits, and report card certifications.
+                </p>
+              </div>
+            </div>
+            <button onclick="switchView('admin')" class="mt-6 w-full bg-purple-700 hover:bg-purple-800 text-white font-bold py-3 rounded-xl text-xs transition shadow-sm flex items-center justify-center gap-2">
+              <i class="fa-solid fa-id-badge"></i> Executive Desk
+            </button>
+          </div>
+
+          <!-- CARD 6: ONLINE ADMISSION -->
+          <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm hover:shadow-md transition flex flex-col justify-between group">
+            <div class="space-y-3">
+              <div class="w-12 h-12 rounded-xl bg-slate-100 text-slate-700 flex items-center justify-center text-2xl font-bold group-hover:scale-105 transition">
+                <i class="fa-solid fa-file-signature"></i>
+              </div>
+              <div>
+                <span class="text-[11px] font-black uppercase tracking-wider text-slate-700 bg-slate-100 px-2.5 py-0.5 rounded-md">Enrollment</span>
+                <h3 class="text-lg font-black text-slate-900 mt-2">Online Admissions Form</h3>
+                <p class="text-xs text-slate-500 leading-relaxed mt-1">
+                  Apply for nursery, primary, or secondary enrollment, upload birth certificates, and schedule entrance examinations.
+                </p>
+              </div>
+            </div>
+            <button onclick="alert('Admission Portal: 2026/2027 application form loaded.')" class="mt-6 w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-3 rounded-xl text-xs transition shadow-sm flex items-center justify-center gap-2">
+              <i class="fa-solid fa-arrow-right"></i> Apply for Admission
+            </button>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+
+    <!-- =================================================================== -->
+    <!-- VIEW B: STUDENT SPACE (TIMETABLE & CBT EXAMS)                       -->
+    <!-- =================================================================== -->
+    <div id="view-student" class="hidden max-w-6xl mx-auto px-4 sm:px-6 py-8 space-y-6">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b">
+        <div>
+          <h2 class="text-2xl font-black text-slate-900 flex items-center gap-2">
+            <i class="fa-solid fa-user-graduate text-emerald-600"></i> Student Learning Space
+          </h2>
+          <p class="text-xs text-slate-500">Welcome, Adeyemi Toluwalase (Reg: STU/2026/042 • Class: JSS 2 Diamond)</p>
+        </div>
+        <div class="flex gap-2">
+          <button onclick="startCbtMock()" class="bg-emerald-600 text-white font-bold text-xs px-4 py-2 rounded-xl shadow flex items-center gap-1.5">
+            <i class="fa-solid fa-play"></i> Start CBT Math Test
+          </button>
+          <button onclick="openModal('result-modal')" class="bg-blue-600 text-white font-bold text-xs px-4 py-2 rounded-xl shadow">
+            View Terminal Report
+          </button>
+        </div>
+      </div>
+
+      <!-- Weekly Timetable -->
+      <div class="bg-white rounded-2xl border p-6 shadow-sm space-y-4">
+        <h3 class="text-sm font-bold text-slate-800 flex items-center gap-2">
+          <i class="fa-regular fa-calendar-days text-brand-600"></i> Term 2 Weekly Course Schedule
+        </h3>
+        <div class="overflow-x-auto">
+          <table class="w-full text-xs text-left border">
+            <thead class="bg-slate-50 uppercase text-slate-500 font-bold border-b">
+              <tr>
+                <th class="p-3 border-r">Time Slot</th>
+                <th class="p-3 border-r">Monday</th>
+                <th class="p-3 border-r">Tuesday</th>
+                <th class="p-3 border-r">Wednesday</th>
+                <th class="p-3 border-r">Thursday</th>
+                <th class="p-3">Friday</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100 font-medium">
+              <tr>
+                <td class="p-3 bg-slate-50 font-bold text-slate-600 border-r">08:00 - 09:00 AM</td>
+                <td class="p-3 text-blue-700 border-r">Mathematics</td>
+                <td class="p-3 text-indigo-700 border-r">English Grammar</td>
+                <td class="p-3 text-emerald-700 border-r">Basic Science</td>
+                <td class="p-3 text-purple-700 border-r">Computer Studies</td>
+                <td class="p-3 text-blue-700">Mathematics</td>
+              </tr>
+              <tr>
+                <td class="p-3 bg-slate-50 font-bold text-slate-600 border-r">09:00 - 10:00 AM</td>
+                <td class="p-3 text-indigo-700 border-r">English Literature</td>
+                <td class="p-3 text-blue-700 border-r">Mathematics</td>
+                <td class="p-3 text-amber-700 border-r">Civic Education</td>
+                <td class="p-3 text-emerald-700 border-r">Basic Science</td>
+                <td class="p-3 text-indigo-700">Oral English</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- =================================================================== -->
+    <!-- VIEW C: PARENT PORTAL                                               -->
+    <!-- =================================================================== -->
+    <div id="view-parent" class="hidden max-w-6xl mx-auto px-4 sm:px-6 py-8 space-y-6">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b">
+        <div>
+          <h2 class="text-2xl font-black text-slate-900 flex items-center gap-2">
+            <i class="fa-solid fa-user-group text-amber-600"></i> Parent Oversight Portal
+          </h2>
+          <p class="text-xs text-slate-500">Monitoring ward: Adeyemi Toluwalase (JSS 2 Diamond)</p>
+        </div>
+        <button onclick="openModal('fee-modal')" class="bg-emerald-600 text-white font-bold text-xs px-4 py-2 rounded-xl shadow flex items-center gap-1.5">
+          <i class="fa-solid fa-credit-card"></i> Pay School Fees (₦45,000)
+        </button>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="bg-white p-5 rounded-2xl border shadow-sm">
+          <div class="text-xs font-bold text-slate-400 uppercase">Term Attendance Rate</div>
+          <div class="text-3xl font-black text-emerald-600 mt-1">95.4%</div>
+          <div class="text-[11px] text-slate-500 mt-1">62 / 65 Days Present</div>
+        </div>
+        <div class="bg-white p-5 rounded-2xl border shadow-sm">
+          <div class="text-xs font-bold text-slate-400 uppercase">Current Term Standing</div>
+          <div class="text-3xl font-black text-blue-700 mt-1">3rd Position</div>
+          <div class="text-[11px] text-slate-500 mt-1">Out of 38 students</div>
+        </div>
+        <div class="bg-white p-5 rounded-2xl border shadow-sm">
+          <div class="text-xs font-bold text-slate-400 uppercase">Tuition Clearance</div>
+          <div id="parent-fee-pill" class="mt-1">
+            <span class="inline-block bg-rose-100 text-rose-800 text-xs font-black px-2.5 py-1 rounded-md">₦45,000 Outstanding</span>
+          </div>
+          <div class="text-[11px] text-slate-500 mt-1">Clear to unlock official terminal report</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- =================================================================== -->
+    <!-- VIEW D: TEACHER GRADEBOOK WORKSTATION                               -->
+    <!-- =================================================================== -->
+    <div id="view-teacher" class="hidden max-w-6xl mx-auto px-4 sm:px-6 py-8 space-y-6">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b">
+        <div>
+          <h2 class="text-2xl font-black text-slate-900 flex items-center gap-2">
+            <i class="fa-solid fa-chalkboard-user text-blue-600"></i> Faculty Workstation
+          </h2>
+          <p class="text-xs text-slate-500">Instructor: Mrs. O. Balogun (JSS 2 Diamond Form Master)</p>
+        </div>
+        <button onclick="alert('Continuous Assessment scores synchronized with student report sheets.')" class="bg-emerald-600 text-white font-bold text-xs px-4 py-2 rounded-xl shadow">
+          Commit Gradebook Marks
+        </button>
+      </div>
+
+      <div class="bg-white rounded-2xl border p-6 shadow-sm space-y-4">
+        <h3 class="text-sm font-bold text-slate-800">CA & Exam Mark Entry (Auto Letter Grade Engine)</h3>
+        <div class="overflow-x-auto">
+          <table class="w-full text-xs text-left border">
+            <thead class="bg-slate-50 font-bold uppercase text-slate-500">
+              <tr>
+                <th class="p-3 border-r">Reg No.</th>
+                <th class="p-3 border-r">Student Name</th>
+                <th class="p-3 border-r text-center">CA1 (20)</th>
+                <th class="p-3 border-r text-center">CA2 (20)</th>
+                <th class="p-3 border-r text-center">Exam (60)</th>
+                <th class="p-3 border-r text-center font-black">Total (100)</th>
+                <th class="p-3 text-center">Grade</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100 font-medium">
+              <tr>
+                <td class="p-3 font-mono font-bold text-slate-500 border-r">STU/2026/042</td>
+                <td class="p-3 font-bold text-slate-900 border-r">Adeyemi Toluwalase (Mathematics)</td>
+                <td class="p-3 text-center border-r"><input type="number" value="18" class="w-12 text-center border rounded py-1 font-bold" /></td>
+                <td class="p-3 text-center border-r"><input type="number" value="19" class="w-12 text-center border rounded py-1 font-bold" /></td>
+                <td class="p-3 text-center border-r"><input type="number" value="54" class="w-12 text-center border rounded py-1 font-bold" /></td>
+                <td class="p-3 text-center font-black text-blue-700 border-r">91</td>
+                <td class="p-3 text-center font-bold text-emerald-700">A1</td>
+              </tr>
+              <tr>
+                <td class="p-3 font-mono font-bold text-slate-500 border-r">STU/2026/042</td>
+                <td class="p-3 font-bold text-slate-900 border-r">Adeyemi Toluwalase (English Language)</td>
+                <td class="p-3 text-center border-r"><input type="number" value="17" class="w-12 text-center border rounded py-1 font-bold" /></td>
+                <td class="p-3 text-center border-r"><input type="number" value="16" class="w-12 text-center border rounded py-1 font-bold" /></td>
+                <td class="p-3 text-center border-r"><input type="number" value="52" class="w-12 text-center border rounded py-1 font-bold" /></td>
+                <td class="p-3 text-center font-black text-blue-700 border-r">85</td>
+                <td class="p-3 text-center font-bold text-emerald-700">A1</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- =================================================================== -->
+    <!-- VIEW E: ADMIN CONSOLE & PASSPORT PHOTO MANAGER                      -->
+    <!-- =================================================================== -->
+    <div id="view-admin" class="hidden max-w-6xl mx-auto px-4 sm:px-6 py-8 space-y-6">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b">
+        <div>
+          <h2 class="text-2xl font-black text-slate-900 flex items-center gap-2">
+            <i class="fa-solid fa-crown text-purple-600"></i> Executive Headteacher Console
+          </h2>
+          <p class="text-xs text-slate-500">Student directory, passport photo management, and audit records.</p>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-2xl border p-6 shadow-sm space-y-4">
+        <h3 class="text-sm font-bold text-slate-800">Pupil Directory & Passport Uploads</h3>
+        <div class="grid sm:grid-cols-2 md:grid-cols-3 gap-4" id="admin-roster-cards">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+    </div>
+
+    <!-- =================================================================== -->
+    <!-- VIEW F: OFFICIAL PRINTABLE REPORT CARD (A4 PDF READY)               -->
+    <!-- =================================================================== -->
+    <div id="printable-report" class="hidden max-w-4xl mx-auto p-8 bg-white border-2 border-slate-900 rounded-2xl shadow-xl my-8">
+      <div class="border-b-2 border-slate-900 pb-4 text-center space-y-1">
+        <h2 id="rep-school-name" class="text-2xl sm:text-3xl font-black text-slate-950 uppercase">RUSSELL INTERNATIONAL SCHOOL</h2>
+        <p id="rep-school-address" class="text-xs text-slate-600 font-medium uppercase">Plot 12, Russell Close, Victoria Island, Lagos</p>
+        <div class="inline-block bg-slate-900 text-white text-xs font-bold px-4 py-1 rounded-full uppercase mt-2">
+          Continuous Assessment & Terminal Evaluation Dossier
+        </div>
+      </div>
+
+      <div class="grid grid-cols-4 gap-4 items-center bg-slate-50 p-4 rounded-xl border my-4 text-xs">
+        <div>
+          <img id="report-passport-img" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&h=200&q=80" class="w-20 h-20 rounded-lg object-cover border" alt="Student Passport" />
+        </div>
+        <div class="col-span-3 grid grid-cols-2 gap-2">
+          <div><span class="text-slate-500">Pupil Name:</span> <strong class="block text-slate-900 text-sm">Adeyemi Toluwalase</strong></div>
+          <div><span class="text-slate-500">Admission No:</span> <strong class="block text-slate-900">STU/2026/042</strong></div>
+          <div><span class="text-slate-500">Class Arm:</span> <strong class="block text-slate-900">JSS 2 Diamond</strong></div>
+          <div><span class="text-slate-500">Fee Status:</span> <strong class="block text-emerald-700">100% Cleared</strong></div>
+        </div>
+      </div>
+
+      <table class="w-full text-xs text-left border-collapse border border-slate-300">
+        <thead>
+          <tr class="bg-slate-100 uppercase font-bold text-[11px] border-b border-slate-300">
+            <th class="p-2 border-r">Subject</th>
+            <th class="p-2 text-center border-r">CA1 (20)</th>
+            <th class="p-2 text-center border-r">CA2 (20)</th>
+            <th class="p-2 text-center border-r">Exam (60)</th>
+            <th class="p-2 text-center border-r font-black">Total (100)</th>
+            <th class="p-2 text-center">Grade</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-slate-200">
+          <tr><td class="p-2 font-bold border-r">Mathematics</td><td class="p-2 text-center border-r">18</td><td class="p-2 text-center border-r">19</td><td class="p-2 text-center border-r">54</td><td class="p-2 text-center font-bold border-r">91</td><td class="p-2 text-center font-bold text-emerald-700">A1</td></tr>
+          <tr><td class="p-2 font-bold border-r">English Language</td><td class="p-2 text-center border-r">17</td><td class="p-2 text-center border-r">16</td><td class="p-2 text-center border-r">52</td><td class="p-2 text-center font-bold border-r">85</td><td class="p-2 text-center font-bold text-emerald-700">A1</td></tr>
+          <tr><td class="p-2 font-bold border-r">Basic Science</td><td class="p-2 text-center border-r">19</td><td class="p-2 text-center border-r">18</td><td class="p-2 text-center border-r">55</td><td class="p-2 text-center font-bold border-r">92</td><td class="p-2 text-center font-bold text-emerald-700">A1</td></tr>
+          <tr><td class="p-2 font-bold border-r">Civic Education</td><td class="p-2 text-center border-r">16</td><td class="p-2 text-center border-r">17</td><td class="p-2 text-center border-r">48</td><td class="p-2 text-center font-bold border-r">81</td><td class="p-2 text-center font-bold text-blue-700">B2</td></tr>
+        </tbody>
+      </table>
+
+      <div class="pt-6 border-t-2 border-slate-900 flex justify-between items-end gap-6 text-xs mt-6">
+        <div><div class="font-serif italic text-base">Mrs. O. Balogun</div><div class="border-t pt-1 font-bold">Class Form Master</div></div>
+        <div class="w-14 h-14 rounded-full border-2 border-emerald-600 border-dashed flex items-center justify-center text-emerald-700 text-[10px] font-black uppercase rotate-[-10deg]">VERIFIED</div>
+        <div class="text-right"><div class="font-serif italic text-base">Dr. Anthony K. Eze</div><div class="border-t pt-1 font-bold">Head of School</div></div>
+      </div>
+
+      <div class="mt-6 text-center no-print">
+        <button onclick="window.print()" class="bg-slate-900 text-white px-6 py-2.5 rounded-xl font-bold text-xs shadow-md">
+          <i class="fa-solid fa-print"></i> Print Official Report (A4 PDF)
+        </button>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- =================================================================== -->
+  <!-- MODALS                                                              -->
+  <!-- =================================================================== -->
+
+  <!-- RESULT CHECKER MODAL -->
+  <div id="result-modal" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-md w-full p-6 sm:p-8 space-y-4 shadow-2xl relative">
+      <div class="flex justify-between items-center border-b pb-3">
+        <h3 class="text-base font-bold text-slate-900">Check Terminal Results</h3>
+        <button onclick="closeModal('result-modal')" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="space-y-3 text-xs">
+        <div>
+          <label class="block font-bold text-slate-700 uppercase mb-1">Student Admission No.</label>
+          <input type="text" value="STU/2026/042" class="w-full border rounded-xl p-3 font-mono font-bold" />
+        </div>
+        <div>
+          <label class="block font-bold text-slate-700 uppercase mb-1">Session & Term</label>
+          <select class="w-full border rounded-xl p-3 font-semibold">
+            <option>2026/2027 Academic Session • Second Term</option>
+            <option>2026/2027 Academic Session • First Term</option>
+          </select>
+        </div>
+        <div>
+          <label class="block font-bold text-slate-700 uppercase mb-1">Scratchcard PIN Token</label>
+          <input type="password" value="4481" class="w-full border rounded-xl p-3 font-mono" />
+        </div>
+      </div>
+      <button onclick="executeCheckResult()" class="w-full text-white font-bold py-3.5 rounded-xl text-xs shadow-md" style="background-color: var(--primary);">
+        Load Certified Report Sheet
+      </button>
+    </div>
+  </div>
+
+  <!-- CBT TEST MODAL -->
+  <div id="cbt-modal" class="hidden fixed inset-0 z-50 bg-slate-950/85 backdrop-blur-md flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-2xl w-full p-6 sm:p-8 space-y-4 shadow-2xl">
+      <div class="flex justify-between items-center border-b pb-3">
+        <div>
+          <span class="text-xs font-bold text-amber-600 uppercase">Mathematics CBT Mock</span>
+          <h3 class="text-base font-bold text-slate-900">Second Term Diagnostic Assessment</h3>
+        </div>
+        <div class="bg-rose-50 text-rose-700 font-mono font-bold px-3 py-1 rounded-lg border border-rose-200">
+          Time: 14:48
+        </div>
+      </div>
+      <div class="space-y-4 py-2 text-xs">
+        <div class="p-4 bg-slate-50 border rounded-xl space-y-2">
+          <div class="font-bold text-slate-500">Question 1 of 5</div>
+          <p class="text-sm font-bold text-slate-900">Solve for x in the linear equation: 3x + 12 = 27</p>
+          <div class="grid grid-cols-2 gap-2 pt-2">
+            <label class="p-2 border rounded-lg bg-white flex items-center gap-2 cursor-pointer hover:border-blue-500"><input type="radio" name="cbt_q1" /> A) 3</label>
+            <label class="p-2 border rounded-lg bg-white flex items-center gap-2 cursor-pointer hover:border-blue-500"><input type="radio" name="cbt_q1" /> B) 5</label>
+            <label class="p-2 border rounded-lg bg-white flex items-center gap-2 cursor-pointer hover:border-blue-500"><input type="radio" name="cbt_q1" /> C) 7</label>
+            <label class="p-2 border rounded-lg bg-white flex items-center gap-2 cursor-pointer hover:border-blue-500"><input type="radio" name="cbt_q1" /> D) 9</label>
+          </div>
+        </div>
+      </div>
+      <div class="flex justify-end gap-2 pt-2 border-t">
+        <button onclick="closeModal('cbt-modal')" class="px-4 py-2 text-xs font-bold text-slate-600">Close</button>
+        <button onclick="alert('CBT score: 100%. Recorded in continuous assessment database.'); closeModal('cbt-modal');" class="px-5 py-2 text-xs font-bold bg-emerald-600 text-white rounded-xl shadow">Submit Exam</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- FEE PAYMENT MODAL -->
+  <div id="fee-modal" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-sm w-full p-6 space-y-4 shadow-2xl">
+      <div class="flex justify-between items-center border-b pb-3">
+        <h3 class="text-base font-bold text-slate-900">Tuition Payment</h3>
+        <button onclick="closeModal('fee-modal')" class="text-slate-400"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="text-center py-2">
+        <div class="text-xs text-slate-400 uppercase font-semibold">Outstanding Balance</div>
+        <div class="text-3xl font-black text-slate-900 mt-1">₦45,000.00</div>
+      </div>
+      <button onclick="confirmFeePayment()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-xl text-xs shadow">
+        Confirm Payment of ₦45,000
+      </button>
+    </div>
+  </div>
+
+  <!-- HIDDEN PASSPORT INPUT -->
+  <input type="file" id="passport-hidden-input" accept="image/*" class="hidden" onchange="handlePassportUpload(event)" />
+
+  <!-- SCRIPT ENGINE -->
+  <script>
+    // TENANT DEFINITIONS
+    const tenants = {
+      ris: {
+        name: "RUSSELL INTERNATIONAL SCHOOL",
+        motto: "Building Leaders of Distinction & Academic Excellence",
+        phone: "+234 (0) 803 234 5678",
+        address: "Plot 12, Russell Close, Victoria Island, Lagos",
+        primary: "#1e3a8a",
+        primaryDark: "#0f172a",
+        crestIcon: "fa-graduation-cap"
+      },
+      crown: {
+        name: "CROWN CREST COLLEGE",
+        motto: "Wisdom, Discipline & Academic Integrity",
+        phone: "+234 (0) 802 987 6543",
+        address: "14 Isaac John Street, Ikeja GRA, Lagos",
+        primary: "#047857",
+        primaryDark: "#064e3b",
+        crestIcon: "fa-tree"
+      },
+      apex: {
+        name: "APEX HORIZON ACADEMY",
+        motto: "Excellence, Character & Global Leadership",
+        phone: "+234 (0) 805 111 2233",
+        address: "Admiralty Way, Lekki Phase 1, Lagos",
+        primary: "#6d28d9",
+        primaryDark: "#3b0764",
+        crestIcon: "fa-shapes"
+      }
+    };
+
+    let activeTenant = 'ris';
+    let targetStudentId = 'STU/2026/042';
+
+    function initTenant() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const schoolKey = urlParams.get('school');
+      if (schoolKey && tenants[schoolKey]) {
+        activeTenant = schoolKey;
+      }
+      const t = tenants[activeTenant];
+
+      document.getElementById('school-name-header').textContent = t.name;
+      document.getElementById('school-motto-header').textContent = t.motto;
+      document.getElementById('school-phone-display').textContent = t.phone;
+      document.getElementById('rep-school-name').textContent = t.name;
+      document.getElementById('rep-school-address').textContent = t.address;
+      document.getElementById('school-crest-wrapper').style.backgroundColor = t.primary;
+      document.getElementById('school-crest-icon').className = `fa-solid ${t.crestIcon}`;
+      document.documentElement.style.setProperty('--primary', t.primary);
+      document.documentElement.style.setProperty('--primary-dark', t.primaryDark);
+
+      renderRoster();
+    }
+
+    function switchView(view) {
+      document.getElementById('active-role-badge').textContent = view.toUpperCase();
+      ['view-gateway', 'view-student', 'view-parent', 'view-teacher', 'view-admin', 'printable-report'].forEach(id => {
+        document.getElementById(id).classList.add('hidden');
+      });
+
+      if (view === 'gateway') document.getElementById('view-gateway').classList.remove('hidden');
+      if (view === 'student') document.getElementById('view-student').classList.remove('hidden');
+      if (view === 'parent') document.getElementById('view-parent').classList.remove('hidden');
+      if (view === 'teacher') document.getElementById('view-teacher').classList.remove('hidden');
+      if (view === 'admin') document.getElementById('view-admin').classList.remove('hidden');
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function openModal(id) { document.getElementById(id).classList.remove('hidden'); }
+    function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
+
+    function executeCheckResult() {
+      closeModal('result-modal');
+      ['view-gateway', 'view-student', 'view-parent', 'view-teacher', 'view-admin'].forEach(id => {
+        document.getElementById(id).classList.add('hidden');
+      });
+      const rep = document.getElementById('printable-report');
+      rep.classList.remove('hidden');
+      rep.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function startCbtMock() { openModal('cbt-modal'); }
+
+    function confirmFeePayment() {
+      closeModal('fee-modal');
+      document.getElementById('parent-fee-pill').innerHTML = '<span class="inline-block bg-emerald-100 text-emerald-800 text-xs font-black px-2.5 py-1 rounded-md"><i class="fa-solid fa-check"></i> 100% Cleared (₦0.00 Outstanding)</span>';
+      alert('Tuition of ₦45,000 cleared successfully! Terminal results have been unlocked.');
+    }
+
+    function renderRoster() {
+      const container = document.getElementById('admin-roster-cards');
+      container.innerHTML = `
+        <div class="bg-slate-50 p-4 rounded-xl border flex items-center space-x-4">
+          <div class="relative group cursor-pointer" onclick="triggerPassportUpload('STU/2026/042')">
+            <img id="admin-roster-img" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&h=200&q=80" class="w-14 h-14 rounded-full object-cover border-2 border-brand-500 shadow-sm" alt="Student photo" />
+            <div class="absolute inset-0 bg-black/40 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition text-white text-xs">
+              <i class="fa-solid fa-camera"></i>
+            </div>
+          </div>
+          <div class="flex-grow space-y-0.5">
+            <div class="text-xs font-bold text-slate-900">Adeyemi Toluwalase</div>
+            <div class="text-[11px] text-slate-500">STU/2026/042 • JSS 2 Diamond</div>
+            <button onclick="triggerPassportUpload('STU/2026/042')" class="text-[11px] font-bold text-blue-600 hover:underline">Change Passport</button>
+          </div>
+        </div>
+      `;
+    }
+
+    function triggerPassportUpload(id) {
+      targetStudentId = id;
+      document.getElementById('passport-hidden-input').click();
+    }
+
+    function handlePassportUpload(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const photo = e.target.result;
+        document.getElementById('admin-roster-img').src = photo;
+        document.getElementById('report-passport-img').src = photo;
+        alert("Pupil passport photo updated across the database and official report cards!");
+      };
+      reader.readAsDataURL(file);
+    }
+
+    window.addEventListener('DOMContentLoaded', initTenant);
+  </script>
+</body>
+</html>
