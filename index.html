@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Apex Horizon Academy - School Portal & CBT Engine</title>
+  <title>EduPortal Multi-Campus Hub | Unified School Management</title>
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Font Awesome Icons -->
@@ -14,18 +14,28 @@
         extend: {
           colors: {
             brand: {
-              50: '#f0f5ff',
-              100: '#e5edff',
-              500: '#2563eb',
-              600: '#1d4ed8',
-              700: '#1e40af',
-              800: '#1e3a8a',
-              900: '#0f172a',
+              50: 'var(--brand-50, #eff6ff)',
+              100: 'var(--brand-100, #dbeafe)',
+              500: 'var(--brand-500, #3b82f6)',
+              600: 'var(--brand-600, #2563eb)',
+              700: 'var(--brand-700, #1d4ed8)',
+              800: 'var(--brand-800, #1e40af)',
+              900: 'var(--brand-900, #0f172a)',
             },
             accent: {
-              400: '#fbbf24',
-              500: '#f59e0b',
-              600: '#d97706',
+              400: 'var(--accent-400, #fbbf24)',
+              500: 'var(--accent-500, #f59e0b)',
+              600: 'var(--accent-600, #d97706)',
+            }
+          },
+          animation: {
+            'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+            'float': 'float 4s ease-in-out infinite',
+          },
+          keyframes: {
+            float: {
+              '0%, 100%': { transform: 'translateY(0px)' },
+              '50%': { transform: 'translateY(-10px)' },
             }
           }
         }
@@ -33,1319 +43,1030 @@
     }
   </script>
   <style>
+    :root {
+      --brand-50: #eff6ff;
+      --brand-100: #dbeafe;
+      --brand-500: #2563eb;
+      --brand-600: #1d4ed8;
+      --brand-700: #1e40af;
+      --brand-800: #1e3a8a;
+      --brand-900: #0f172a;
+      --accent-400: #fbbf24;
+      --accent-500: #f59e0b;
+      --accent-600: #d97706;
+    }
+
+    .mesh-gradient {
+      background: radial-gradient(circle at 10% 20%, rgba(37, 99, 235, 0.35) 0%, transparent 40%),
+                  radial-gradient(circle at 90% 10%, rgba(245, 158, 11, 0.25) 0%, transparent 45%),
+                  radial-gradient(circle at 50% 90%, rgba(139, 92, 246, 0.3) 0%, transparent 50%),
+                  #0f172a;
+    }
+
+    .glass-card {
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+
+    .glass-dark {
+      background: rgba(15, 23, 42, 0.75);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+    }
+
     @media print {
       body * { visibility: hidden; }
       #printable-report, #printable-report * { visibility: visible; }
       #printable-report {
-        position: absolute;
-        left: 0;
-        top: 0;
-        width: 100%;
-        margin: 0;
-        padding: 0;
-        background: white !important;
-        box-shadow: none !important;
+        position: absolute; left: 0; top: 0; width: 100%; margin: 0; padding: 0;
+        background: white !important; box-shadow: none !important;
       }
       .no-print { display: none !important; }
     }
     .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
-    .custom-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; }
+    .custom-scrollbar::-webkit-scrollbar-track { background: #f8fafc; }
     .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
   </style>
 </head>
-<body class="bg-slate-50 text-slate-800 font-sans min-h-screen flex flex-col antialiased">
+<body class="bg-slate-50 text-slate-800 font-sans min-h-screen flex flex-col antialiased selection:bg-brand-500 selection:text-white">
 
-  <!-- TOP DEMO ROLE SWITCHER BAR (NO-PRINT) -->
-  <header class="no-print bg-slate-900 text-slate-200 text-xs py-2 px-4 border-b border-slate-800 sticky top-0 z-50 shadow-md">
-    <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2">
-      <div class="flex items-center space-x-2">
+  <!-- TOP MULTI-CAMPUS BAR (STICKY) -->
+  <header class="no-print bg-slate-950 text-slate-200 text-xs py-2 px-4 border-b border-slate-800 sticky top-0 z-50 shadow-md">
+    <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3">
+      
+      <!-- School Selector Dropdown -->
+      <div class="flex items-center gap-2">
         <span class="inline-block w-2.5 h-2.5 bg-emerald-400 rounded-full animate-pulse"></span>
-        <span class="font-bold text-white uppercase tracking-wider">Demo Role Mode:</span>
-        <span id="active-role-badge" class="bg-blue-600/30 text-blue-300 font-semibold px-2 py-0.5 rounded border border-blue-500/30">Public Website</span>
+        <span class="text-slate-400 font-semibold uppercase tracking-wider text-[11px]">Selected School:</span>
+        <select id="school-campus-select" onchange="changeActiveSchool(this.value)" class="bg-slate-800 text-white font-bold px-3 py-1 rounded-lg border border-slate-700 outline-none hover:border-brand-500 cursor-pointer text-xs">
+          <option value="apex">🏫 Apex Horizon Academy (Navy / Gold)</option>
+          <option value="crown">🌿 Crown Crest College (Emerald / Amber)</option>
+          <option value="augustine">🏛️ St. Augustine Preparatory (Purple / Sky)</option>
+        </select>
       </div>
+
+      <!-- Quick Role Mode Switcher -->
       <div class="flex items-center flex-wrap gap-1.5 sm:gap-2">
-        <span class="text-slate-400 hidden md:inline">Quick Switch:</span>
-        <button onclick="switchRole('public')" class="px-2.5 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-200 transition">🌐 Public Site</button>
-        <button onclick="switchRole('admin')" class="px-2.5 py-1 rounded bg-purple-900/60 hover:bg-purple-800 text-purple-200 border border-purple-500/40 transition">👑 Headteacher (admin123)</button>
-        <button onclick="switchRole('teacher')" class="px-2.5 py-1 rounded bg-blue-900/60 hover:bg-blue-800 text-blue-200 border border-blue-500/40 transition">👨‍🏫 Teacher (teacher123)</button>
-        <button onclick="switchRole('student')" class="px-2.5 py-1 rounded bg-emerald-900/60 hover:bg-emerald-800 text-emerald-200 border border-emerald-500/40 transition">🎓 Student (PIN: 4481)</button>
+        <span class="text-slate-400 text-[11px] hidden lg:inline">Quick Jump:</span>
+        <button onclick="switchRole('public')" class="px-2.5 py-1 rounded-md bg-slate-800 hover:bg-slate-700 text-slate-200 font-medium transition">🌐 Home</button>
+        <button onclick="switchRole('student')" class="px-2.5 py-1 rounded-md bg-emerald-950 hover:bg-emerald-900 text-emerald-300 border border-emerald-500/30 font-medium transition">🎓 Student</button>
+        <button onclick="switchRole('parent')" class="px-2.5 py-1 rounded-md bg-amber-950 hover:bg-amber-900 text-amber-300 border border-amber-500/30 font-medium transition">👨‍👩‍👧 Parent</button>
+        <button onclick="switchRole('teacher')" class="px-2.5 py-1 rounded-md bg-blue-950 hover:bg-blue-900 text-blue-300 border border-blue-500/30 font-medium transition">👨‍🏫 Teacher</button>
+        <button onclick="switchRole('admin')" class="px-2.5 py-1 rounded-md bg-purple-950 hover:bg-purple-900 text-purple-300 border border-purple-500/30 font-medium transition">👑 Headteacher</button>
       </div>
     </div>
   </header>
 
   <!-- MAIN NAVIGATION -->
-  <nav class="no-print bg-white border-b border-slate-200 shadow-sm sticky top-9 z-40">
+  <nav class="no-print bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-sm sticky top-9 z-40">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex justify-between h-16">
+        <!-- School Crest & Brand -->
         <div class="flex items-center space-x-3 cursor-pointer" onclick="switchRole('public')">
-          <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-700 to-blue-500 flex items-center justify-center text-white font-black text-xl shadow-md">
-            <i class="fa-solid fa-graduation-cap"></i>
+          <div id="school-crest-box" class="w-11 h-11 rounded-xl bg-gradient-to-tr from-blue-700 to-indigo-500 flex items-center justify-center text-white font-black text-xl shadow-md transform hover:rotate-3 transition">
+            <i id="school-crest-icon" class="fa-solid fa-graduation-cap"></i>
           </div>
           <div>
-            <span class="text-lg font-bold text-brand-900 block leading-tight tracking-tight school-name-text">Apex Horizon Academy</span>
-            <span class="text-xs text-slate-500 font-medium">Excellence, Character & Leadership</span>
+            <div class="flex items-center gap-2">
+              <span id="nav-school-name" class="text-lg font-black text-slate-900 block leading-tight tracking-tight">Apex Horizon Academy</span>
+              <span id="nav-school-tag" class="text-[10px] font-black uppercase tracking-wider bg-brand-100 text-brand-800 px-2 py-0.5 rounded-full">Victoria Island</span>
+            </div>
+            <span id="nav-school-motto" class="text-xs text-slate-500 font-medium">Excellence, Character & Leadership</span>
           </div>
         </div>
 
         <!-- DYNAMIC NAV LINKS -->
-        <div id="nav-links-container" class="hidden md:flex items-center space-x-1 lg:space-x-3 text-sm font-semibold text-slate-600">
-          <!-- Populated by JavaScript based on active role -->
+        <div id="nav-links-container" class="hidden md:flex items-center space-x-2 text-sm font-bold text-slate-600">
+          <!-- Rendered by JS -->
         </div>
 
-        <!-- MOBILE MENU BUTTON -->
+        <!-- Primary Actions -->
+        <div class="hidden md:flex items-center space-x-3">
+          <button onclick="openCampusLoginModal()" class="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold text-xs px-4 py-2.5 rounded-xl shadow-md hover:shadow-lg transition flex items-center gap-2">
+            <i class="fa-solid fa-right-to-bracket"></i> School Portal Login
+          </button>
+        </div>
+
         <div class="flex items-center md:hidden">
-          <button onclick="toggleMobileNav()" class="p-2 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-100 focus:outline-none">
+          <button onclick="toggleMobileNav()" class="p-2 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-100">
             <i class="fa-solid fa-bars text-xl"></i>
           </button>
         </div>
       </div>
     </div>
-    <!-- MOBILE DROPDOWN -->
     <div id="mobile-nav-drawer" class="hidden md:hidden border-t border-slate-200 bg-white px-4 pt-2 pb-4 space-y-1 shadow-lg"></div>
   </nav>
 
-  <!-- MAIN CONTENT CONTAINER -->
+  <!-- MAIN BODY -->
   <main class="flex-grow">
 
-    <!-- ========================================== -->
-    <!-- VIEW 1: PUBLIC SCHOOL WEBSITE               -->
-    <!-- ========================================== -->
-    <section id="view-public" class="space-y-16 pb-16">
-      <!-- Hero Banner -->
-      <div class="relative bg-gradient-to-br from-brand-900 via-brand-800 to-slate-900 text-white py-20 px-4 sm:px-6 lg:px-8 overflow-hidden">
-        <div class="absolute inset-0 opacity-10 bg-[radial-gradient(#3b82f6_1px,transparent_1px)] [background-size:16px_16px]"></div>
-        <div class="max-w-5xl mx-auto text-center relative z-10 space-y-6">
-          <div class="inline-flex items-center gap-2 bg-blue-500/20 border border-blue-400/30 px-3.5 py-1.5 rounded-full text-xs font-semibold text-blue-200 uppercase tracking-widest">
-            <i class="fa-solid fa-award text-accent-400"></i> Accredited STEM & Holistic Curriculum
+    <!-- =================================================================== -->
+    <!-- 1. COLORFUL, VIBRANT & INTERACTIVE LANDING PAGE                     -->
+    <!-- =================================================================== -->
+    <section id="view-public" class="space-y-16 pb-20">
+
+      <!-- Dynamic Hero with Mesh Gradient & Live Glass Card -->
+      <div class="relative mesh-gradient text-white pt-16 pb-28 px-4 sm:px-6 lg:px-8 overflow-hidden">
+        <!-- Floating decorative shapes -->
+        <div class="absolute top-10 left-10 w-72 h-72 bg-blue-500/20 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute bottom-10 right-10 w-80 h-80 bg-amber-500/20 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute top-1/2 left-1/3 w-64 h-64 bg-purple-500/20 rounded-full blur-3xl pointer-events-none"></div>
+
+        <div class="max-w-7xl mx-auto grid lg:grid-cols-12 gap-12 items-center relative z-10">
+          
+          <!-- Hero Left Column: Headings & CTAs -->
+          <div class="lg:col-span-7 space-y-6 text-center lg:text-left">
+            <div class="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 px-4 py-1.5 rounded-full text-xs font-bold text-amber-300 uppercase tracking-widest shadow-inner">
+              <i class="fa-solid fa-sparkles text-amber-400"></i> Empowering Nigerian Schools with Smart EdTech
+            </div>
+            
+            <h1 class="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-[1.15]">
+              Modern Schooling, <br class="hidden sm:inline" />
+              <span class="bg-gradient-to-r from-amber-400 via-yellow-200 to-emerald-400 bg-clip-text text-transparent">Zero Paper Headaches.</span>
+            </h1>
+            
+            <p class="text-base sm:text-lg text-slate-300 max-w-2xl mx-auto lg:mx-0 leading-relaxed font-normal">
+              Experience the unified digital campus for <span id="hero-school-name" class="font-bold text-white underline decoration-amber-400 decoration-2">Apex Horizon Academy</span>. Instant WAEC-standard terminal report sheets, real-time parent fee clearance, online CBT mock tests, and teacher gradebooks.
+            </p>
+
+            <div class="flex flex-wrap items-center justify-center lg:justify-start gap-3.5 pt-2">
+              <button onclick="openCampusLoginModal()" class="bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black text-sm px-6 py-3.5 rounded-xl shadow-xl hover:shadow-amber-500/30 transition transform hover:-translate-y-0.5 flex items-center gap-2">
+                <i class="fa-solid fa-arrow-right-to-bracket"></i> Login to Your Campus
+              </button>
+              <button onclick="showReportView()" class="bg-white/10 hover:bg-white/20 text-white font-bold text-sm px-6 py-3.5 rounded-xl border border-white/20 backdrop-blur-md transition flex items-center gap-2">
+                <i class="fa-solid fa-file-invoice"></i> Sample Report Sheet
+              </button>
+            </div>
+
+            <!-- Quick trust metrics -->
+            <div class="pt-6 grid grid-cols-3 gap-4 border-t border-white/10 max-w-lg mx-auto lg:mx-0">
+              <div>
+                <div class="text-2xl font-black text-amber-400">100%</div>
+                <div class="text-[11px] text-slate-300 uppercase font-semibold">Tuition Audit Lock</div>
+              </div>
+              <div>
+                <div class="text-2xl font-black text-emerald-400">20 Sec</div>
+                <div class="text-[11px] text-slate-300 uppercase font-semibold">Exam Result Release</div>
+              </div>
+              <div>
+                <div class="text-2xl font-black text-sky-400">A4 PDF</div>
+                <div class="text-[11px] text-slate-300 uppercase font-semibold">WAEC-Ready Format</div>
+              </div>
+            </div>
           </div>
-          <h1 class="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-tight">
-            Nurturing Tomorrow's Global Thinkers & Innovators
-          </h1>
-          <p class="text-lg sm:text-xl text-slate-300 max-w-3xl mx-auto leading-relaxed">
-            Welcome to <span class="school-name-text text-white font-semibold">Apex Horizon Academy</span>. We offer world-class education integrated with computer-based assessments, digital report systems, and character development.
-          </p>
-          <div class="flex flex-wrap justify-center gap-4 pt-4">
-            <button onclick="openLoginModal('student')" class="bg-accent-500 hover:bg-accent-600 text-slate-950 font-bold px-6 py-3.5 rounded-xl shadow-lg transition transform hover:-translate-y-0.5 flex items-center gap-2">
-              <i class="fa-solid fa-clipboard-check"></i> Check Terminal Result
-            </button>
-            <button onclick="openLoginModal('student')" class="bg-brand-600 hover:bg-brand-500 text-white font-bold px-6 py-3.5 rounded-xl shadow-lg transition transform hover:-translate-y-0.5 flex items-center gap-2">
-              <i class="fa-solid fa-laptop-code"></i> Student CBT & Homework
-            </button>
+
+          <!-- Hero Right Column: Interactive Campus Card Preview -->
+          <div class="lg:col-span-5">
+            <div class="glass-dark rounded-3xl p-6 sm:p-7 shadow-2xl relative overflow-hidden border border-white/20">
+              
+              <!-- Badge -->
+              <div class="flex items-center justify-between pb-4 border-b border-white/10">
+                <div class="flex items-center gap-3">
+                  <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-amber-500 to-yellow-300 flex items-center justify-center text-slate-950 font-black text-lg">
+                    <i class="fa-solid fa-building-columns"></i>
+                  </div>
+                  <div>
+                    <h3 class="text-sm font-black text-white" id="card-preview-school">Apex Horizon Academy</h3>
+                    <p class="text-[11px] text-emerald-400 font-bold flex items-center gap-1">
+                      <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> Cloud Portal Active
+                    </p>
+                  </div>
+                </div>
+                <span class="text-xs bg-white/10 text-slate-300 px-2.5 py-1 rounded-full font-mono font-bold" id="card-preview-term">Term 2 • 2026</span>
+              </div>
+
+              <!-- Quick Interactive Login Simulator -->
+              <div class="py-5 space-y-3">
+                <div class="text-xs font-bold text-slate-300 uppercase tracking-wider">Fast Demo Entry (No Typing Required)</div>
+                <div class="grid grid-cols-2 gap-2 text-xs">
+                  <button onclick="simulateLogin('student')" class="bg-white/10 hover:bg-emerald-600/40 border border-white/15 p-2.5 rounded-xl text-left transition group">
+                    <div class="font-bold text-white group-hover:text-emerald-300">🎓 Student</div>
+                    <div class="text-[11px] text-slate-400">PIN: 4481</div>
+                  </button>
+                  <button onclick="simulateLogin('parent')" class="bg-white/10 hover:bg-amber-600/40 border border-white/15 p-2.5 rounded-xl text-left transition group">
+                    <div class="font-bold text-white group-hover:text-amber-300">👨‍👩‍👧 Parent</div>
+                    <div class="text-[11px] text-slate-400">PIN: parent123</div>
+                  </button>
+                  <button onclick="simulateLogin('teacher')" class="bg-white/10 hover:bg-blue-600/40 border border-white/15 p-2.5 rounded-xl text-left transition group">
+                    <div class="font-bold text-white group-hover:text-blue-300">👨‍🏫 Teacher</div>
+                    <div class="text-[11px] text-slate-400">PIN: teacher123</div>
+                  </button>
+                  <button onclick="simulateLogin('admin')" class="bg-white/10 hover:bg-purple-600/40 border border-white/15 p-2.5 rounded-xl text-left transition group">
+                    <div class="font-bold text-white group-hover:text-purple-300">👑 Headteacher</div>
+                    <div class="text-[11px] text-slate-400">PIN: admin123</div>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Live Card Mini Ticker -->
+              <div class="bg-black/30 rounded-2xl p-4 border border-white/5 space-y-2">
+                <div class="flex justify-between items-center text-xs">
+                  <span class="text-slate-400 font-medium">Recent Activity:</span>
+                  <span class="text-amber-300 text-[11px] font-bold">14 Secs Ago</span>
+                </div>
+                <p class="text-xs text-slate-200 leading-snug">
+                  <i class="fa-solid fa-circle-check text-emerald-400 mr-1"></i> Continuous assessment grades submitted for <strong>JSS 2 Diamond (Mathematics)</strong>.
+                </p>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- CAMPUS SELECTOR ROW ("Pick a School to Preview") -->
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 -mt-14 relative z-20">
+        <div class="bg-white rounded-3xl p-6 sm:p-8 shadow-2xl border border-slate-200/80 space-y-4">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b pb-4">
+            <div>
+              <h2 class="text-lg font-black text-slate-900">Choose a Demo School Campus</h2>
+              <p class="text-xs text-slate-500">Click any institution to test its individual branding, colors, credentials, and curriculum.</p>
+            </div>
+            <span class="text-xs font-bold text-brand-600 bg-brand-50 px-3 py-1 rounded-full uppercase">3 Multi-Tenant Campuses Ready</span>
+          </div>
+
+          <div class="grid md:grid-cols-3 gap-4 pt-2">
+            
+            <!-- Campus 1 -->
+            <div onclick="changeActiveSchool('apex')" class="cursor-pointer border-2 border-blue-500 bg-blue-50/50 hover:bg-blue-50 p-4 rounded-2xl transition space-y-2 relative group shadow-sm">
+              <span class="absolute top-3 right-3 text-xs bg-blue-600 text-white font-bold px-2 py-0.5 rounded-full">Active</span>
+              <div class="w-10 h-10 rounded-xl bg-blue-700 text-white flex items-center justify-center text-lg font-bold">
+                <i class="fa-solid fa-graduation-cap"></i>
+              </div>
+              <h3 class="font-black text-slate-900 text-sm">Apex Horizon Academy</h3>
+              <p class="text-xs text-slate-500">Victoria Island, Lagos • Navy & Gold Palette</p>
+              <div class="text-[11px] font-bold text-blue-700 pt-1">Student ID: STU/2026/042 • PIN: 4481</div>
+            </div>
+
+            <!-- Campus 2 -->
+            <div onclick="changeActiveSchool('crown')" class="cursor-pointer border-2 border-transparent hover:border-emerald-500 bg-slate-50 hover:bg-emerald-50/50 p-4 rounded-2xl transition space-y-2 relative group shadow-sm">
+              <div class="w-10 h-10 rounded-xl bg-emerald-600 text-white flex items-center justify-center text-lg font-bold">
+                <i class="fa-solid fa-tree"></i>
+              </div>
+              <h3 class="font-black text-slate-900 text-sm">Crown Crest College</h3>
+              <p class="text-xs text-slate-500">Ikeja GRA, Lagos • Emerald & Amber Palette</p>
+              <div class="text-[11px] font-bold text-emerald-700 pt-1">Student ID: CCC/2026/114 • PIN: 5592</div>
+            </div>
+
+            <!-- Campus 3 -->
+            <div onclick="changeActiveSchool('augustine')" class="cursor-pointer border-2 border-transparent hover:border-purple-500 bg-slate-50 hover:bg-purple-50/50 p-4 rounded-2xl transition space-y-2 relative group shadow-sm">
+              <div class="w-10 h-10 rounded-xl bg-purple-700 text-white flex items-center justify-center text-lg font-bold">
+                <i class="fa-solid fa-monument"></i>
+              </div>
+              <h3 class="font-black text-slate-900 text-sm">St. Augustine Preparatory</h3>
+              <p class="text-xs text-slate-500">Lekki Phase 1, Lagos • Imperial Purple Palette</p>
+              <div class="text-[11px] font-bold text-purple-700 pt-1">Student ID: SAP/2026/089 • PIN: 3371</div>
+            </div>
+
           </div>
         </div>
       </div>
 
-      <!-- Quick Metrics -->
-      <div class="max-w-6xl mx-auto px-4 -mt-10 relative z-20">
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 bg-white rounded-2xl shadow-xl p-6 border border-slate-100 text-center">
-          <div>
-            <div class="text-3xl font-black text-brand-700">100%</div>
-            <div class="text-xs font-medium text-slate-500 uppercase mt-1">WAEC / BECE Pass Rate</div>
+      <!-- INTERACTIVE FEATURE SHOWCASE -->
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 pt-8 space-y-8">
+        <div class="text-center max-w-3xl mx-auto space-y-2">
+          <span class="text-xs font-black text-brand-600 bg-brand-50 px-3 py-1 rounded-full uppercase tracking-wider">Everything Under One Roof</span>
+          <h2 class="text-3xl font-black text-slate-900">Built Specifically for Primary & Secondary Schools</h2>
+          <p class="text-sm text-slate-500">Test how each module helps school owners cut costs, eliminate teacher calculation errors, and collect fees promptly.</p>
+        </div>
+
+        <div class="grid md:grid-cols-4 gap-6">
+          
+          <div class="bg-gradient-to-br from-blue-500 to-indigo-600 text-white p-6 rounded-3xl shadow-lg space-y-4 transform hover:-translate-y-1 transition">
+            <div class="w-12 h-12 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center text-2xl font-bold">
+              <i class="fa-solid fa-laptop-code"></i>
+            </div>
+            <h3 class="text-lg font-black">Online CBT Engine</h3>
+            <p class="text-xs text-blue-100 leading-relaxed">Multiple choice, typed short answers, and file uploads. Instant automated marking rubric.</p>
+            <button onclick="switchRole('student')" class="text-xs font-bold bg-white text-blue-800 px-3.5 py-2 rounded-xl shadow">Test CBT Exam</button>
           </div>
-          <div>
-            <div class="text-3xl font-black text-brand-700">25+</div>
-            <div class="text-xs font-medium text-slate-500 uppercase mt-1">Certified Educators</div>
+
+          <div class="bg-gradient-to-br from-emerald-500 to-teal-700 text-white p-6 rounded-3xl shadow-lg space-y-4 transform hover:-translate-y-1 transition">
+            <div class="w-12 h-12 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center text-2xl font-bold">
+              <i class="fa-solid fa-credit-card"></i>
+            </div>
+            <h3 class="text-lg font-black">Fee Recovery Lock</h3>
+            <p class="text-xs text-emerald-100 leading-relaxed">Parents cannot view or print terminal reports until term fees are cleared. Card & bank transfer simulator.</p>
+            <button onclick="switchRole('parent')" class="text-xs font-bold bg-white text-emerald-800 px-3.5 py-2 rounded-xl shadow">View Fee Flow</button>
           </div>
-          <div>
-            <div class="text-3xl font-black text-brand-700">1:12</div>
-            <div class="text-xs font-medium text-slate-500 uppercase mt-1">Teacher-Student Ratio</div>
+
+          <div class="bg-gradient-to-br from-amber-500 to-orange-600 text-white p-6 rounded-3xl shadow-lg space-y-4 transform hover:-translate-y-1 transition">
+            <div class="w-12 h-12 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center text-2xl font-bold">
+              <i class="fa-solid fa-file-circle-check"></i>
+            </div>
+            <h3 class="text-lg font-black">Printable A4 Reports</h3>
+            <p class="text-xs text-amber-100 leading-relaxed">Official crest, verified digital stamp, WAEC grading (A1–F9), affective domains, and class positions.</p>
+            <button onclick="showReportView()" class="text-xs font-bold bg-white text-amber-900 px-3.5 py-2 rounded-xl shadow">Print Report PDF</button>
           </div>
-          <div>
-            <div class="text-3xl font-black text-brand-700">15+</div>
-            <div class="text-xs font-medium text-slate-500 uppercase mt-1">Co-Curricular Clubs</div>
+
+          <div class="bg-gradient-to-br from-purple-600 to-violet-800 text-white p-6 rounded-3xl shadow-lg space-y-4 transform hover:-translate-y-1 transition">
+            <div class="w-12 h-12 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center text-2xl font-bold">
+              <i class="fa-solid fa-id-badge"></i>
+            </div>
+            <h3 class="text-lg font-black">Passport Photos</h3>
+            <p class="text-xs text-purple-100 leading-relaxed">Click any pupil in the Admin Console to upload their passport photo directly from your mobile camera.</p>
+            <button onclick="switchRole('admin')" class="text-xs font-bold bg-white text-purple-900 px-3.5 py-2 rounded-xl shadow">Admin Console</button>
           </div>
+
         </div>
       </div>
 
-      <!-- Announcements & Upcoming Dates -->
-      <div class="max-w-6xl mx-auto px-4 sm:px-6">
-        <div class="flex items-center justify-between mb-8">
-          <div>
-            <h2 class="text-2xl font-black text-slate-900">Notice Board & Circulars</h2>
-            <p class="text-sm text-slate-500">Official circulars, academic calendar updates, and PTA notices</p>
-          </div>
-          <span class="text-xs font-bold text-brand-600 bg-brand-50 px-3 py-1 rounded-full uppercase">Term 2 Active</span>
-        </div>
-
-        <div class="grid md:grid-cols-3 gap-6">
-          <div class="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm hover:shadow-md transition">
-            <span class="bg-rose-100 text-rose-700 text-xs font-bold px-2.5 py-1 rounded-md">Urgent Notice</span>
-            <h3 class="text-base font-bold text-slate-900 mt-3 mb-2">Term 2 CBT Mock Examinations</h3>
-            <p class="text-xs text-slate-600 leading-relaxed">Students in JSS1–SS3 can now access preliminary CBT mock tests from their student portal for Mathematics and English.</p>
-            <div class="text-xs text-slate-400 mt-4 pt-3 border-t border-slate-100 flex justify-between">
-              <span>Admin Office</span>
-              <span>2 Days Ago</span>
-            </div>
-          </div>
-
-          <div class="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm hover:shadow-md transition">
-            <span class="bg-blue-100 text-blue-700 text-xs font-bold px-2.5 py-1 rounded-md">Academic</span>
-            <h3 class="text-base font-bold text-slate-900 mt-3 mb-2">Mid-Term Assignment Submission Deadline</h3>
-            <p class="text-xs text-slate-600 leading-relaxed">All midterm assignment uploads are due this Friday. Pupils should turn in PDF or handwritten work through the Assignment Hub.</p>
-            <div class="text-xs text-slate-400 mt-4 pt-3 border-t border-slate-100 flex justify-between">
-              <span>Academic Dean</span>
-              <span>This Week</span>
-            </div>
-          </div>
-
-          <div class="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-sm hover:shadow-md transition">
-            <span class="bg-emerald-100 text-emerald-700 text-xs font-bold px-2.5 py-1 rounded-md">Parents & PTA</span>
-            <h3 class="text-base font-bold text-slate-900 mt-3 mb-2">Annual Inter-House Sports & Cultural Gala</h3>
-            <p class="text-xs text-slate-600 leading-relaxed">Parents are warmly invited to cheer our students at the stadium. Uniforms and tracksuits are available at the bursary.</p>
-            <div class="text-xs text-slate-400 mt-4 pt-3 border-t border-slate-100 flex justify-between">
-              <span>PTA Council</span>
-              <span>Oct 24, 2026</span>
-            </div>
-          </div>
-        </div>
-      </div>
     </section>
 
-    <!-- ========================================== -->
-    <!-- VIEW 2: CBT EXAMS & QUIZZES (PUPILS)        -->
-    <!-- ========================================== -->
-    <section id="view-student-cbt" class="hidden max-w-6xl mx-auto px-4 sm:px-6 py-8 space-y-8">
-      <!-- Header -->
-      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-slate-200">
+    <!-- =================================================================== -->
+    <!-- 2. STUDENT PORTAL (CBT, SCHEDULE, LIBRARY)                          -->
+    <!-- =================================================================== -->
+    <section id="view-student" class="hidden max-w-6xl mx-auto px-4 sm:px-6 py-8 space-y-6">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b">
         <div>
-          <h1 class="text-2xl sm:text-3xl font-black text-slate-900 flex items-center gap-3">
-            <i class="fa-solid fa-laptop-code text-brand-600"></i> Computer-Based Test (CBT) Center
+          <h1 class="text-2xl font-black text-slate-900 flex items-center gap-2">
+            <i class="fa-solid fa-user-graduate text-emerald-600"></i> Student Learning Space
           </h1>
-          <p class="text-sm text-slate-500 mt-1">Take scheduled tests, submit essays, upload working sheets, and view scores.</p>
-        </div>
-        <div class="flex items-center gap-3">
-          <div class="bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs px-3 py-1.5 rounded-lg flex items-center gap-2">
-            <i class="fa-solid fa-shield-halved text-emerald-600"></i> Secure Exam Environment
-          </div>
-        </div>
-      </div>
-
-      <!-- Available Exams Grid -->
-      <div id="cbt-exam-list" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <!-- Rendered by JavaScript -->
-      </div>
-    </section>
-
-    <!-- ACTIVE CBT PLAYER MODAL / FULLSCREEN TEST RUNNER -->
-    <div id="cbt-runner-modal" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-2 sm:p-4 overflow-y-auto">
-      <div class="bg-white w-full max-w-4xl rounded-2xl shadow-2xl flex flex-col max-h-[92vh] overflow-hidden">
-        <!-- Test Header -->
-        <div class="bg-slate-900 text-white px-6 py-4 flex flex-wrap items-center justify-between gap-4 border-b border-slate-800">
-          <div>
-            <span id="cbt-runner-subject" class="text-xs uppercase tracking-wider text-accent-400 font-bold">Mathematics</span>
-            <h2 id="cbt-runner-title" class="text-lg font-bold">Second Term Mid-Term Assessment</h2>
-          </div>
-          <div class="flex items-center gap-4">
-            <div class="bg-rose-500/20 border border-rose-500/40 text-rose-300 px-3 py-1.5 rounded-xl font-mono text-base font-bold flex items-center gap-2">
-              <i class="fa-regular fa-clock animate-spin"></i>
-              <span id="cbt-timer">14:59</span>
-            </div>
-            <button onclick="closeCbtRunner()" class="text-slate-400 hover:text-white text-lg">
-              <i class="fa-solid fa-xmark"></i>
-            </button>
-          </div>
-        </div>
-
-        <!-- Question Body (Scrollable) -->
-        <div id="cbt-questions-container" class="flex-grow p-6 overflow-y-auto space-y-8 custom-scrollbar bg-slate-50/50">
-          <!-- Dynamically populated with MCQs, short answers, and file uploads -->
-        </div>
-
-        <!-- Footer Actions -->
-        <div class="bg-white border-t border-slate-200 px-6 py-4 flex items-center justify-between">
-          <span class="text-xs text-slate-500">Ensure all answers are answered or attached before submission.</span>
-          <button onclick="submitActiveExam()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-6 py-2.5 rounded-xl shadow-md transition flex items-center gap-2">
-            <i class="fa-solid fa-paper-plane"></i> Submit Exam
-          </button>
-        </div>
-      </div>
-    </div>
-
-    <!-- CBT RESULT SUMMARY MODAL -->
-    <div id="cbt-result-modal" class="hidden fixed inset-0 z-50 bg-slate-900/80 backdrop-blur-sm flex items-center justify-center p-4">
-      <div class="bg-white rounded-2xl max-w-md w-full p-6 text-center space-y-4 shadow-2xl">
-        <div class="w-16 h-16 mx-auto rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center text-3xl font-black">
-          <i class="fa-solid fa-trophy"></i>
-        </div>
-        <h3 class="text-2xl font-black text-slate-900">Exam Completed!</h3>
-        <p class="text-xs text-slate-500">Your objective questions have been graded automatically by the rubric engine.</p>
-        
-        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-2">
-          <div class="flex justify-between text-sm">
-            <span class="text-slate-600 font-medium">Objective (Auto-Graded):</span>
-            <span id="result-auto-score" class="font-bold text-slate-900">20 / 20</span>
-          </div>
-          <div class="flex justify-between text-sm">
-            <span class="text-slate-600 font-medium">Theory & File Submissions:</span>
-            <span class="font-bold text-blue-600">Pending Review</span>
-          </div>
-          <div class="border-t border-slate-200 pt-2 flex justify-between font-black text-base">
-            <span>Current Score:</span>
-            <span id="result-total-pct" class="text-emerald-700">100%</span>
-          </div>
-        </div>
-
-        <button onclick="document.getElementById('cbt-result-modal').classList.add('hidden')" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-2.5 rounded-xl transition">
-          Return to Portal
-        </button>
-      </div>
-    </div>
-
-    <!-- ========================================== -->
-    <!-- VIEW 3: ASSIGNMENT & HOMEWORK HUB          -->
-    <!-- ========================================== -->
-    <section id="view-assignments" class="hidden max-w-6xl mx-auto px-4 sm:px-6 py-8 space-y-8">
-      <!-- Title & Filters -->
-      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-slate-200">
-        <div>
-          <h1 class="text-2xl sm:text-3xl font-black text-slate-900 flex items-center gap-3">
-            <i class="fa-solid fa-book-open-reader text-brand-600"></i> Subject Assignment Hub
-          </h1>
-          <p class="text-sm text-slate-500 mt-1">Download homework attachments, read guidelines, and turn in class projects.</p>
-        </div>
-
-        <!-- SUBJECT DROPDOWN FILTER -->
-        <div class="flex items-center gap-3">
-          <label for="filter-subject" class="text-xs font-bold text-slate-600 uppercase tracking-wider">Subject:</label>
-          <select id="filter-subject" onchange="filterAssignments()" class="bg-white border border-slate-300 text-slate-800 text-sm font-semibold rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-brand-500 shadow-sm outline-none">
-            <option value="ALL">All Subjects</option>
-            <option value="Mathematics">Mathematics</option>
-            <option value="English Language">English Language</option>
-            <option value="Basic Science">Basic Science</option>
-            <option value="Civic Education">Civic Education</option>
-            <option value="Agricultural Science">Agricultural Science</option>
-            <option value="Computer Studies">Computer Studies</option>
-          </select>
-        </div>
-      </div>
-
-      <!-- Assignment Cards Grid -->
-      <div id="assignment-cards-container" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <!-- Rendered by JavaScript -->
-      </div>
-    </section>
-
-    <!-- ASSIGNMENT SUBMISSION MODAL -->
-    <div id="homework-submit-modal" class="hidden fixed inset-0 z-50 bg-slate-900/80 backdrop-blur-sm flex items-center justify-center p-4">
-      <div class="bg-white rounded-2xl max-w-lg w-full p-6 space-y-4 shadow-2xl">
-        <div class="flex items-center justify-between border-b pb-3">
-          <h3 class="text-lg font-bold text-slate-900" id="submit-hw-title">Turn in Assignment</h3>
-          <button onclick="closeHomeworkModal()" class="text-slate-400 hover:text-slate-600">
-            <i class="fa-solid fa-xmark text-lg"></i>
-          </button>
-        </div>
-
-        <div class="space-y-4">
-          <div>
-            <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Type Answer / Notes</label>
-            <textarea id="hw-typed-response" rows="4" placeholder="Type your full answer or project summary here..." class="w-full text-sm border border-slate-300 rounded-xl p-3 focus:ring-2 focus:ring-brand-500 outline-none"></textarea>
-          </div>
-
-          <div>
-            <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Attach File (PDF, Word, or Picture)</label>
-            <div class="border-2 border-dashed border-slate-300 hover:border-brand-500 rounded-xl p-4 text-center cursor-pointer bg-slate-50">
-              <input type="file" id="hw-file-input" class="hidden" onchange="handleHwFileSelected(event)" />
-              <label for="hw-file-input" class="cursor-pointer block">
-                <i class="fa-solid fa-cloud-arrow-up text-brand-600 text-2xl mb-1"></i>
-                <div class="text-xs font-bold text-slate-700" id="hw-file-name">Click to choose PDF or file</div>
-                <div class="text-[11px] text-slate-400">PDF, DOCX, PNG, JPG up to 10MB</div>
-              </label>
-            </div>
-          </div>
-        </div>
-
-        <div class="pt-2 flex justify-end gap-3">
-          <button onclick="closeHomeworkModal()" class="px-4 py-2 text-xs font-bold text-slate-600 hover:bg-slate-100 rounded-lg">Cancel</button>
-          <button onclick="confirmSubmitHomework()" class="px-5 py-2 text-xs font-bold bg-brand-600 hover:bg-brand-700 text-white rounded-lg shadow">Turn In Homework</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- ========================================== -->
-    <!-- VIEW 4: TEACHER EXAM BUILDER & RUBRIC      -->
-    <!-- ========================================== -->
-    <section id="view-teacher-cbt-builder" class="hidden max-w-6xl mx-auto px-4 sm:px-6 py-8 space-y-8">
-      <!-- Title & CTA -->
-      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-slate-200">
-        <div>
-          <h1 class="text-2xl sm:text-3xl font-black text-slate-900 flex items-center gap-3">
-            <i class="fa-solid fa-sliders text-brand-600"></i> Exam & Marking Rubric Engine
-          </h1>
-          <p class="text-sm text-slate-500 mt-1">Create CBT papers, set auto-grading keys, and mark theory/file submissions.</p>
+          <p class="text-xs text-slate-500">Logged in: <span id="student-name-display" class="font-bold text-slate-800">Adeyemi Toluwalase</span> • <span id="student-reg-display" class="font-mono">STU/2026/042</span> (<span id="student-class-display">JSS 2 Diamond</span>)</p>
         </div>
         <div class="flex gap-2">
-          <button onclick="openNewExamModal()" class="bg-brand-600 hover:bg-brand-700 text-white font-bold text-xs px-4 py-2.5 rounded-xl shadow transition flex items-center gap-2">
-            <i class="fa-solid fa-plus"></i> New CBT Paper
-          </button>
-          <button onclick="openNewAssignmentModal()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs px-4 py-2.5 rounded-xl shadow transition flex items-center gap-2">
-            <i class="fa-solid fa-file-circle-plus"></i> Post Assignment (PDF/Text)
-          </button>
+          <button onclick="switchStudentTab('timetable')" class="px-3 py-1.5 text-xs font-bold rounded-lg bg-emerald-50 text-emerald-700 hover:bg-emerald-100">Timetable</button>
+          <button onclick="switchStudentTab('materials')" class="px-3 py-1.5 text-xs font-bold rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200">E-Library</button>
+          <button onclick="showReportView()" class="px-3 py-1.5 text-xs font-bold rounded-lg bg-blue-50 text-blue-700 hover:bg-blue-100">Terminal Report Card</button>
         </div>
       </div>
 
-      <!-- Exams Created by Teacher Table -->
-      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
-        <div class="px-6 py-4 bg-slate-50 border-b border-slate-200 flex justify-between items-center">
-          <h2 class="font-bold text-slate-800 text-sm">Active Examination Papers</h2>
-          <span class="text-xs bg-brand-100 text-brand-800 font-bold px-2.5 py-0.5 rounded-full">Auto-Marking Active</span>
-        </div>
-        <div class="overflow-x-auto">
-          <table class="w-full text-left text-xs text-slate-700">
-            <thead class="bg-slate-100 uppercase tracking-wider text-slate-500 border-b">
-              <tr>
-                <th class="py-3 px-4">Subject</th>
-                <th class="py-3 px-4">Paper Title</th>
-                <th class="py-3 px-4">Duration</th>
-                <th class="py-3 px-4">Questions</th>
-                <th class="py-3 px-4">Marking Rubric</th>
-                <th class="py-3 px-4 text-right">Actions</th>
-              </tr>
-            </thead>
-            <tbody id="teacher-exams-table" class="divide-y divide-slate-100">
-              <!-- Rendered by JS -->
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      <!-- Student Submissions Review -->
-      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 space-y-4">
-        <h2 class="font-bold text-slate-800 text-sm flex items-center gap-2">
-          <i class="fa-solid fa-user-check text-brand-600"></i> Pupil Test Submissions & File Answers
+      <!-- TIMETABLE -->
+      <div id="student-tab-timetable" class="bg-white rounded-2xl border p-6 shadow-sm space-y-4">
+        <h2 class="text-sm font-bold text-slate-800 flex items-center gap-2">
+          <i class="fa-regular fa-calendar-days text-brand-600"></i> Term 2 Weekly Course Schedule
         </h2>
         <div class="overflow-x-auto">
-          <table class="w-full text-left text-xs text-slate-700">
-            <thead class="bg-slate-100 uppercase text-slate-500">
-              <tr>
-                <th class="py-2.5 px-4">Student</th>
-                <th class="py-2.5 px-4">Exam Paper</th>
-                <th class="py-2.5 px-4">Auto-Mark (MCQ)</th>
-                <th class="py-2.5 px-4">Uploaded File Answer</th>
-                <th class="py-2.5 px-4">Rubric Score</th>
-                <th class="py-2.5 px-4 text-right">Review</th>
-              </tr>
+          <table class="w-full text-xs text-left border">
+            <thead class="bg-slate-50 uppercase text-slate-500 font-bold border-b">
+              <tr><th class="p-3 border-r">Time Slot</th><th class="p-3 border-r">Monday</th><th class="p-3 border-r">Tuesday</th><th class="p-3 border-r">Wednesday</th><th class="p-3 border-r">Thursday</th><th class="p-3">Friday</th></tr>
             </thead>
-            <tbody id="student-submissions-table" class="divide-y divide-slate-100">
-              <!-- Populated by JS -->
+            <tbody class="divide-y divide-slate-100 font-medium">
+              <tr><td class="p-3 bg-slate-50 font-bold text-slate-600 border-r">08:00 - 09:00 AM</td><td class="p-3 text-blue-700 border-r">Mathematics (Hall B)</td><td class="p-3 text-indigo-700 border-r">English Grammar</td><td class="p-3 text-emerald-700 border-r">Basic Science</td><td class="p-3 text-purple-700 border-r">Computer Studies</td><td class="p-3 text-blue-700">Mathematics</td></tr>
+              <tr><td class="p-3 bg-slate-50 font-bold text-slate-600 border-r">09:00 - 10:00 AM</td><td class="p-3 text-indigo-700 border-r">English Literature</td><td class="p-3 text-blue-700 border-r">Mathematics</td><td class="p-3 text-amber-700 border-r">Civic Education</td><td class="p-3 text-emerald-700 border-r">Basic Science</td><td class="p-3 text-indigo-700">Oral English</td></tr>
             </tbody>
           </table>
+        </div>
+      </div>
+
+      <!-- E-LIBRARY -->
+      <div id="student-tab-materials" class="hidden bg-white rounded-2xl border p-6 shadow-sm space-y-4">
+        <h2 class="text-sm font-bold text-slate-800 flex items-center gap-2">
+          <i class="fa-solid fa-book-bookmark text-brand-600"></i> Subject E-Library & Downloads
+        </h2>
+        <div class="grid md:grid-cols-3 gap-4" id="student-materials-grid"></div>
+      </div>
+    </section>
+
+    <!-- =================================================================== -->
+    <!-- 3. PARENT PORTAL (FEES, REPORT, CHAT)                               -->
+    <!-- =================================================================== -->
+    <section id="view-parent" class="hidden max-w-6xl mx-auto px-4 sm:px-6 py-8 space-y-6">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b">
+        <div>
+          <h1 class="text-2xl font-black text-slate-900 flex items-center gap-2">
+            <i class="fa-solid fa-user-group text-amber-600"></i> Parent Oversight Portal
+          </h1>
+          <p class="text-xs text-slate-500">Ward: <span id="parent-ward-name" class="font-bold text-slate-800">Adeyemi Toluwalase</span></p>
+        </div>
+        <div class="flex gap-2">
+          <button onclick="switchParentTab('overview')" class="px-3 py-1.5 text-xs font-bold rounded-lg bg-amber-50 text-amber-800 hover:bg-amber-100">Attendance & Status</button>
+          <button onclick="switchParentTab('finances')" class="px-3 py-1.5 text-xs font-bold rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200">School Fees & Levies</button>
+          <button onclick="switchParentTab('chat')" class="px-3 py-1.5 text-xs font-bold rounded-lg bg-blue-50 text-blue-700 hover:bg-blue-100">Message Teacher</button>
+        </div>
+      </div>
+
+      <div id="parent-tab-overview" class="space-y-6">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div class="bg-white p-5 rounded-2xl border shadow-sm">
+            <div class="text-xs font-bold text-slate-400 uppercase">Term Attendance</div>
+            <div class="text-3xl font-black text-emerald-600 mt-1">95.4%</div>
+            <div class="text-[11px] text-slate-500 mt-1">62 / 65 Days Present</div>
+          </div>
+          <div class="bg-white p-5 rounded-2xl border shadow-sm">
+            <div class="text-xs font-bold text-slate-400 uppercase">Class Position</div>
+            <div class="text-3xl font-black text-blue-700 mt-1">3rd Position</div>
+            <div class="text-[11px] text-slate-500 mt-1">Out of 38 students</div>
+          </div>
+          <div class="bg-white p-5 rounded-2xl border shadow-sm">
+            <div class="text-xs font-bold text-slate-400 uppercase">Tuition Clearance</div>
+            <div id="parent-tuition-badge" class="mt-1">
+              <span class="inline-block bg-rose-100 text-rose-800 text-xs font-black px-2.5 py-1 rounded-md">₦45,000 Outstanding</span>
+            </div>
+            <div class="text-[11px] text-slate-500 mt-1">Clear to unlock official terminal report</div>
+          </div>
+        </div>
+      </div>
+
+      <div id="parent-tab-finances" class="hidden bg-white rounded-2xl border p-6 shadow-sm space-y-6">
+        <div class="flex justify-between items-center pb-4 border-b">
+          <div>
+            <h2 class="text-base font-bold text-slate-900">Term 2 Fee Breakdown</h2>
+            <p class="text-xs text-slate-500">Official statement of account</p>
+          </div>
+          <button onclick="openPaymentGatewayModal()" id="btn-pay-tuition" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs px-5 py-2.5 rounded-xl shadow transition flex items-center gap-2">
+            <i class="fa-solid fa-credit-card"></i> Pay Outstanding (₦45,000)
+          </button>
+        </div>
+        <div class="space-y-2 text-xs">
+          <div class="flex justify-between p-3 bg-slate-50 rounded-lg"><span>Tuition & Instructional Levy:</span><span class="font-bold">₦120,000 (Paid)</span></div>
+          <div class="flex justify-between p-3 bg-slate-50 rounded-lg"><span>ICT & CBT Examination Platform Fee:</span><span class="font-bold">₦15,000 (Paid)</span></div>
+          <div class="flex justify-between p-3 bg-rose-50 text-rose-900 rounded-lg font-bold"><span>PTA Development Dues:</span><span>₦45,000 (Pending)</span></div>
+        </div>
+      </div>
+
+      <div id="parent-tab-chat" class="hidden bg-white rounded-2xl border p-6 shadow-sm space-y-4">
+        <h2 class="text-sm font-bold text-slate-800 flex items-center gap-2">
+          <i class="fa-solid fa-comments text-blue-600"></i> Direct Channel: Mrs. O. Balogun (Form Teacher)
+        </h2>
+        <div class="border rounded-xl p-4 bg-slate-50 h-56 overflow-y-auto space-y-3 text-xs custom-scrollbar" id="parent-chat-thread">
+          <div class="bg-white p-3 rounded-xl border max-w-sm"><div class="font-bold text-slate-900">Mrs. O. Balogun:</div> Good day Mr. Adeyemi, Toluwalase scored an A1 in Mathematics today!</div>
+          <div class="bg-blue-600 text-white p-3 rounded-xl max-w-sm ml-auto"><div class="font-bold text-blue-100">You:</div> Excellent news, thank you Mrs. Balogun!</div>
+        </div>
+        <div class="flex gap-2">
+          <input type="text" id="parent-message-input" placeholder="Type a message..." class="flex-grow text-xs border rounded-xl p-3 outline-none" />
+          <button onclick="sendParentMessage()" class="bg-blue-600 text-white font-bold text-xs px-5 py-3 rounded-xl shadow">Send</button>
         </div>
       </div>
     </section>
 
-    <!-- CREATE EXAM MODAL -->
-    <div id="new-exam-modal" class="hidden fixed inset-0 z-50 bg-slate-900/80 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
-      <div class="bg-white rounded-2xl max-w-2xl w-full p-6 space-y-6 shadow-2xl max-h-[90vh] overflow-y-auto custom-scrollbar">
-        <div class="flex justify-between items-center border-b pb-3">
-          <h3 class="text-lg font-bold text-slate-900">Configure New CBT Examination</h3>
-          <button onclick="document.getElementById('new-exam-modal').classList.add('hidden')" class="text-slate-400 hover:text-slate-600">
-            <i class="fa-solid fa-xmark text-lg"></i>
-          </button>
-        </div>
-
-        <div class="grid grid-cols-2 gap-4">
-          <div>
-            <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Subject</label>
-            <select id="new-exam-subject" class="w-full text-xs border border-slate-300 rounded-lg p-2.5 outline-none font-semibold">
-              <option>Mathematics</option>
-              <option>English Language</option>
-              <option>Basic Science</option>
-              <option>Civic Education</option>
-              <option>Computer Studies</option>
-            </select>
-          </div>
-          <div>
-            <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Duration (Minutes)</label>
-            <input type="number" id="new-exam-duration" value="20" class="w-full text-xs border border-slate-300 rounded-lg p-2.5 outline-none" />
-          </div>
-          <div class="col-span-2">
-            <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Exam Title</label>
-            <input type="text" id="new-exam-title" placeholder="e.g., Second Term Mid-Term Assessment" class="w-full text-xs border border-slate-300 rounded-lg p-2.5 outline-none font-semibold" />
-          </div>
-        </div>
-
-        <!-- Question Creator Sandbox -->
-        <div class="border-t pt-4 space-y-4">
-          <h4 class="text-xs font-bold uppercase tracking-wider text-brand-800">Add Question to Paper</h4>
-          <div>
-            <label class="block text-xs font-semibold text-slate-600 mb-1">Question Type</label>
-            <select id="new-q-type" class="w-full text-xs border border-slate-300 rounded-lg p-2 outline-none">
-              <option value="mcq">Multiple Choice Question (MCQ - Auto Marked)</option>
-              <option value="typed">Short Answer / Typed Text (Auto-Checked by Keyword)</option>
-              <option value="file">File Upload / Essay Working Sheet (Rubric Graded)</option>
-            </select>
-          </div>
-          <div>
-            <label class="block text-xs font-semibold text-slate-600 mb-1">Question Prompt / Problem</label>
-            <textarea id="new-q-prompt" rows="2" placeholder="e.g., Solve for x in the equation 3x + 12 = 27" class="w-full text-xs border border-slate-300 rounded-lg p-2 outline-none"></textarea>
-          </div>
-          <div>
-            <label class="block text-xs font-semibold text-slate-600 mb-1">Auto-Mark Correct Answer / Marking Rubric</label>
-            <input type="text" id="new-q-answer" placeholder="For MCQ: enter option (A, B, C, D) | For Short: enter answer (e.g. 5) | For File: points rubric" class="w-full text-xs border border-slate-300 rounded-lg p-2 outline-none font-mono" />
-          </div>
-        </div>
-
-        <div class="flex justify-end gap-3 pt-4 border-t">
-          <button onclick="document.getElementById('new-exam-modal').classList.add('hidden')" class="px-4 py-2 text-xs font-bold text-slate-600 hover:bg-slate-100 rounded-lg">Cancel</button>
-          <button onclick="saveNewExam()" class="px-5 py-2 text-xs font-bold bg-brand-600 hover:bg-brand-700 text-white rounded-lg shadow">Publish Examination</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- POST ASSIGNMENT MODAL -->
-    <div id="new-assignment-modal" class="hidden fixed inset-0 z-50 bg-slate-900/80 backdrop-blur-sm flex items-center justify-center p-4">
-      <div class="bg-white rounded-2xl max-w-lg w-full p-6 space-y-4 shadow-2xl">
-        <div class="flex justify-between items-center border-b pb-3">
-          <h3 class="text-lg font-bold text-slate-900">Post New Subject Assignment</h3>
-          <button onclick="document.getElementById('new-assignment-modal').classList.add('hidden')" class="text-slate-400 hover:text-slate-600">
-            <i class="fa-solid fa-xmark text-lg"></i>
-          </button>
-        </div>
-
-        <div class="space-y-3">
-          <div>
-            <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Select Subject</label>
-            <select id="assign-subject" class="w-full text-xs border border-slate-300 rounded-lg p-2.5 outline-none font-semibold">
-              <option>Mathematics</option>
-              <option>English Language</option>
-              <option>Basic Science</option>
-              <option>Civic Education</option>
-              <option>Agricultural Science</option>
-              <option>Computer Studies</option>
-            </select>
-          </div>
-          <div>
-            <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Assignment Title</label>
-            <input type="text" id="assign-title" placeholder="e.g., Weekly Problem Set 4: Quadratic Equations" class="w-full text-xs border border-slate-300 rounded-lg p-2.5 outline-none" />
-          </div>
-          <div>
-            <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Due Date</label>
-            <input type="date" id="assign-due" value="2026-10-18" class="w-full text-xs border border-slate-300 rounded-lg p-2.5 outline-none" />
-          </div>
-          <div>
-            <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Assignment Instructions / Text</label>
-            <textarea id="assign-body" rows="3" placeholder="Enter instructions or problem statement here..." class="w-full text-xs border border-slate-300 rounded-lg p-2.5 outline-none"></textarea>
-          </div>
-          <div>
-            <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Optional PDF Attachment Name</label>
-            <input type="text" id="assign-pdf-name" placeholder="e.g., Algebra_Worksheet_Grade8.pdf" class="w-full text-xs border border-slate-300 rounded-lg p-2.5 outline-none font-mono" />
-          </div>
-        </div>
-
-        <div class="flex justify-end gap-3 pt-3 border-t">
-          <button onclick="document.getElementById('new-assignment-modal').classList.add('hidden')" class="px-4 py-2 text-xs font-bold text-slate-600 hover:bg-slate-100 rounded-lg">Cancel</button>
-          <button onclick="saveNewAssignment()" class="px-5 py-2 text-xs font-bold bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg shadow">Post Assignment</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- ========================================== -->
-    <!-- VIEW 5: STUDENT OFFICIAL REPORT CARD       -->
-    <!-- ========================================== -->
-    <section id="view-student-report" class="hidden max-w-4xl mx-auto px-4 py-8 space-y-6">
-      <div class="no-print flex justify-between items-center bg-white p-4 rounded-xl shadow-sm border border-slate-200">
+    <!-- =================================================================== -->
+    <!-- 4. TEACHER WORKSTATION                                              -->
+    <!-- =================================================================== -->
+    <section id="view-teacher" class="hidden max-w-6xl mx-auto px-4 sm:px-6 py-8 space-y-6">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b">
         <div>
-          <h2 class="font-bold text-slate-900 text-sm">Terminal Report Card Available</h2>
-          <p class="text-xs text-slate-500">Official digital seal applied by the Head of School.</p>
+          <h1 class="text-2xl font-black text-slate-900 flex items-center gap-2">
+            <i class="fa-solid fa-chalkboard-user text-blue-600"></i> Faculty Workstation
+          </h1>
+          <p class="text-xs text-slate-500">Instructor: <span class="font-bold">Mrs. O. Balogun</span></p>
         </div>
-        <button onclick="window.print()" class="bg-brand-600 hover:bg-brand-700 text-white font-bold text-xs px-4 py-2.5 rounded-lg shadow transition flex items-center gap-2">
+        <div class="flex gap-2">
+          <button onclick="switchTeacherTab('gradebook')" class="px-3 py-1.5 text-xs font-bold rounded-lg bg-blue-50 text-blue-800">Gradebook</button>
+          <button onclick="switchTeacherTab('attendance')" class="px-3 py-1.5 text-xs font-bold rounded-lg bg-slate-100 text-slate-700">Attendance</button>
+        </div>
+      </div>
+
+      <div id="teacher-tab-gradebook" class="bg-white rounded-2xl border p-6 shadow-sm space-y-4">
+        <div class="flex justify-between items-center">
+          <h2 class="text-sm font-bold text-slate-800">Continuous Assessment Gradebook (Auto-Grade)</h2>
+          <button onclick="alert('Scores updated and synced with student report cards.')" class="bg-emerald-600 text-white text-xs font-bold px-4 py-2 rounded-lg shadow">Commit Marks</button>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-xs text-left border">
+            <thead class="bg-slate-50 font-bold uppercase text-slate-500">
+              <tr>
+                <th class="p-3 border-r">Reg No.</th>
+                <th class="p-3 border-r">Student Name</th>
+                <th class="p-3 border-r text-center">CA1 (20)</th>
+                <th class="p-3 border-r text-center">CA2 (20)</th>
+                <th class="p-3 border-r text-center">Exam (60)</th>
+                <th class="p-3 border-r text-center">Total (100)</th>
+                <th class="p-3 text-center">Grade</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100" id="teacher-gradebook-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div id="teacher-tab-attendance" class="hidden bg-white rounded-2xl border p-6 shadow-sm space-y-4">
+        <h2 class="text-sm font-bold text-slate-800">Morning Roll Call Register</h2>
+        <div class="divide-y text-xs" id="teacher-attendance-roster"></div>
+      </div>
+    </section>
+
+    <!-- =================================================================== -->
+    <!-- 5. ADMIN CONSOLE (PASSPORTS & AUDIT)                                -->
+    <!-- =================================================================== -->
+    <section id="view-admin" class="hidden max-w-6xl mx-auto px-4 sm:px-6 py-8 space-y-6">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b">
+        <div>
+          <h1 class="text-2xl font-black text-slate-900 flex items-center gap-2">
+            <i class="fa-solid fa-crown text-purple-600"></i> Executive Headteacher Console
+          </h1>
+          <p class="text-xs text-slate-500">Manage pupil passport photographs and central institutional settings.</p>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-2xl border p-6 shadow-sm space-y-4">
+        <h2 class="text-sm font-bold text-slate-800">Student Directory & Passport Photo Updates (Click any photo)</h2>
+        <div class="grid sm:grid-cols-2 md:grid-cols-3 gap-4" id="admin-student-cards"></div>
+      </div>
+    </section>
+
+    <!-- =================================================================== -->
+    <!-- 6. PRINTABLE A4 REPORT CARD SHEET                                   -->
+    <!-- =================================================================== -->
+    <section id="view-report-card" class="hidden max-w-4xl mx-auto px-4 py-8 space-y-6">
+      <div class="no-print flex justify-between items-center bg-white p-4 rounded-xl shadow-sm border">
+        <div>
+          <h2 class="font-bold text-slate-900 text-sm">Official Terminal Report Sheet</h2>
+          <p class="text-xs text-slate-500">Official digital seal validated by the Principal.</p>
+        </div>
+        <button onclick="window.print()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs px-4 py-2.5 rounded-lg shadow flex items-center gap-2">
           <i class="fa-solid fa-print"></i> Print / Save as PDF
         </button>
       </div>
 
-      <!-- A4 REPORT CARD CANVAS -->
-      <div id="printable-report" class="bg-white border-2 border-slate-900 rounded-xl p-6 sm:p-10 shadow-lg space-y-6 relative overflow-hidden">
-        <!-- Watermark -->
-        <div class="absolute inset-0 flex items-center justify-center opacity-[0.03] pointer-events-none text-9xl font-black uppercase tracking-widest text-slate-950">
-          OFFICIAL
-        </div>
-
-        <!-- Report Header -->
-        <div class="border-b-2 border-slate-900 pb-6 text-center space-y-1">
-          <h1 class="text-2xl sm:text-3xl font-black text-brand-900 tracking-wide uppercase school-name-text">Apex Horizon Academy</h1>
-          <p class="text-xs text-slate-600 font-medium uppercase tracking-wider">P.O. Box 4820, Victoria Island, Lagos, Nigeria | info@apexhorizon.edu.ng</p>
+      <div id="printable-report" class="bg-white border-2 border-slate-900 rounded-xl p-8 shadow-lg space-y-6 relative overflow-hidden">
+        <div class="border-b-2 border-slate-900 pb-4 text-center space-y-1">
+          <h1 class="text-2xl sm:text-3xl font-black text-slate-950 uppercase tracking-wide" id="report-school-name">Apex Horizon Academy</h1>
+          <p class="text-xs text-slate-600 font-medium uppercase" id="report-school-address">P.O. Box 4820, Victoria Island, Lagos, Nigeria</p>
           <div class="inline-block bg-slate-900 text-white text-xs font-bold px-4 py-1 rounded-full uppercase tracking-wider mt-2">
             Continuous Assessment & Terminal Evaluation Dossier
           </div>
         </div>
 
-        <!-- Student Biodata & Passport -->
-        <div class="grid grid-cols-1 sm:grid-cols-4 gap-4 items-center bg-slate-50 p-4 rounded-xl border border-slate-200">
+        <div class="grid grid-cols-1 sm:grid-cols-4 gap-4 items-center bg-slate-50 p-4 rounded-xl border">
           <div class="flex justify-center sm:justify-start">
-            <img id="report-passport-img" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&h=200&q=80" alt="Student Passport" class="w-24 h-24 rounded-lg object-cover border-2 border-slate-300 shadow-sm" />
+            <img id="report-passport-img" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&h=200&q=80" alt="Student Passport" class="w-24 h-24 rounded-lg object-cover border-2 border-slate-300" />
           </div>
           <div class="sm:col-span-3 grid grid-cols-2 sm:grid-cols-3 gap-y-2 text-xs">
             <div><span class="text-slate-500 font-medium">Student Name:</span><div class="font-bold text-slate-900 text-sm" id="rep-name">Adeyemi Toluwalase</div></div>
             <div><span class="text-slate-500 font-medium">Admission No:</span><div class="font-bold text-slate-900" id="rep-reg">STU/2026/042</div></div>
-            <div><span class="text-slate-500 font-medium">Class / Arm:</span><div class="font-bold text-slate-900">JSS 2 Diamond</div></div>
-            <div><span class="text-slate-500 font-medium">Term / Session:</span><div class="font-bold text-slate-900">Term 2 • 2026/2027</div></div>
-            <div><span class="text-slate-500 font-medium">Class Attendance:</span><div class="font-bold text-emerald-700">62 / 65 Days (95%)</div></div>
-            <div><span class="text-slate-500 font-medium">Position:</span><div class="font-bold text-brand-700">3rd out of 38</div></div>
+            <div><span class="text-slate-500 font-medium">Class:</span><div class="font-bold text-slate-900" id="rep-class">JSS 2 Diamond</div></div>
+            <div><span class="text-slate-500 font-medium">Attendance:</span><div class="font-bold text-emerald-700">62 / 65 Days (95.4%)</div></div>
+            <div><span class="text-slate-500 font-medium">Class Position:</span><div class="font-bold text-blue-700">3rd of 38</div></div>
+            <div><span class="text-slate-500 font-medium">Fee Clearance:</span><div class="font-bold text-emerald-700" id="rep-fee-status">Verified / Full Clearance</div></div>
           </div>
         </div>
 
-        <!-- Subject Scores Table -->
         <table class="w-full text-xs text-left border-collapse border border-slate-300">
           <thead>
             <tr class="bg-slate-100 text-slate-800 uppercase font-bold text-[11px] border-b border-slate-300">
-              <th class="p-2.5 border-r border-slate-300">Subject</th>
-              <th class="p-2.5 text-center border-r border-slate-300">CA1 (20)</th>
-              <th class="p-2.5 text-center border-r border-slate-300">CA2 (20)</th>
-              <th class="p-2.5 text-center border-r border-slate-300">Exam (60)</th>
-              <th class="p-2.5 text-center border-r border-slate-300 font-black">Total (100)</th>
-              <th class="p-2.5 text-center border-r border-slate-300">Grade</th>
-              <th class="p-2.5">Teacher Remark</th>
+              <th class="p-2 border-r border-slate-300">Subject</th>
+              <th class="p-2 text-center border-r border-slate-300">CA1 (20)</th>
+              <th class="p-2 text-center border-r border-slate-300">CA2 (20)</th>
+              <th class="p-2 text-center border-r border-slate-300">Exam (60)</th>
+              <th class="p-2 text-center border-r border-slate-300 font-black">Total (100)</th>
+              <th class="p-2 text-center border-r border-slate-300">Grade</th>
+              <th class="p-2">Teacher Remark</th>
             </tr>
           </thead>
-          <tbody class="divide-y divide-slate-200" id="report-subjects-body">
-            <!-- Dynamically populated -->
-          </tbody>
+          <tbody class="divide-y divide-slate-200" id="report-subjects-body"></tbody>
         </table>
 
-        <!-- Signatures and Digital Stamp -->
-        <div class="pt-6 border-t-2 border-slate-900 flex flex-wrap justify-between items-end gap-6 text-xs">
-          <div class="space-y-1">
-            <div class="font-serif italic text-base text-slate-700">Mrs. O. Balogun</div>
-            <div class="border-t border-slate-400 pt-1 font-bold text-slate-700">Class Form Master</div>
-          </div>
-          <div class="text-center">
-            <div class="w-16 h-16 rounded-full border-2 border-emerald-600 border-dashed mx-auto flex items-center justify-center text-emerald-700 text-xs font-black uppercase rotate-[-12deg]">
-              VERIFIED<br>OFFICIAL
-            </div>
-          </div>
-          <div class="space-y-1 text-right">
-            <div class="font-serif italic text-base text-slate-700">Dr. Anthony K. Eze</div>
-            <div class="border-t border-slate-400 pt-1 font-bold text-slate-700">Principal / Headteacher</div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ========================================== -->
-    <!-- VIEW 6: HEADTEACHER CONSOLE & ROSTER       -->
-    <!-- ========================================== -->
-    <section id="view-admin" class="hidden max-w-6xl mx-auto px-4 sm:px-6 py-8 space-y-8">
-      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-slate-200">
-        <div>
-          <h1 class="text-2xl sm:text-3xl font-black text-slate-900 flex items-center gap-3">
-            <i class="fa-solid fa-crown text-purple-600"></i> Headteacher Executive Console
-          </h1>
-          <p class="text-sm text-slate-500 mt-1">Manage school branding, student passport photos, fees, and certified approvals.</p>
-        </div>
-        <button onclick="document.getElementById('brand-modal').classList.remove('hidden')" class="bg-purple-600 hover:bg-purple-700 text-white font-bold text-xs px-4 py-2.5 rounded-xl shadow transition">
-          <i class="fa-solid fa-palette"></i> Customize School Branding
-        </button>
-      </div>
-
-      <!-- Student Directory with Passport Photo Upload -->
-      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 space-y-4">
-        <div class="flex justify-between items-center">
-          <h2 class="font-bold text-slate-900 text-sm flex items-center gap-2">
-            <i class="fa-solid fa-id-card text-brand-600"></i> Student Roster & Passport Photo Uploads
-          </h2>
-          <span class="text-xs text-slate-500">Click any student's photo to update directly</span>
-        </div>
-        <div class="grid sm:grid-cols-2 md:grid-cols-3 gap-4" id="admin-student-cards">
-          <!-- Populated by JS -->
+        <div class="pt-6 border-t-2 border-slate-900 flex justify-between items-end gap-6 text-xs">
+          <div><div class="font-serif italic text-base">Mrs. O. Balogun</div><div class="border-t pt-1 font-bold">Form Teacher</div></div>
+          <div class="text-center"><div class="w-16 h-16 rounded-full border-2 border-emerald-600 border-dashed mx-auto flex items-center justify-center text-emerald-700 text-xs font-black uppercase rotate-[-10deg]">VERIFIED<br>OFFICIAL</div></div>
+          <div class="text-right"><div class="font-serif italic text-base">Dr. Anthony K. Eze</div><div class="border-t pt-1 font-bold">Principal / Headteacher</div></div>
         </div>
       </div>
     </section>
 
   </main>
 
-  <!-- BRAND SETTINGS MODAL -->
-  <div id="brand-modal" class="hidden fixed inset-0 z-50 bg-slate-900/80 backdrop-blur-sm flex items-center justify-center p-4">
-    <div class="bg-white rounded-2xl max-w-md w-full p-6 space-y-4 shadow-2xl">
+  <!-- DEDICATED MULTI-SCHOOL LOGIN MODAL -->
+  <div id="campus-login-modal" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-md w-full p-6 sm:p-8 space-y-5 shadow-2xl relative border border-slate-100">
       <div class="flex justify-between items-center border-b pb-3">
-        <h3 class="text-lg font-bold text-slate-900">School Identity & Branding</h3>
-        <button onclick="document.getElementById('brand-modal').classList.add('hidden')" class="text-slate-400 hover:text-slate-600">
-          <i class="fa-solid fa-xmark text-lg"></i>
-        </button>
+        <div>
+          <h3 class="text-lg font-black text-slate-900">Institutional Portal Login</h3>
+          <p class="text-xs text-slate-500">Select campus and role credentials</p>
+        </div>
+        <button onclick="closeCampusLoginModal()" class="text-slate-400 hover:text-slate-600 text-lg"><i class="fa-solid fa-xmark"></i></button>
       </div>
-      <div>
-        <label class="block text-xs font-bold text-slate-700 uppercase mb-1">School Name</label>
-        <input type="text" id="brand-name-input" value="Apex Horizon Academy" class="w-full text-xs border border-slate-300 rounded-lg p-2.5 outline-none font-bold" />
-      </div>
-      <div>
-        <label class="block text-xs font-bold text-slate-700 uppercase mb-1">School Motto</label>
-        <input type="text" id="brand-motto-input" value="Excellence, Character & Leadership" class="w-full text-xs border border-slate-300 rounded-lg p-2.5 outline-none" />
-      </div>
-      <div class="flex justify-end gap-3 pt-3 border-t">
-        <button onclick="document.getElementById('brand-modal').classList.add('hidden')" class="px-4 py-2 text-xs font-bold text-slate-600 hover:bg-slate-100 rounded-lg">Cancel</button>
-        <button onclick="saveBrandSettings()" class="px-5 py-2 text-xs font-bold bg-purple-600 hover:bg-purple-700 text-white rounded-lg shadow">Save Branding</button>
-      </div>
-    </div>
-  </div>
 
-  <!-- AUTH / LOGIN MODAL -->
-  <div id="login-modal" class="hidden fixed inset-0 z-50 bg-slate-900/80 backdrop-blur-sm flex items-center justify-center p-4">
-    <div class="bg-white rounded-2xl max-w-sm w-full p-6 space-y-4 shadow-2xl">
-      <div class="flex justify-between items-center border-b pb-3">
-        <h3 class="text-lg font-bold text-slate-900" id="login-modal-title">Portal Sign In</h3>
-        <button onclick="document.getElementById('login-modal').classList.add('hidden')" class="text-slate-400 hover:text-slate-600">
-          <i class="fa-solid fa-xmark text-lg"></i>
-        </button>
-      </div>
+      <!-- Campus Select in Login -->
       <div class="space-y-3">
         <div>
-          <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Passcode / PIN</label>
-          <input type="password" id="login-pin-input" placeholder="Enter PIN..." class="w-full text-sm border border-slate-300 rounded-lg p-3 outline-none" />
-          <p class="text-[11px] text-slate-400 mt-1" id="login-hint">Admin: admin123 | Teacher: teacher123 | Student: 4481</p>
+          <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Select School Campus</label>
+          <select id="login-modal-campus" onchange="updateModalCredentialsHint(this.value)" class="w-full text-xs font-bold border border-slate-300 rounded-xl p-3 outline-none focus:ring-2 focus:ring-blue-500">
+            <option value="apex">Apex Horizon Academy (Victoria Island)</option>
+            <option value="crown">Crown Crest College (Ikeja GRA)</option>
+            <option value="augustine">St. Augustine Preparatory (Lekki)</option>
+          </select>
         </div>
-        <button onclick="validateLogin()" class="w-full bg-brand-600 hover:bg-brand-700 text-white font-bold py-3 rounded-xl transition text-sm">
-          Access Portal
-        </button>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-700 uppercase mb-1">Target Role</label>
+          <select id="login-modal-role" onchange="autoFillDemoPin()" class="w-full text-xs font-bold border border-slate-300 rounded-xl p-3 outline-none">
+            <option value="student">Student Portal (Results & CBT)</option>
+            <option value="parent">Parent Portal (Attendance & Fees)</option>
+            <option value="teacher">Teacher Workstation (Gradebook)</option>
+            <option value="admin">Headteacher / Admin Console</option>
+          </select>
+        </div>
+
+        <div>
+          <div class="flex justify-between items-center mb-1">
+            <label class="text-xs font-bold text-slate-700 uppercase">Access PIN / Scratchcard Token</label>
+            <button onclick="autoFillDemoPin()" class="text-[11px] font-bold text-blue-600 hover:underline">Auto-Fill Demo PIN</button>
+          </div>
+          <input type="password" id="login-modal-pin" value="4481" class="w-full text-sm border border-slate-300 rounded-xl p-3 outline-none font-mono" />
+          <p id="login-credentials-hint" class="text-[11px] text-slate-500 mt-1">Default Student PIN: 4481</p>
+        </div>
       </div>
+
+      <button onclick="submitCampusLogin()" class="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold py-3.5 rounded-xl shadow-lg transition text-xs">
+        Enter School Portal
+      </button>
     </div>
   </div>
 
-  <!-- HIDDEN FILE INPUT FOR PASSPORT EDITING -->
+  <!-- PAYMENT CHECKOUT MODAL -->
+  <div id="payment-modal" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-sm w-full p-6 space-y-4 shadow-2xl">
+      <div class="flex justify-between items-center border-b pb-3">
+        <h3 class="text-sm font-bold text-slate-900 uppercase">Secure Fee Checkout</h3>
+        <button onclick="document.getElementById('payment-modal').classList.add('hidden')" class="text-slate-400"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div class="text-center py-2">
+        <div class="text-xs text-slate-500 uppercase">Amount Due</div>
+        <div class="text-3xl font-black text-slate-900 mt-1">₦45,000.00</div>
+      </div>
+      <button onclick="processTuitionPayment()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-xl text-xs shadow transition">
+        Confirm & Authorize ₦45,000.00
+      </button>
+    </div>
+  </div>
+
+  <!-- HIDDEN PASSPORT INPUT -->
   <input type="file" id="passport-hidden-input" accept="image/*" class="hidden" onchange="applyUploadedPassport(event)" />
 
   <!-- SCRIPT ENGINE -->
   <script>
-    // =========================================================================
-    // INITIAL DATA REPOSITORY
-    // =========================================================================
-    const defaultStudents = [
-      {
-        id: "STU/2026/042",
-        name: "Adeyemi Toluwalase",
-        class: "JSS 2 Diamond",
-        pin: "4481",
-        photo: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&h=200&q=80",
-        scores: [
-          { subject: "Mathematics", ca1: 18, ca2: 19, exam: 54, total: 91, grade: "A1", remark: "Distinction" },
-          { subject: "English Language", ca1: 17, ca2: 16, exam: 52, total: 85, grade: "A1", remark: "Distinction" },
-          { subject: "Basic Science", ca1: 19, ca2: 18, exam: 55, total: 92, grade: "A1", remark: "Distinction" },
-          { subject: "Civic Education", ca1: 16, ca2: 17, exam: 48, total: 81, grade: "B2", remark: "Very Good" },
-          { subject: "Computer Studies", ca1: 20, ca2: 19, exam: 58, total: 97, grade: "A1", remark: "Outstanding" },
-        ]
-      },
-      {
-        id: "STU/2026/108",
-        name: "Chukwuma Kamsiyochukwu",
-        class: "JSS 2 Diamond",
-        pin: "4481",
-        photo: "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=200&h=200&q=80",
-        scores: [
-          { subject: "Mathematics", ca1: 15, ca2: 16, exam: 45, total: 76, grade: "B3", remark: "Good" },
-          { subject: "English Language", ca1: 18, ca2: 17, exam: 50, total: 85, grade: "A1", remark: "Distinction" },
-          { subject: "Basic Science", ca1: 16, ca2: 14, exam: 48, total: 78, grade: "B3", remark: "Good" },
-          { subject: "Civic Education", ca1: 15, ca2: 15, exam: 46, total: 76, grade: "B3", remark: "Good" },
-          { subject: "Computer Studies", ca1: 17, ca2: 18, exam: 52, total: 87, grade: "A1", remark: "Distinction" },
-        ]
-      }
-    ];
-
-    const defaultExams = [
-      {
-        id: "EXAM-101",
-        subject: "Mathematics",
-        title: "Term 2 Mid-Term Assessment",
-        durationMinutes: 15,
-        questions: [
+    // MULTI-SCHOOL PROFILES
+    const schoolDatabases = {
+      apex: {
+        id: "apex",
+        name: "Apex Horizon Academy",
+        tag: "Victoria Island",
+        motto: "Excellence, Character & Leadership",
+        address: "P.O. Box 4820, Victoria Island, Lagos, Nigeria",
+        crestIcon: "fa-graduation-cap",
+        crestGradient: "from-blue-700 to-indigo-500",
+        cssVars: {
+          '--brand-50': '#eff6ff',
+          '--brand-100': '#dbeafe',
+          '--brand-500': '#2563eb',
+          '--brand-600': '#1d4ed8',
+          '--brand-700': '#1e40af',
+          '--brand-800': '#1e3a8a',
+          '--accent-400': '#fbbf24',
+          '--accent-500': '#f59e0b',
+        },
+        students: [
           {
-            id: 1,
-            type: "mcq",
-            prompt: "What is the value of x if 2x + 7 = 19?",
-            options: ["A) 4", "B) 6", "C) 8", "D) 12"],
-            correctAnswer: "B",
-            points: 5
-          },
-          {
-            id: 2,
-            type: "mcq",
-            prompt: "Calculate the area of a circle with a radius of 7 cm (Take π = 22/7).",
-            options: ["A) 44 cm²", "B) 154 cm²", "C) 196 cm²", "D) 308 cm²"],
-            correctAnswer: "B",
-            points: 5
-          },
-          {
-            id: 3,
-            type: "typed",
-            prompt: "Type the name of a polygon that has exactly eight interior angles.",
-            correctAnswer: "octagon",
-            points: 5
-          },
-          {
-            id: 4,
-            type: "file",
-            prompt: "Solve the simultaneous equations: 2x + y = 10 and x - y = 2. Write out your step-by-step working on paper, take a clear photo or scan, and attach the file below.",
-            rubric: "Max 10 pts: 3 pts for method, 3 pts for x=4, 3 pts for y=2, 1 pt neatness.",
-            points: 10
+            id: "STU/2026/042",
+            name: "Adeyemi Toluwalase",
+            class: "JSS 2 Diamond",
+            pin: "4481",
+            photo: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&h=200&q=80",
+            scores: [
+              { subject: "Mathematics", ca1: 18, ca2: 19, exam: 54, total: 91, grade: "A1", remark: "Distinction" },
+              { subject: "English Language", ca1: 17, ca2: 16, exam: 52, total: 85, grade: "A1", remark: "Distinction" },
+              { subject: "Basic Science", ca1: 19, ca2: 18, exam: 55, total: 92, grade: "A1", remark: "Distinction" },
+              { subject: "Civic Education", ca1: 16, ca2: 17, exam: 48, total: 81, grade: "B2", remark: "Very Good" }
+            ]
           }
         ]
       },
-      {
-        id: "EXAM-102",
-        subject: "English Language",
-        title: "Reading Comprehension & Grammar Test",
-        durationMinutes: 20,
-        questions: [
+      crown: {
+        id: "crown",
+        name: "Crown Crest College",
+        tag: "Ikeja GRA",
+        motto: "Wisdom, Discipline & Integrity",
+        address: "14 Isaac John Street, Ikeja GRA, Lagos, Nigeria",
+        crestIcon: "fa-tree",
+        crestGradient: "from-emerald-700 to-teal-500",
+        cssVars: {
+          '--brand-50': '#ecfdf5',
+          '--brand-100': '#d1fae5',
+          '--brand-500': '#10b981',
+          '--brand-600': '#059669',
+          '--brand-700': '#047857',
+          '--brand-800': '#065f46',
+          '--accent-400': '#f59e0b',
+          '--accent-500': '#d97706',
+        },
+        students: [
           {
-            id: 1,
-            type: "mcq",
-            prompt: "Choose the correct antonym of the word 'BENEVOLENT':",
-            options: ["A) Generous", "B) Malevolent", "C) Kind-hearted", "D) Honest"],
-            correctAnswer: "B",
-            points: 5
-          },
+            id: "CCC/2026/114",
+            name: "Chukwuma Kamsi",
+            class: "Grade 8 Emerald",
+            pin: "5592",
+            photo: "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=200&h=200&q=80",
+            scores: [
+              { subject: "Mathematics", ca1: 19, ca2: 18, exam: 58, total: 95, grade: "A1", remark: "Distinction" },
+              { subject: "English Language", ca1: 16, ca2: 18, exam: 54, total: 88, grade: "A1", remark: "Distinction" },
+              { subject: "Basic Science", ca1: 17, ca2: 17, exam: 52, total: 86, grade: "A1", remark: "Distinction" },
+              { subject: "French Language", ca1: 15, ca2: 16, exam: 49, total: 80, grade: "B2", remark: "Very Good" }
+            ]
+          }
+        ]
+      },
+      augustine: {
+        id: "augustine",
+        name: "St. Augustine Preparatory",
+        tag: "Lekki Phase 1",
+        motto: "Fides, Scientia et Virtus",
+        address: "Plot 8 Admiralty Way, Lekki Phase 1, Lagos, Nigeria",
+        crestIcon: "fa-monument",
+        crestGradient: "from-purple-800 to-violet-600",
+        cssVars: {
+          '--brand-50': '#faf5ff',
+          '--brand-100': '#f3e8ff',
+          '--brand-500': '#8b5cf6',
+          '--brand-600': '#7c3aed',
+          '--brand-700': '#6d28d9',
+          '--brand-800': '#5b21b6',
+          '--accent-400': '#38bdf8',
+          '--accent-500': '#0ea5e9',
+        },
+        students: [
           {
-            id: 2,
-            type: "typed",
-            prompt: "Identify the part of speech of the word 'swiftly' in the sentence: 'The cheetah ran swiftly.'",
-            correctAnswer: "adverb",
-            points: 5
-          },
-          {
-            id: 3,
-            type: "file",
-            prompt: "Write a short composition (150 words) on 'The Role of Technology in Modern Education'. Upload your typed Word document or handwritten PDF.",
-            rubric: "Max 15 pts: 5 pts vocabulary, 5 pts grammar/spelling, 5 pts coherent structure.",
-            points: 15
+            id: "SAP/2026/089",
+            name: "Fatima Al-Hassan",
+            class: "Year 9 Royal",
+            pin: "3371",
+            photo: "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=200&h=200&q=80",
+            scores: [
+              { subject: "Mathematics", ca1: 17, ca2: 17, exam: 53, total: 87, grade: "A1", remark: "Distinction" },
+              { subject: "English Language", ca1: 19, ca2: 19, exam: 57, total: 95, grade: "A1", remark: "Distinction" },
+              { subject: "Basic Science", ca1: 18, ca2: 18, exam: 54, total: 90, grade: "A1", remark: "Distinction" },
+              { subject: "Computer Science", ca1: 20, ca2: 19, exam: 59, total: 98, grade: "A1", remark: "Outstanding" }
+            ]
           }
         ]
       }
-    ];
+    };
 
-    const defaultAssignments = [
-      {
-        id: "ASG-01",
-        subject: "Mathematics",
-        title: "Weekly Practice: Quadratic Factorization",
-        dueDate: "2026-10-18",
-        instructions: "Complete all questions from Chapter 4, Exercises 4.2 (Nos 1 through 15). Show full factor steps.",
-        attachmentPdf: "Math_Factorization_Practice_Set.pdf"
-      },
-      {
-        id: "ASG-02",
-        subject: "English Language",
-        title: "Formal Letter Writing Exercise",
-        dueDate: "2026-10-20",
-        instructions: "Write a letter to the Chairman of your Local Government Area requesting clean public library facilities in your neighborhood.",
-        attachmentPdf: "Formal_Letter_Guidelines_Rubric.pdf"
-      },
-      {
-        id: "ASG-03",
-        subject: "Basic Science",
-        title: "Laboratory Report: Renewable Energy Sources",
-        dueDate: "2026-10-22",
-        instructions: "Draft a 1-page summary contrasting Solar Photovoltaics and Wind Turbines with diagrams.",
-        attachmentPdf: "Renewable_Energy_Lab_Guide.pdf"
-      },
-      {
-        id: "ASG-04",
-        subject: "Civic Education",
-        title: "Rule of Law & Constitution Analysis",
-        dueDate: "2026-10-25",
-        instructions: "Explain three distinct pillars of the Nigerian Constitution with real-world examples.",
-        attachmentPdf: null
-      }
-    ];
-
-    const defaultSubmissions = [
-      {
-        studentName: "Adeyemi Toluwalase",
-        examTitle: "Term 2 Mid-Term Assessment",
-        autoScore: "15 / 15",
-        uploadedFileName: "tolu_math_working_sheet.jpg",
-        rubricAwarded: "9 / 10",
-        status: "Graded"
-      }
-    ];
-
-    // App State
-    let students = JSON.parse(localStorage.getItem('portal_students')) || defaultStudents;
-    let exams = JSON.parse(localStorage.getItem('portal_exams')) || defaultExams;
-    let assignments = JSON.parse(localStorage.getItem('portal_assignments')) || defaultAssignments;
-    let submissions = JSON.parse(localStorage.getItem('portal_submissions')) || defaultSubmissions;
+    let activeSchoolKey = 'apex';
+    let currentSchool = schoolDatabases.apex;
     let activeRole = 'public';
     let targetPhotoStudentId = null;
-    let activeRunningExam = null;
-    let cbtTimerInterval = null;
-    let selectedHwFile = null;
 
-    // =========================================================================
-    // INITIALIZATION & ROUTING
-    // =========================================================================
     window.addEventListener('DOMContentLoaded', () => {
-      renderNavLinks();
-      renderStudentReport();
-      renderStudentCbtCards();
-      renderAssignmentsList();
-      renderAdminCards();
-      renderTeacherExamsTable();
-      renderSubmissionsTable();
+      applySchoolBranding(activeSchoolKey);
     });
+
+    function changeActiveSchool(key) {
+      activeSchoolKey = key;
+      currentSchool = schoolDatabases[key];
+      document.getElementById('school-campus-select').value = key;
+      document.getElementById('login-modal-campus').value = key;
+      applySchoolBranding(key);
+    }
+
+    function applySchoolBranding(key) {
+      const s = schoolDatabases[key];
+      
+      // Update DOM Text
+      document.getElementById('nav-school-name').textContent = s.name;
+      document.getElementById('nav-school-tag').textContent = s.tag;
+      document.getElementById('nav-school-motto').textContent = s.motto;
+      document.getElementById('hero-school-name').textContent = s.name;
+      document.getElementById('card-preview-school').textContent = s.name;
+      document.getElementById('report-school-name').textContent = s.name;
+      document.getElementById('report-school-address').textContent = s.address;
+
+      // Update Crest
+      const crestBox = document.getElementById('school-crest-box');
+      crestBox.className = `w-11 h-11 rounded-xl bg-gradient-to-tr ${s.crestGradient} flex items-center justify-center text-white font-black text-xl shadow-md`;
+      document.getElementById('school-crest-icon').className = `fa-solid ${s.crestIcon}`;
+
+      // Apply CSS variables
+      for (const [varName, val] of Object.entries(s.cssVars)) {
+        document.documentElement.style.setProperty(varName, val);
+      }
+
+      renderNav();
+      renderReport();
+      renderTeacherGradebook();
+      renderAttendanceRoster();
+      renderAdminCards();
+    }
 
     function switchRole(role) {
       activeRole = role;
-      document.getElementById('active-role-badge').textContent = 
-        role === 'admin' ? 'Headteacher' :
-        role === 'teacher' ? 'Teacher' :
-        role === 'student' ? 'Student / Parent' : 'Public Website';
-
-      // Hide all views
-      ['view-public', 'view-student-cbt', 'view-assignments', 'view-teacher-cbt-builder', 'view-student-report', 'view-admin']
+      ['view-public', 'view-student', 'view-parent', 'view-teacher', 'view-admin', 'view-report-card']
         .forEach(id => document.getElementById(id).classList.add('hidden'));
 
-      // Show contextual view
       if (role === 'public') document.getElementById('view-public').classList.remove('hidden');
-      if (role === 'student') document.getElementById('view-student-cbt').classList.remove('hidden');
-      if (role === 'teacher') document.getElementById('view-teacher-cbt-builder').classList.remove('hidden');
+      if (role === 'student') document.getElementById('view-student').classList.remove('hidden');
+      if (role === 'parent') document.getElementById('view-parent').classList.remove('hidden');
+      if (role === 'teacher') document.getElementById('view-teacher').classList.remove('hidden');
       if (role === 'admin') document.getElementById('view-admin').classList.remove('hidden');
 
-      renderNavLinks();
+      renderNav();
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    function renderNavLinks() {
+    function renderNav() {
       const container = document.getElementById('nav-links-container');
       const mobileContainer = document.getElementById('mobile-nav-drawer');
       let links = [];
 
       if (activeRole === 'public') {
         links = [
-          { text: 'Home', action: "switchRole('public')" },
-          { text: 'CBT Center', action: "openLoginModal('student')" },
-          { text: 'Check Result', action: "openLoginModal('student')" },
-          { text: 'Staff Portal', action: "openLoginModal('teacher')" }
+          { text: 'Home', act: "switchRole('public')" },
+          { text: 'Student', act: "switchRole('student')" },
+          { text: 'Parent', act: "switchRole('parent')" },
+          { text: 'Teacher', act: "switchRole('teacher')" },
+          { text: 'Admin', act: "switchRole('admin')" }
         ];
       } else if (activeRole === 'student') {
         links = [
-          { text: 'Take CBT Exams', action: "showStudentView('cbt')" },
-          { text: 'Assignments & PDF', action: "showStudentView('assignments')" },
-          { text: 'Terminal Report Card', action: "showStudentView('report')" },
-          { text: 'Log Out', action: "switchRole('public')" }
+          { text: 'Schedule', act: "switchStudentTab('timetable')" },
+          { text: 'Materials', act: "switchStudentTab('materials')" },
+          { text: 'Report Sheet', act: "showReportView()" },
+          { text: 'Logout', act: "switchRole('public')" }
+        ];
+      } else if (activeRole === 'parent') {
+        links = [
+          { text: 'Attendance', act: "switchParentTab('overview')" },
+          { text: 'Pay Fees', act: "switchParentTab('finances')" },
+          { text: 'Chat', act: "switchParentTab('chat')" },
+          { text: 'Report', act: "showReportView()" },
+          { text: 'Logout', act: "switchRole('public')" }
         ];
       } else if (activeRole === 'teacher') {
         links = [
-          { text: 'Exam Builder & Rubric', action: "showTeacherView('exams')" },
-          { text: 'Assignments Hub', action: "showTeacherView('assignments')" },
-          { text: 'Log Out', action: "switchRole('public')" }
+          { text: 'Gradebook', act: "switchTeacherTab('gradebook')" },
+          { text: 'Roll Call', act: "switchTeacherTab('attendance')" },
+          { text: 'Logout', act: "switchRole('public')" }
         ];
       } else if (activeRole === 'admin') {
         links = [
-          { text: 'Students & Passports', action: "switchRole('admin')" },
-          { text: 'Exams & CBT Overview', action: "switchRole('teacher')" },
-          { text: 'Log Out', action: "switchRole('public')" }
+          { text: 'Directory & Passports', act: "switchRole('admin')" },
+          { text: 'Logout', act: "switchRole('public')" }
         ];
       }
 
-      container.innerHTML = links.map(l => `
-        <button onclick="${l.action}" class="hover:text-brand-600 transition px-2 py-1 rounded-lg">${l.text}</button>
-      `).join('');
-
-      mobileContainer.innerHTML = links.map(l => `
-        <button onclick="${l.action}; toggleMobileNav();" class="block w-full text-left font-semibold py-2 px-3 text-slate-700 hover:bg-slate-100 rounded-lg">${l.text}</button>
-      `).join('');
+      container.innerHTML = links.map(l => `<button onclick="${l.act}" class="hover:text-blue-600 transition px-2 py-1 font-bold">${l.text}</button>`).join('');
+      mobileContainer.innerHTML = links.map(l => `<button onclick="${l.act}; toggleMobileNav();" class="block w-full text-left font-bold py-2 px-3 hover:bg-slate-50">${l.text}</button>`).join('');
     }
 
-    function toggleMobileNav() {
-      document.getElementById('mobile-nav-drawer').classList.toggle('hidden');
+    function toggleMobileNav() { document.getElementById('mobile-nav-drawer').classList.toggle('hidden'); }
+
+    // LOGIN & DEMO SIMULATION
+    function openCampusLoginModal() {
+      document.getElementById('login-modal-campus').value = activeSchoolKey;
+      autoFillDemoPin();
+      document.getElementById('campus-login-modal').classList.remove('hidden');
     }
 
-    function showStudentView(tab) {
-      document.getElementById('view-student-cbt').classList.add('hidden');
-      document.getElementById('view-assignments').classList.add('hidden');
-      document.getElementById('view-student-report').classList.add('hidden');
-
-      if (tab === 'cbt') document.getElementById('view-student-cbt').classList.remove('hidden');
-      if (tab === 'assignments') document.getElementById('view-assignments').classList.remove('hidden');
-      if (tab === 'report') document.getElementById('view-student-report').classList.remove('hidden');
+    function closeCampusLoginModal() {
+      document.getElementById('campus-login-modal').classList.add('hidden');
     }
 
-    function showTeacherView(tab) {
-      if (tab === 'exams') {
-        document.getElementById('view-assignments').classList.add('hidden');
-        document.getElementById('view-teacher-cbt-builder').classList.remove('hidden');
-      } else if (tab === 'assignments') {
-        document.getElementById('view-teacher-cbt-builder').classList.add('hidden');
-        document.getElementById('view-assignments').classList.remove('hidden');
+    function updateModalCredentialsHint(campusKey) {
+      changeActiveSchool(campusKey);
+      autoFillDemoPin();
+    }
+
+    function autoFillDemoPin() {
+      const role = document.getElementById('login-modal-role').value;
+      const pinInput = document.getElementById('login-modal-pin');
+      const hint = document.getElementById('login-credentials-hint');
+      const curStu = currentSchool.students[0];
+
+      if (role === 'student') {
+        pinInput.value = curStu.pin;
+        hint.textContent = `Student ID: ${curStu.id} • PIN: ${curStu.pin}`;
+      } else if (role === 'parent') {
+        pinInput.value = 'parent123';
+        hint.textContent = `Parent Demo PIN: parent123`;
+      } else if (role === 'teacher') {
+        pinInput.value = 'teacher123';
+        hint.textContent = `Faculty Demo PIN: teacher123`;
+      } else if (role === 'admin') {
+        pinInput.value = 'admin123';
+        hint.textContent = `Headteacher Demo PIN: admin123`;
       }
     }
 
-    // =========================================================================
-    // CBT / EXAM ENGINE FOR STUDENTS
-    // =========================================================================
-    function renderStudentCbtCards() {
-      const container = document.getElementById('cbt-exam-list');
-      container.innerHTML = exams.map(ex => `
-        <div class="bg-white rounded-2xl border border-slate-200/90 p-6 shadow-sm hover:shadow-md transition space-y-4 flex flex-col justify-between">
-          <div class="space-y-2">
-            <div class="flex items-center justify-between">
-              <span class="text-xs font-bold bg-brand-50 text-brand-700 px-2.5 py-1 rounded-md uppercase">${ex.subject}</span>
-              <span class="text-xs font-semibold text-slate-500"><i class="fa-regular fa-clock"></i> ${ex.durationMinutes} Mins</span>
-            </div>
-            <h3 class="text-base font-bold text-slate-900">${ex.title}</h3>
-            <p class="text-xs text-slate-500">${ex.questions.length} questions included (MCQ, short answers & working uploads).</p>
-          </div>
-          <button onclick="startCbtExam('${ex.id}')" class="w-full bg-brand-600 hover:bg-brand-700 text-white font-bold py-2.5 rounded-xl text-xs transition flex items-center justify-center gap-2 shadow">
-            <i class="fa-solid fa-play"></i> Start Examination
-          </button>
-        </div>
-      `).join('');
+    function submitCampusLogin() {
+      const role = document.getElementById('login-modal-role').value;
+      closeCampusLoginModal();
+      switchRole(role);
     }
 
-    function startCbtExam(examId) {
-      activeRunningExam = exams.find(e => e.id === examId);
-      if (!activeRunningExam) return;
-
-      document.getElementById('cbt-runner-subject').textContent = activeRunningExam.subject;
-      document.getElementById('cbt-runner-title').textContent = activeRunningExam.title;
-
-      const qContainer = document.getElementById('cbt-questions-container');
-      qContainer.innerHTML = activeRunningExam.questions.map((q, idx) => {
-        let inputHtml = '';
-        if (q.type === 'mcq') {
-          inputHtml = `
-            <div class="grid sm:grid-cols-2 gap-3 pt-2">
-              ${q.options.map((opt, oIdx) => {
-                const optLetter = opt.charAt(0);
-                return `
-                  <label class="flex items-center gap-3 p-3 rounded-xl border border-slate-200 bg-white hover:border-brand-500 cursor-pointer transition">
-                    <input type="radio" name="q_${q.id}" value="${optLetter}" class="accent-brand-600" />
-                    <span class="text-xs font-medium text-slate-800">${opt}</span>
-                  </label>
-                `;
-              }).join('')}
-            </div>
-          `;
-        } else if (q.type === 'typed') {
-          inputHtml = `
-            <div class="pt-2">
-              <input type="text" id="q_input_${q.id}" placeholder="Type your answer here..." class="w-full text-xs border border-slate-300 rounded-xl p-3 focus:ring-2 focus:ring-brand-500 outline-none" />
-              <p class="text-[11px] text-slate-400 mt-1">This typed answer will be verified by the rubric engine.</p>
-            </div>
-          `;
-        } else if (q.type === 'file') {
-          inputHtml = `
-            <div class="pt-2 space-y-2">
-              <div class="bg-amber-50 border border-amber-200 p-2.5 rounded-lg text-[11px] text-amber-800">
-                <strong>Rubric Guidelines:</strong> ${q.rubric}
-              </div>
-              <div class="border-2 border-dashed border-slate-300 rounded-xl p-4 text-center bg-white cursor-pointer hover:border-brand-500">
-                <input type="file" id="q_file_${q.id}" class="hidden" onchange="previewExamUpload(event, 'file_name_${q.id}')" />
-                <label for="q_file_${q.id}" class="cursor-pointer block">
-                  <i class="fa-solid fa-cloud-arrow-up text-brand-600 text-2xl mb-1"></i>
-                  <div class="text-xs font-bold text-slate-700" id="file_name_${q.id}">Click to upload solution file or photo</div>
-                  <div class="text-[11px] text-slate-400">PDF, JPG, PNG up to 15MB</div>
-                </label>
-              </div>
-            </div>
-          `;
-        }
-
-        return `
-          <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm space-y-3">
-            <div class="flex items-center justify-between">
-              <span class="text-xs font-black text-brand-700 bg-brand-50 px-2.5 py-0.5 rounded">Question ${idx + 1} of ${activeRunningExam.questions.length}</span>
-              <span class="text-xs font-bold text-slate-400">${q.points} Points</span>
-            </div>
-            <p class="text-sm font-bold text-slate-900">${q.prompt}</p>
-            ${inputHtml}
-          </div>
-        `;
-      }).join('');
-
-      // Start Countdown Timer
-      let totalSeconds = activeRunningExam.durationMinutes * 60;
-      clearInterval(cbtTimerInterval);
-      cbtTimerInterval = setInterval(() => {
-        totalSeconds--;
-        const m = Math.floor(totalSeconds / 60);
-        const s = totalSeconds % 60;
-        document.getElementById('cbt-timer').textContent = `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
-        if (totalSeconds <= 0) {
-          clearInterval(cbtTimerInterval);
-          submitActiveExam();
-        }
-      }, 1000);
-
-      document.getElementById('cbt-runner-modal').classList.remove('hidden');
+    function simulateLogin(role) {
+      switchRole(role);
     }
 
-    function previewExamUpload(e, labelId) {
-      if (e.target.files && e.target.files[0]) {
-        document.getElementById(labelId).textContent = "Attached: " + e.target.files[0].name;
-      }
+    // STUDENT & PARENT SUBTABS
+    function switchStudentTab(tab) {
+      document.getElementById('view-report-card').classList.add('hidden');
+      document.getElementById('view-student').classList.remove('hidden');
+      document.getElementById('student-tab-timetable').classList.toggle('hidden', tab !== 'timetable');
+      document.getElementById('student-tab-materials').classList.toggle('hidden', tab !== 'materials');
     }
 
-    function closeCbtRunner() {
-      if (confirm("Are you sure you want to exit? Your answers will not be submitted.")) {
-        clearInterval(cbtTimerInterval);
-        document.getElementById('cbt-runner-modal').classList.add('hidden');
-      }
+    function switchParentTab(tab) {
+      document.getElementById('view-report-card').classList.add('hidden');
+      document.getElementById('view-parent').classList.remove('hidden');
+      document.getElementById('parent-tab-overview').classList.toggle('hidden', tab !== 'overview');
+      document.getElementById('parent-tab-finances').classList.toggle('hidden', tab !== 'finances');
+      document.getElementById('parent-tab-chat').classList.toggle('hidden', tab !== 'chat');
     }
 
-    function submitActiveExam() {
-      clearInterval(cbtTimerInterval);
-      document.getElementById('cbt-runner-modal').classList.add('hidden');
-
-      // Auto-marking logic for MCQs and typed questions
-      let autoScore = 0;
-      let totalObjectivePoints = 0;
-
-      activeRunningExam.questions.forEach(q => {
-        if (q.type === 'mcq') {
-          totalObjectivePoints += q.points;
-          const selected = document.querySelector(`input[name="q_${q.id}"]:checked`);
-          if (selected && selected.value.toUpperCase() === q.correctAnswer.toUpperCase()) {
-            autoScore += q.points;
-          }
-        } else if (q.type === 'typed') {
-          totalObjectivePoints += q.points;
-          const userVal = (document.getElementById(`q_input_${q.id}`)?.value || '').trim().toLowerCase();
-          if (userVal === q.correctAnswer.toLowerCase()) {
-            autoScore += q.points;
-          }
-        }
-      });
-
-      // Push to Submissions
-      submissions.unshift({
-        studentName: students[0].name,
-        examTitle: activeRunningExam.title,
-        autoScore: `${autoScore} / ${totalObjectivePoints}`,
-        uploadedFileName: "worksheet_submission.pdf",
-        rubricAwarded: "Pending Review",
-        status: "Submitted"
-      });
-      localStorage.setItem('portal_submissions', JSON.stringify(submissions));
-      renderSubmissionsTable();
-
-      document.getElementById('result-auto-score').textContent = `${autoScore} / ${totalObjectivePoints}`;
-      const pct = totalObjectivePoints > 0 ? Math.round((autoScore / totalObjectivePoints) * 100) : 100;
-      document.getElementById('result-total-pct').textContent = `${pct}%`;
-      document.getElementById('cbt-result-modal').classList.remove('hidden');
+    function switchTeacherTab(tab) {
+      document.getElementById('teacher-tab-gradebook').classList.toggle('hidden', tab !== 'gradebook');
+      document.getElementById('teacher-tab-attendance').classList.toggle('hidden', tab !== 'attendance');
     }
 
-    // =========================================================================
-    // ASSIGNMENT HUB & DROPDOWN FILTERING
-    // =========================================================================
-    function renderAssignmentsList(filter = 'ALL') {
-      const container = document.getElementById('assignment-cards-container');
-      const filtered = filter === 'ALL' ? assignments : assignments.filter(a => a.subject === filter);
-
-      if (filtered.length === 0) {
-        container.innerHTML = `<div class="col-span-3 text-center py-12 text-slate-400 text-sm">No homework assignments found for ${filter}.</div>`;
-        return;
-      }
-
-      container.innerHTML = filtered.map(asg => `
-        <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm flex flex-col justify-between space-y-4">
-          <div class="space-y-3">
-            <div class="flex items-center justify-between">
-              <span class="text-xs font-bold px-2.5 py-1 rounded bg-brand-50 text-brand-700 uppercase">${asg.subject}</span>
-              <span class="text-xs font-semibold text-rose-600 bg-rose-50 px-2 py-0.5 rounded">Due: ${asg.dueDate}</span>
-            </div>
-            <h3 class="text-base font-bold text-slate-900">${asg.title}</h3>
-            <p class="text-xs text-slate-600 leading-relaxed">${asg.instructions}</p>
-            ${asg.attachmentPdf ? `
-              <div class="bg-slate-50 border border-slate-200 rounded-xl p-3 flex items-center justify-between text-xs">
-                <div class="flex items-center gap-2 text-slate-700 font-medium truncate">
-                  <i class="fa-solid fa-file-pdf text-rose-500 text-base"></i>
-                  <span class="truncate">${asg.attachmentPdf}</span>
-                </div>
-                <button onclick="downloadPdfMock('${asg.attachmentPdf}')" class="text-brand-600 hover:text-brand-800 font-bold ml-2">Download</button>
-              </div>
-            ` : ''}
-          </div>
-          <button onclick="openHomeworkSubmitModal('${asg.title}')" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-2.5 rounded-xl text-xs transition shadow flex items-center justify-center gap-2">
-            <i class="fa-solid fa-arrow-up-from-bracket"></i> Turn in Homework
-          </button>
-        </div>
-      `).join('');
+    function showReportView() {
+      ['view-public', 'view-student', 'view-parent', 'view-teacher', 'view-admin'].forEach(id => document.getElementById(id).classList.add('hidden'));
+      document.getElementById('view-report-card').classList.remove('hidden');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    function filterAssignments() {
-      const subject = document.getElementById('filter-subject').value;
-      renderAssignmentsList(subject);
+    function openPaymentGatewayModal() { document.getElementById('payment-modal').classList.remove('hidden'); }
+    function processTuitionPayment() {
+      document.getElementById('payment-modal').classList.add('hidden');
+      document.getElementById('parent-tuition-badge').innerHTML = '<span class="inline-block bg-emerald-100 text-emerald-800 text-xs font-black px-2.5 py-1 rounded-md"><i class="fa-solid fa-circle-check"></i> 100% Cleared (₦0.00 Outstanding)</span>';
+      document.getElementById('btn-pay-tuition').classList.add('hidden');
+      alert("Payment of ₦45,000 received! Report card unlocked.");
     }
 
-    function downloadPdfMock(filename) {
-      alert(`Downloading ${filename} to your device...`);
+    function sendParentMessage() {
+      const input = document.getElementById('parent-message-input');
+      const val = input.value.trim();
+      if (!val) return;
+      document.getElementById('parent-chat-thread').innerHTML += `<div class="bg-blue-600 text-white p-3 rounded-xl max-w-sm ml-auto"><div class="font-bold text-blue-100">You:</div> ${val}</div>`;
+      input.value = '';
     }
 
-    function openHomeworkSubmitModal(title) {
-      document.getElementById('submit-hw-title').textContent = `Submit: ${title}`;
-      document.getElementById('homework-submit-modal').classList.remove('hidden');
-    }
-
-    function closeHomeworkModal() {
-      document.getElementById('homework-submit-modal').classList.add('hidden');
-    }
-
-    function handleHwFileSelected(e) {
-      if (e.target.files && e.target.files[0]) {
-        selectedHwFile = e.target.files[0].name;
-        document.getElementById('hw-file-name').textContent = "Selected: " + selectedHwFile;
-      }
-    }
-
-    function confirmSubmitHomework() {
-      alert("Homework successfully submitted to your subject teacher!");
-      closeHomeworkModal();
-    }
-
-    // =========================================================================
-    // TEACHER EXAM CREATOR & SUBMISSIONS REVIEW
-    // =========================================================================
-    function renderTeacherExamsTable() {
-      const tbody = document.getElementById('teacher-exams-table');
-      tbody.innerHTML = exams.map(e => `
-        <tr class="hover:bg-slate-50">
-          <td class="py-3 px-4 font-bold text-slate-900">${e.subject}</td>
-          <td class="py-3 px-4">${e.title}</td>
-          <td class="py-3 px-4">${e.durationMinutes} Minutes</td>
-          <td class="py-3 px-4">${e.questions.length} Items</td>
-          <td class="py-3 px-4"><span class="bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded text-[10px] font-bold">Auto + Rubric</span></td>
-          <td class="py-3 px-4 text-right">
-            <button onclick="deleteExam('${e.id}')" class="text-rose-500 hover:text-rose-700 font-bold ml-2">Delete</button>
-          </td>
-        </tr>
-      `).join('');
-    }
-
-    function renderSubmissionsTable() {
-      const tbody = document.getElementById('student-submissions-table');
-      tbody.innerHTML = submissions.map((sub, i) => `
-        <tr class="hover:bg-slate-50">
-          <td class="py-3 px-4 font-bold text-slate-900">${sub.studentName}</td>
-          <td class="py-3 px-4">${sub.examTitle}</td>
-          <td class="py-3 px-4 font-bold text-emerald-700">${sub.autoScore}</td>
-          <td class="py-3 px-4 text-brand-600 font-medium cursor-pointer" onclick="alert('Viewing attached scan: ' + '${sub.uploadedFileName}')">
-            <i class="fa-solid fa-paperclip"></i> ${sub.uploadedFileName}
-          </td>
-          <td class="py-3 px-4 font-bold text-slate-800">${sub.rubricAwarded}</td>
-          <td class="py-3 px-4 text-right">
-            <button onclick="awardRubricMarks(${i})" class="bg-brand-50 hover:bg-brand-100 text-brand-700 px-2.5 py-1 rounded font-bold">Grade File</button>
-          </td>
-        </tr>
-      `).join('');
-    }
-
-    function awardRubricMarks(idx) {
-      const marks = prompt("Enter rubric marks to award for student's uploaded solution sheet (e.g., 9/10):", "9 / 10");
-      if (marks) {
-        submissions[idx].rubricAwarded = marks;
-        localStorage.setItem('portal_submissions', JSON.stringify(submissions));
-        renderSubmissionsTable();
-      }
-    }
-
-    function openNewExamModal() {
-      document.getElementById('new-exam-modal').classList.remove('hidden');
-    }
-
-    function saveNewExam() {
-      const subject = document.getElementById('new-exam-subject').value;
-      const title = document.getElementById('new-exam-title').value || "Class Assessment";
-      const duration = parseInt(document.getElementById('new-exam-duration').value) || 20;
-      const qType = document.getElementById('new-q-type').value;
-      const qPrompt = document.getElementById('new-q-prompt').value || "Sample Exam Question";
-      const qAnswer = document.getElementById('new-q-answer').value || "A";
-
-      const newQ = {
-        id: Date.now(),
-        type: qType,
-        prompt: qPrompt,
-        options: qType === 'mcq' ? ["A) Option 1", "B) Option 2", "C) Option 3", "D) Option 4"] : null,
-        correctAnswer: qAnswer,
-        rubric: qType === 'file' ? qAnswer : null,
-        points: 10
-      };
-
-      exams.unshift({
-        id: "EXAM-" + Date.now().toString().slice(-4),
-        subject,
-        title,
-        durationMinutes: duration,
-        questions: [newQ]
-      });
-
-      localStorage.setItem('portal_exams', JSON.stringify(exams));
-      renderTeacherExamsTable();
-      renderStudentCbtCards();
-      document.getElementById('new-exam-modal').classList.add('hidden');
-      alert("New CBT Examination published successfully!");
-    }
-
-    function deleteExam(id) {
-      if (confirm("Delete this examination paper?")) {
-        exams = exams.filter(e => e.id !== id);
-        localStorage.setItem('portal_exams', JSON.stringify(exams));
-        renderTeacherExamsTable();
-        renderStudentCbtCards();
-      }
-    }
-
-    function openNewAssignmentModal() {
-      document.getElementById('new-assignment-modal').classList.remove('hidden');
-    }
-
-    function saveNewAssignment() {
-      const subject = document.getElementById('assign-subject').value;
-      const title = document.getElementById('assign-title').value || "Homework Exercise";
-      const due = document.getElementById('assign-due').value;
-      const body = document.getElementById('assign-body').value || "Read instructions and submit answers.";
-      const pdf = document.getElementById('assign-pdf-name').value;
-
-      assignments.unshift({
-        id: "ASG-" + Date.now().toString().slice(-4),
-        subject,
-        title,
-        dueDate: due,
-        instructions: body,
-        attachmentPdf: pdf || null
-      });
-
-      localStorage.setItem('portal_assignments', JSON.stringify(assignments));
-      renderAssignmentsList();
-      document.getElementById('new-assignment-modal').classList.add('hidden');
-      alert("New assignment published to student portal!");
-    }
-
-    // =========================================================================
-    // REPORT CARD & PASSPORT PHOTO MANAGEMENT
-    // =========================================================================
-    function renderStudentReport() {
-      const s = students[0];
+    // RENDERS
+    function renderReport() {
+      const s = currentSchool.students[0];
       document.getElementById('rep-name').textContent = s.name;
       document.getElementById('rep-reg').textContent = s.id;
+      document.getElementById('rep-class').textContent = s.class;
       document.getElementById('report-passport-img').src = s.photo;
+      document.getElementById('student-name-display').textContent = s.name;
+      document.getElementById('student-reg-display').textContent = s.id;
+      document.getElementById('student-class-display').textContent = s.class;
+      document.getElementById('parent-ward-name').textContent = s.name;
 
       const tbody = document.getElementById('report-subjects-body');
       tbody.innerHTML = s.scores.map(sc => `
         <tr class="hover:bg-slate-50">
-          <td class="p-2.5 font-bold text-slate-900 border-r border-slate-200">${sc.subject}</td>
-          <td class="p-2.5 text-center border-r border-slate-200">${sc.ca1}</td>
-          <td class="p-2.5 text-center border-r border-slate-200">${sc.ca2}</td>
-          <td class="p-2.5 text-center border-r border-slate-200">${sc.exam}</td>
-          <td class="p-2.5 text-center font-black border-r border-slate-200 text-brand-800">${sc.total}</td>
-          <td class="p-2.5 text-center font-bold border-r border-slate-200">${sc.grade}</td>
-          <td class="p-2.5 text-slate-600">${sc.remark}</td>
+          <td class="p-2 font-bold text-slate-900 border-r border-slate-200">${sc.subject}</td>
+          <td class="p-2 text-center border-r border-slate-200">${sc.ca1}</td>
+          <td class="p-2 text-center border-r border-slate-200">${sc.ca2}</td>
+          <td class="p-2 text-center border-r border-slate-200">${sc.exam}</td>
+          <td class="p-2 text-center font-black border-r border-slate-200 text-blue-800">${sc.total}</td>
+          <td class="p-2 text-center font-bold border-r border-slate-200">${sc.grade}</td>
+          <td class="p-2 text-slate-600">${sc.remark}</td>
         </tr>
+      `).join('');
+    }
+
+    function renderTeacherGradebook() {
+      const s = currentSchool.students[0];
+      const tbody = document.getElementById('teacher-gradebook-tbody');
+      tbody.innerHTML = s.scores.map(sc => `
+        <tr class="hover:bg-slate-50">
+          <td class="p-3 font-mono font-bold text-slate-500 border-r">${s.id}</td>
+          <td class="p-3 font-bold text-slate-900 border-r">${s.name} (${sc.subject})</td>
+          <td class="p-3 text-center border-r"><input type="number" value="${sc.ca1}" class="w-12 text-center border rounded py-1 font-bold" /></td>
+          <td class="p-3 text-center border-r"><input type="number" value="${sc.ca2}" class="w-12 text-center border rounded py-1 font-bold" /></td>
+          <td class="p-3 text-center border-r"><input type="number" value="${sc.exam}" class="w-12 text-center border rounded py-1 font-bold" /></td>
+          <td class="p-3 text-center font-black text-blue-700 border-r">${sc.total}</td>
+          <td class="p-3 text-center font-bold text-emerald-700">${sc.grade}</td>
+        </tr>
+      `).join('');
+    }
+
+    function renderAttendanceRoster() {
+      const roster = document.getElementById('teacher-attendance-roster');
+      roster.innerHTML = currentSchool.students.map(s => `
+        <div class="py-3 flex justify-between items-center">
+          <div class="flex items-center gap-3">
+            <img src="${s.photo}" class="w-8 h-8 rounded-full object-cover" />
+            <div><div class="font-bold text-slate-900">${s.name}</div><div class="text-[11px] text-slate-500">${s.id}</div></div>
+          </div>
+          <div class="flex gap-1.5">
+            <button class="px-2.5 py-1 rounded bg-emerald-600 text-white font-bold text-[11px]">Present</button>
+            <button class="px-2.5 py-1 rounded bg-slate-100 text-slate-600 font-bold text-[11px]">Late</button>
+            <button class="px-2.5 py-1 rounded bg-slate-100 text-slate-600 font-bold text-[11px]">Absent</button>
+          </div>
+        </div>
       `).join('');
     }
 
     function renderAdminCards() {
       const container = document.getElementById('admin-student-cards');
-      container.innerHTML = students.map(s => `
-        <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 flex items-center space-x-4">
+      container.innerHTML = currentSchool.students.map(s => `
+        <div class="bg-slate-50 p-4 rounded-xl border flex items-center space-x-4">
           <div class="relative group cursor-pointer" onclick="triggerPassportUpload('${s.id}')">
-            <img src="${s.photo}" class="w-16 h-16 rounded-full object-cover border-2 border-brand-500 shadow-sm" />
+            <img src="${s.photo}" class="w-14 h-14 rounded-full object-cover border-2 border-blue-500 shadow-sm" />
             <div class="absolute inset-0 bg-black/40 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition text-white text-xs">
               <i class="fa-solid fa-camera"></i>
             </div>
           </div>
-          <div class="flex-grow space-y-1">
-            <div class="text-sm font-bold text-slate-900">${s.name}</div>
-            <div class="text-xs text-slate-500">${s.id} • ${s.class}</div>
-            <button onclick="triggerPassportUpload('${s.id}')" class="text-[11px] font-bold text-brand-600 hover:underline">
-              Change Passport Photo
-            </button>
+          <div class="flex-grow space-y-0.5">
+            <div class="text-xs font-bold text-slate-900">${s.name}</div>
+            <div class="text-[11px] text-slate-500">${s.id}</div>
+            <button onclick="triggerPassportUpload('${s.id}')" class="text-[11px] font-bold text-blue-600 hover:underline">Change Photo</button>
           </div>
         </div>
       `).join('');
@@ -1359,44 +1080,18 @@
     function applyUploadedPassport(event) {
       const file = event.target.files[0];
       if (!file) return;
-
       const reader = new FileReader();
       reader.onload = (e) => {
-        const base64Photo = e.target.result;
-        const target = students.find(s => s.id === targetPhotoStudentId);
+        const photo = e.target.result;
+        const target = currentSchool.students.find(s => s.id === targetPhotoStudentId);
         if (target) {
-          target.photo = base64Photo;
-          localStorage.setItem('portal_students', JSON.stringify(students));
+          target.photo = photo;
           renderAdminCards();
-          renderStudentReport();
-          alert(`Passport photo for ${target.name} has been updated across the portal and report cards!`);
+          renderReport();
+          alert(`Passport photo for ${target.name} updated successfully!`);
         }
       };
       reader.readAsDataURL(file);
-    }
-
-    // =========================================================================
-    // BRANDING & AUTH MODALS
-    // =========================================================================
-    function saveBrandSettings() {
-      const name = document.getElementById('brand-name-input').value;
-      document.querySelectorAll('.school-name-text').forEach(el => el.textContent = name);
-      document.getElementById('brand-modal').classList.add('hidden');
-      alert("Branding successfully updated!");
-    }
-
-    function openLoginModal(role) {
-      document.getElementById('login-modal-title').textContent = `${role.toUpperCase()} Login`;
-      document.getElementById('login-modal').classList.remove('hidden');
-    }
-
-    function validateLogin() {
-      const pin = document.getElementById('login-pin-input').value;
-      if (pin === 'admin123') switchRole('admin');
-      else if (pin === 'teacher123') switchRole('teacher');
-      else if (pin === '4481') switchRole('student');
-      else alert("Invalid PIN. Use admin123, teacher123, or 4481");
-      document.getElementById('login-modal').classList.add('hidden');
     }
   </script>
 </body>
