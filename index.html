@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Edvance Suite | Nigeria's #1 All-in-One Cloud School Portal & CBT Engine</title>
   
-  <!-- FAVICON: CRISP INLINE SVG CREST (NO FILE UPLOAD NEEDED) -->
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%231d4ed8'/><path d='M50 18 L88 38 L50 58 L12 38 Z' fill='%23ffffff'/><path d='M25 45 L25 65 C25 78 75 78 75 65 L75 45 L50 58 Z' fill='%23fbbf24'/><circle cx='85' cy='48' r='4' fill='%23fbbf24'/><path d='M85 52 L85 64' stroke='%23fbbf24' stroke-width='2'/></svg>" />
+  <!-- 3D SYMBOLIC FAVICON -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'><defs><linearGradient id='gTop' x1='0' y1='0' x2='1' y2='1'><stop offset='0%25' stop-color='%2360a5fa'/><stop offset='100%25' stop-color='%232563eb'/></linearGradient><linearGradient id='gRight' x1='0' y1='0' x2='1' y2='1'><stop offset='0%25' stop-color='%231d4ed8'/><stop offset='100%25' stop-color='%230f172a'/></linearGradient><linearGradient id='gLeft' x1='0' y1='0' x2='1' y2='1'><stop offset='0%25' stop-color='%233b82f6'/><stop offset='100%25' stop-color='%231e3a8a'/></linearGradient><linearGradient id='gGold' x1='0' y1='0' x2='1' y2='1'><stop offset='0%25' stop-color='%23fef08a'/><stop offset='50%25' stop-color='%23f59e0b'/><stop offset='100%25' stop-color='%23b45309'/></linearGradient><filter id='fShadow' x='-20%25' y='-20%25' width='140%25' height='140%25'><feDropShadow dx='0' dy='8' stdDeviation='6' flood-color='%230f172a' flood-opacity='0.4'/></filter></defs><g filter='url(%23fShadow)'><polygon points='60,18 100,38 60,58 20,38' fill='url(%23gTop)'/><polygon points='20,38 60,58 60,98 20,78' fill='url(%23gLeft)'/><polygon points='60,58 100,38 100,78 60,98' fill='url(%23gRight)'/><polygon points='60,6 78,22 60,34 42,22' fill='url(%23gGold)'/><polygon points='60,34 78,22 78,38 60,50' fill='%23d97706'/><polygon points='60,34 42,22 42,38 60,50' fill='%23f59e0b'/></g></svg>" />
 
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -38,9 +38,9 @@
   </script>
   <style>
     .gradient-mesh {
-      background: radial-gradient(circle at 15% 20%, rgba(37, 99, 235, 0.25) 0%, transparent 40%),
-                  radial-gradient(circle at 85% 15%, rgba(245, 158, 11, 0.2) 0%, transparent 40%),
-                  radial-gradient(circle at 50% 90%, rgba(16, 185, 129, 0.15) 0%, transparent 50%),
+      background: radial-gradient(circle at 15% 20%, rgba(37, 99, 235, 0.28) 0%, transparent 40%),
+                  radial-gradient(circle at 85% 15%, rgba(245, 158, 11, 0.22) 0%, transparent 40%),
+                  radial-gradient(circle at 50% 90%, rgba(139, 92, 246, 0.2) 0%, transparent 50%),
                   #0f172a;
     }
     .glass-card {
@@ -48,15 +48,42 @@
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
     }
-    .custom-scrollbar::-webkit-scrollbar { width: 5px; height: 5px; }
-    .custom-scrollbar::-webkit-scrollbar-track { background: #f8fafc; }
-    .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+
+    /* 3D LOGO PERSPECTIVE TILT */
+    .logo-3d-wrapper {
+      perspective: 1000px;
+    }
+    .logo-3d-box {
+      transform-style: preserve-3d;
+      transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .logo-3d-wrapper:hover .logo-3d-box {
+      transform: rotateY(-14deg) rotateX(12deg) scale(1.08);
+    }
+
+    /* LEFT-TO-RIGHT INFINITE SLIDING MARQUEE */
+    @keyframes slideLeftToRight {
+      0% {
+        transform: translateX(-50%);
+      }
+      100% {
+        transform: translateX(0%);
+      }
+    }
+    .marquee-track {
+      display: flex;
+      width: max-content;
+      animation: slideLeftToRight 38s linear infinite;
+    }
+    .marquee-track:hover {
+      animation-play-state: paused;
+    }
   </style>
 </head>
 <body class="bg-slate-50 text-slate-800 font-sans min-h-screen flex flex-col antialiased selection:bg-brand-600 selection:text-white">
 
   <!-- =================================================================== -->
-  <!-- 1. TOP ANNOUNCEMENT & CONTACT BAR                                   -->
+  <!-- 1. TOP ANNOUNCEMENT & DIRECT CONTACT BAR                            -->
   <!-- =================================================================== -->
   <aside aria-label="Announcement" class="bg-slate-950 text-slate-300 text-xs py-2 px-4 border-b border-slate-800">
     <div class="max-w-7xl mx-auto flex flex-wrap justify-between items-center gap-2">
@@ -64,20 +91,18 @@
         <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
           <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 mr-1 animate-pulse"></span> Term 2 Onboarding Open
         </span>
-        <span class="text-slate-400 hidden sm:inline">Set up your school in 48 hours with zero hardware required.</span>
+        <span class="text-slate-400 hidden sm:inline">Set up your school portal in 48 hours with zero hardware.</span>
       </div>
       <div class="flex items-center space-x-3 text-[11px] font-medium">
-        <!-- Phone & WhatsApp -->
-        <a href="https://wa.me/2347016021912" target="_blank" class="hover:text-white transition flex items-center gap-1">
+        <a href="https://wa.me/2347016021912?text=Hello%20Edvance%20Suite!%20I%20want%20to%20request%20a%20school%20portal%20demo." target="_blank" class="hover:text-emerald-300 transition flex items-center gap-1 font-bold text-white">
           <i class="fa-brands fa-whatsapp text-emerald-400"></i> +234 701 602 1912
         </a>
         <span class="text-slate-700">|</span>
-        <!-- Email Option -->
-        <a href="mailto:peteraideloje@gmail.com?subject=School%20Portal%20Inquiry" class="hover:text-white transition flex items-center gap-1 text-slate-300">
-          <i class="fa-regular fa-envelope text-blue-400"></i> Send an Email
-        </a>
+        <button onclick="launchGmailComposer()" class="hover:text-blue-300 transition flex items-center gap-1 text-slate-300">
+          <i class="fa-regular fa-envelope text-blue-400"></i> Open Gmail
+        </button>
         <span class="text-slate-700">|</span>
-        <button onclick="openLeadModal('Header Quick Call')" class="text-amber-400 hover:text-amber-300 font-bold">
+        <button onclick="openLeadModal('Header Demo')" class="text-amber-400 hover:text-amber-300 font-bold">
           Book Demo
         </button>
       </div>
@@ -85,41 +110,80 @@
   </aside>
 
   <!-- =================================================================== -->
-  <!-- 2. STICKY PRIMARY NAVIGATION                                        -->
+  <!-- 2. STICKY PRIMARY NAVIGATION (FEATURING 3D LOGO)                    -->
   <!-- =================================================================== -->
   <nav class="bg-white/95 backdrop-blur-md border-b border-slate-200 sticky top-0 z-40 shadow-xs">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
       
-      <!-- Brand Logo -->
-      <a href="#" class="flex items-center space-x-3 cursor-pointer">
-        <div class="w-11 h-11 rounded-xl bg-gradient-to-tr from-brand-700 to-blue-500 flex items-center justify-center text-white text-xl font-black shadow-md shadow-brand-500/20">
-          <i class="fa-solid fa-shapes"></i>
+      <!-- 3D SYMBOLIC EMBLEM LOGO -->
+      <a href="#" class="flex items-center space-x-3.5 logo-3d-wrapper group">
+        <div class="logo-3d-box relative w-12 h-12 flex items-center justify-center filter drop-shadow-md">
+          <svg viewBox="0 0 120 120" class="w-full h-full">
+            <defs>
+              <linearGradient id="emblemTop" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#93c5fd" />
+                <stop offset="60%" stop-color="#3b82f6" />
+                <stop offset="100%" stop-color="#1d4ed8" />
+              </linearGradient>
+              <linearGradient id="emblemLeft" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#2563eb" />
+                <stop offset="100%" stop-color="#1e3a8a" />
+              </linearGradient>
+              <linearGradient id="emblemRight" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#1e40af" />
+                <stop offset="100%" stop-color="#0f172a" />
+              </linearGradient>
+              <linearGradient id="emblemGoldTop" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#fef08a" />
+                <stop offset="60%" stop-color="#f59e0b" />
+                <stop offset="100%" stop-color="#d97706" />
+              </linearGradient>
+              <linearGradient id="emblemGoldRight" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#d97706" />
+                <stop offset="100%" stop-color="#92400e" />
+              </linearGradient>
+            </defs>
+            <!-- Isometric Foundation Prism (Knowledge Platform) -->
+            <polygon points="60,28 104,50 60,72 16,50" fill="url(#emblemTop)" />
+            <polygon points="16,50 60,72 60,110 16,88" fill="url(#emblemLeft)" />
+            <polygon points="60,72 104,50 104,88 60,110" fill="url(#emblemRight)" />
+            <!-- Specular Facet Line -->
+            <polyline points="16,50 60,72 104,50" fill="none" stroke="#bfdbfe" stroke-width="1.8" opacity="0.6" />
+            <!-- Floating Ascending Crystal Apex (Character & Excellence) -->
+            <polygon points="60,10 82,24 60,36 38,24" fill="url(#emblemGoldTop)" />
+            <polygon points="38,24 60,36 60,52 38,40" fill="#f59e0b" />
+            <polygon points="60,36 82,24 82,40 60,52" fill="url(#emblemGoldRight)" />
+          </svg>
         </div>
         <div>
-          <span class="text-xl font-black text-slate-900 tracking-tight block leading-tight">
-            Edvance<span class="text-brand-600">Suite</span>
+          <span class="text-2xl font-black text-slate-900 tracking-tight block leading-tight">
+            Edvance<span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-600 via-blue-500 to-amber-500">Suite</span>
           </span>
-          <span class="text-[10px] uppercase font-bold text-slate-500 tracking-wider">Institutional Operating System</span>
+          <span class="text-[10px] uppercase font-black text-slate-400 tracking-widest block -mt-0.5">Cloud School OS</span>
         </div>
       </a>
 
       <!-- Desktop Nav Items -->
       <div class="hidden lg:flex items-center space-x-6 text-sm font-semibold text-slate-600">
         <a href="#features" class="hover:text-brand-600 transition">Core Modules</a>
+        <a href="#students-showcase" class="hover:text-brand-600 transition">Digital Campus</a>
+        <a href="#testimonials" class="hover:text-brand-600 transition">Heads of Schools</a>
         <a href="#calculator" class="hover:text-brand-600 transition">Savings Calculator</a>
-        <a href="#comparison" class="hover:text-brand-600 transition">Why Us</a>
         <a href="#pricing" class="hover:text-brand-600 transition">Pricing Plans</a>
       </div>
 
-      <!-- Live Client Sample Buttons (Apex Horizon & Crown Crest) -->
-      <div class="hidden sm:flex items-center space-x-2">
+      <!-- Live Client Sample Dropdown Pills -->
+      <div class="hidden md:flex items-center space-x-2">
         <div class="flex items-center bg-slate-100 rounded-xl p-1 border border-slate-200 text-xs font-bold">
-          <span class="text-[10px] text-slate-400 px-2 uppercase font-black">Live Portals:</span>
-          <a href="/portal?school=apex" target="_blank" class="bg-white text-blue-700 hover:text-blue-900 shadow-xs px-2.5 py-1.5 rounded-lg transition flex items-center gap-1">
+          <span class="text-[10px] text-slate-400 px-2 uppercase font-black">Live Demos:</span>
+          <a href="portal.html?school=apex" target="_blank" class="bg-white text-blue-700 hover:text-blue-900 shadow-xs px-2.5 py-1.5 rounded-lg transition flex items-center gap-1">
             <i class="fa-solid fa-graduation-cap text-blue-600"></i> Apex Horizon
           </a>
-          <a href="/portal?school=crown" target="_blank" class="text-slate-600 hover:text-emerald-700 hover:bg-white px-2.5 py-1.5 rounded-lg transition flex items-center gap-1">
+          <a href="portal.html?school=crown" target="_blank" class="text-slate-600 hover:text-emerald-700 hover:bg-white px-2.5 py-1.5 rounded-lg transition flex items-center gap-1">
             <i class="fa-solid fa-tree text-emerald-600"></i> Crown Crest
+          </a>
+          <a href="portal.html?school=augustine" target="_blank" class="text-slate-600 hover:text-purple-700 hover:bg-white px-2.5 py-1.5 rounded-lg transition flex items-center gap-1">
+            <i class="fa-solid fa-monument text-purple-600"></i> St. Augustine
           </a>
         </div>
 
@@ -129,7 +193,7 @@
       </div>
 
       <!-- Mobile Hamburger -->
-      <button onclick="toggleMobileMenu()" aria-label="Toggle mobile navigation menu" class="lg:hidden p-2 text-slate-600 hover:text-slate-900 rounded-lg">
+      <button onclick="toggleMobileMenu()" aria-label="Toggle mobile menu" class="lg:hidden p-2 text-slate-600 hover:text-slate-900 rounded-lg">
         <i class="fa-solid fa-bars text-xl"></i>
       </button>
     </div>
@@ -137,12 +201,15 @@
     <!-- Mobile Drawer -->
     <div id="mobile-menu" class="hidden lg:hidden border-t border-slate-200 bg-white px-6 py-4 space-y-3 text-sm font-semibold shadow-xl">
       <a href="#features" onclick="toggleMobileMenu()" class="block py-2 text-slate-700">Core Modules</a>
+      <a href="#students-showcase" onclick="toggleMobileMenu()" class="block py-2 text-slate-700">Digital Campus</a>
+      <a href="#testimonials" onclick="toggleMobileMenu()" class="block py-2 text-slate-700">Heads of Schools</a>
       <a href="#calculator" onclick="toggleMobileMenu()" class="block py-2 text-slate-700">Savings Calculator</a>
       <a href="#pricing" onclick="toggleMobileMenu()" class="block py-2 text-slate-700">Pricing Plans</a>
       <div class="pt-2 border-t border-slate-100 space-y-2">
-        <div class="text-xs font-bold uppercase text-slate-400">View Client Demos:</div>
-        <a href="/portal?school=apex" target="_blank" class="block py-1.5 text-blue-700 font-bold">🏫 Apex Horizon Academy</a>
-        <a href="/portal?school=crown" target="_blank" class="block py-1.5 text-emerald-700 font-bold">🌿 Crown Crest College</a>
+        <div class="text-xs font-bold uppercase text-slate-400">Launch School Demos:</div>
+        <a href="portal.html?school=apex" target="_blank" class="block py-1.5 text-blue-700 font-bold">🏫 Apex Horizon Academy</a>
+        <a href="portal.html?school=crown" target="_blank" class="block py-1.5 text-emerald-700 font-bold">🌿 Crown Crest College</a>
+        <a href="portal.html?school=augustine" target="_blank" class="block py-1.5 text-purple-700 font-bold">🏛️ St. Augustine Preparatory</a>
       </div>
       <button onclick="toggleMobileMenu(); openLeadModal('Mobile Drawer');" class="w-full bg-brand-600 text-white font-bold py-3 rounded-xl text-xs mt-3">
         Book Free Demo
@@ -153,10 +220,9 @@
   <!-- =================================================================== -->
   <!-- 3. HERO SECTION                                                     -->
   <!-- =================================================================== -->
-  <section class="gradient-mesh text-white pt-16 sm:pt-24 pb-28 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+  <section class="gradient-mesh text-white pt-16 sm:pt-24 pb-24 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
     <div class="max-w-7xl mx-auto grid lg:grid-cols-12 gap-12 items-center relative z-10">
       
-      <!-- Left Column: Copy & Actions -->
       <div class="lg:col-span-7 space-y-6 text-center lg:text-left">
         <div class="inline-flex items-center gap-2 bg-white/10 border border-white/20 backdrop-blur-md px-4 py-1.5 rounded-full text-xs font-bold text-amber-300 uppercase tracking-widest">
           <i class="fa-solid fa-award text-amber-400"></i> Built Specifically For Nigerian Schools
@@ -173,21 +239,25 @@
           The cloud platform that eliminates tedious terminal math for teachers, generates authenticated WAEC-standard A4 report sheets in seconds, and automatically withholds results until parents clear their school fees.
         </p>
 
-        <div class="flex flex-wrap items-center justify-center lg:justify-start gap-3.5 pt-2">
-          <button onclick="openLeadModal('Hero CTA')" class="bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black text-sm px-6 py-4 rounded-xl shadow-xl shadow-amber-500/20 transition transform hover:-translate-y-0.5 flex items-center gap-2">
-            <i class="fa-brands fa-whatsapp text-lg"></i> Book a 7-Minute WhatsApp Demo
+        <!-- 3 LIVE DEMO BUTTONS -->
+        <div class="flex flex-wrap items-center justify-center lg:justify-start gap-2.5 pt-2">
+          <button onclick="openLeadModal('Hero CTA')" class="bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black text-xs px-5 py-3.5 rounded-xl shadow-xl transition transform hover:-translate-y-0.5 flex items-center gap-2">
+            <i class="fa-brands fa-whatsapp text-base"></i> Book 7-Min Demo
           </button>
           
-          <a href="/portal?school=apex" target="_blank" class="bg-white/10 hover:bg-white/20 text-white font-bold text-sm px-5 py-4 rounded-xl border border-white/20 backdrop-blur-md transition flex items-center gap-2">
-            <i class="fa-solid fa-arrow-up-right-from-square text-amber-400 text-xs"></i> View Apex Horizon Demo
+          <a href="portal.html?school=apex" target="_blank" class="bg-blue-600/30 hover:bg-blue-600/50 text-white font-bold text-xs px-4 py-3.5 rounded-xl border border-blue-400/40 backdrop-blur-md transition flex items-center gap-1.5">
+            <i class="fa-solid fa-graduation-cap text-blue-300"></i> Apex Horizon
           </a>
 
-          <a href="/portal?school=crown" target="_blank" class="bg-white/10 hover:bg-white/20 text-white font-bold text-sm px-5 py-4 rounded-xl border border-white/20 backdrop-blur-md transition flex items-center gap-2">
-            <i class="fa-solid fa-arrow-up-right-from-square text-emerald-400 text-xs"></i> View Crown Crest Demo
+          <a href="portal.html?school=crown" target="_blank" class="bg-emerald-600/30 hover:bg-emerald-600/50 text-white font-bold text-xs px-4 py-3.5 rounded-xl border border-emerald-400/40 backdrop-blur-md transition flex items-center gap-1.5">
+            <i class="fa-solid fa-tree text-emerald-300"></i> Crown Crest
+          </a>
+
+          <a href="portal.html?school=augustine" target="_blank" class="bg-purple-600/30 hover:bg-purple-600/50 text-white font-bold text-xs px-4 py-3.5 rounded-xl border border-purple-400/40 backdrop-blur-md transition flex items-center gap-1.5">
+            <i class="fa-solid fa-monument text-purple-300"></i> St. Augustine
           </a>
         </div>
 
-        <!-- Social Proof Numbers -->
         <div class="pt-8 border-t border-white/15 grid grid-cols-3 gap-6 max-w-lg mx-auto lg:mx-0 text-left">
           <div>
             <div class="text-2xl sm:text-3xl font-black text-amber-400">₦0</div>
@@ -211,21 +281,20 @@
           <div class="flex items-center justify-between border-b border-slate-200 pb-4">
             <div class="flex items-center space-x-3">
               <div class="w-10 h-10 rounded-xl bg-brand-700 text-white flex items-center justify-center font-bold text-lg">
-                <i class="fa-solid fa-graduation-cap"></i>
+                <i class="fa-solid fa-building-columns"></i>
               </div>
               <div>
-                <h2 class="text-xs font-black text-slate-900 uppercase">Live Campus Snapshot</h2>
+                <h2 class="text-xs font-black text-slate-900 uppercase">Interactive Campus Gateway</h2>
                 <div class="text-[11px] text-emerald-600 font-bold flex items-center gap-1">
-                  <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> Apex Horizon Academy
+                  <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> Multi-Tenant Portal Ready
                 </div>
               </div>
             </div>
             <span class="text-[11px] font-bold bg-brand-50 text-brand-700 px-2.5 py-1 rounded-full border border-brand-200">
-              Term 2 Verified
+              Term 2 Active
             </span>
           </div>
 
-          <!-- Feature simulation tabs -->
           <div class="space-y-3">
             <div class="grid grid-cols-2 gap-2 text-xs">
               <div class="p-3 bg-slate-50 border rounded-xl">
@@ -240,7 +309,6 @@
               </div>
             </div>
 
-            <!-- Mini Live Result Preview Card -->
             <div class="p-4 bg-blue-50/70 border border-blue-200 rounded-2xl space-y-2">
               <div class="flex justify-between items-center text-xs">
                 <span class="font-bold text-slate-800">Pupil: Adeyemi Toluwalase (JSS 2)</span>
@@ -252,13 +320,12 @@
               </div>
               <div class="pt-1 flex items-center justify-between text-[11px] border-t border-blue-200 text-slate-500">
                 <span>Digital Principal Seal: Verified</span>
-                <span class="text-brand-600 font-bold">1-Click PDF Download</span>
+                <span class="text-brand-600 font-bold">A4 PDF Printable</span>
               </div>
             </div>
 
-            <!-- CTA inside Mockup pointing directly to Apex Horizon -->
-            <a href="/portal?school=apex" target="_blank" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-3.5 rounded-xl text-xs shadow-md transition flex items-center justify-center gap-2">
-              <i class="fa-solid fa-laptop-code"></i> Launch Apex Horizon Portal Demo
+            <a href="portal.html?school=apex" target="_blank" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-3.5 rounded-xl text-xs shadow-md transition flex items-center justify-center gap-2">
+              <i class="fa-solid fa-arrow-up-right-from-square"></i> Open Live Campus Portal
             </a>
           </div>
 
@@ -269,344 +336,103 @@
   </section>
 
   <!-- =================================================================== -->
-  <!-- 4. CORE SYSTEM MODULES                                              -->
+  <!-- 4. ANIMATED PHOTO REEL: STUDENTS WITH LAPTOPS, TABS & UNIFORMS      -->
   <!-- =================================================================== -->
-  <section id="features" class="py-20 bg-white border-y border-slate-200 px-4 sm:px-6 lg:px-8">
-    <div class="max-w-7xl mx-auto space-y-16">
-      
-      <div class="text-center max-w-3xl mx-auto space-y-3">
-        <span class="text-xs font-black text-brand-600 bg-brand-50 px-3.5 py-1 rounded-full uppercase tracking-wider">
-          Enterprise Cloud Infrastructure
-        </span>
-        <h2 class="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
-          Everything Your School Needs to Operate at Global Standards
-        </h2>
-        <p class="text-base text-slate-500">
-          A modular suite designed to connect pupils, parents, teachers, and school management on one synchronized database.
-        </p>
-      </div>
-
-      <div class="grid md:grid-cols-3 gap-8">
-        
-        <div class="border border-slate-200 rounded-3xl p-7 hover:border-brand-500 hover:shadow-lg transition space-y-4">
-          <div class="w-12 h-12 rounded-2xl bg-brand-50 text-brand-600 flex items-center justify-center text-2xl font-bold">
-            <i class="fa-solid fa-file-invoice"></i>
-          </div>
-          <h3 class="text-lg font-black text-slate-900">WAEC-Standard Terminal Reports</h3>
-          <p class="text-xs text-slate-500 leading-relaxed">
-            Generate clean, border-framed A4 printable reports with Continuous Assessment (CA1, CA2), terminal exams, letter grades (A1–F9), affective/psychomotor domains, and principal verification seals.
-          </p>
-        </div>
-
-        <div class="border border-slate-200 rounded-3xl p-7 hover:border-emerald-500 hover:shadow-lg transition space-y-4">
-          <div class="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-2xl font-bold">
-            <i class="fa-solid fa-lock"></i>
-          </div>
-          <h3 class="text-lg font-black text-slate-900">Tuition Recovery & Token Lock</h3>
-          <p class="text-xs text-slate-500 leading-relaxed">
-            Results are locked behind a secure scratchcard PIN or payment confirmation token. Parents can settle outstanding fees online via Paystack/Moniepoint to automatically unlock reports.
-          </p>
-        </div>
-
-        <div class="border border-slate-200 rounded-3xl p-7 hover:border-amber-500 hover:shadow-lg transition space-y-4">
-          <div class="w-12 h-12 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center text-2xl font-bold">
-            <i class="fa-solid fa-laptop-code"></i>
-          </div>
-          <h3 class="text-lg font-black text-slate-900">Computer-Based Testing (CBT)</h3>
-          <p class="text-xs text-slate-500 leading-relaxed">
-            Prepare pupils for BECE, WAEC, and JAMB with interactive timed CBT exams. Supports multiple-choice, typed short answers, and camera uploads for math step-by-step solutions.
-          </p>
-        </div>
-
-      </div>
-
-    </div>
-  </section>
-
-  <!-- =================================================================== -->
-  <!-- 5. INTERACTIVE SAVINGS CALCULATOR                                   -->
-  <!-- =================================================================== -->
-  <section id="calculator" class="py-20 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto">
-    <div class="bg-gradient-to-br from-slate-900 to-brand-950 text-white rounded-3xl p-8 sm:p-12 shadow-2xl border border-slate-800 space-y-8">
-      
-      <div class="text-center max-w-2xl mx-auto space-y-2">
-        <span class="text-xs font-black text-amber-400 uppercase tracking-widest bg-amber-400/10 px-3 py-1 rounded-full border border-amber-400/20">
-          Financial Impact Analyzer
-        </span>
-        <h2 class="text-2xl sm:text-3xl font-black">See How Much Your School Saves Every Term</h2>
-        <p class="text-xs sm:text-sm text-slate-400">
-          Adjust your student population below to calculate your savings on paper printing and recovered tuition defaults.
-        </p>
-      </div>
-
-      <div class="space-y-6 max-w-2xl mx-auto">
-        <div>
-          <div class="flex justify-between items-center text-xs font-bold mb-2">
-            <span>Enrolled Students in Your School:</span>
-            <span id="calc-student-count" class="text-amber-400 text-base font-black">250 Pupils</span>
-          </div>
-          <input type="range" id="student-slider" min="50" max="1500" step="25" value="250" oninput="updateRoiCalculation()" class="w-full accent-amber-400 bg-slate-800 h-2 rounded-lg cursor-pointer" />
-        </div>
-
-        <div>
-          <div class="flex justify-between items-center text-xs font-bold mb-2">
-            <span>Estimated Booklet Printing Cost per Child per Term:</span>
-            <span id="calc-print-cost" class="text-amber-400 text-base font-black">₦2,500</span>
-          </div>
-          <input type="range" id="print-slider" min="1000" max="5000" step="250" value="2500" oninput="updateRoiCalculation()" class="w-full accent-amber-400 bg-slate-800 h-2 rounded-lg cursor-pointer" />
-        </div>
-      </div>
-
-      <div class="grid sm:grid-cols-3 gap-4 pt-4 border-t border-slate-800 text-center">
-        <div class="bg-white/5 p-4 rounded-2xl border border-white/10">
-          <div class="text-[11px] text-slate-400 uppercase font-semibold">Paper Printing Saved / Term</div>
-          <div id="calc-printing-saved" class="text-2xl font-black text-emerald-400 mt-1">₦625,000</div>
-        </div>
-        <div class="bg-white/5 p-4 rounded-2xl border border-white/10">
-          <div class="text-[11px] text-slate-400 uppercase font-semibold">Tuition Recovered via Lock</div>
-          <div id="calc-fees-recovered" class="text-2xl font-black text-amber-400 mt-1">₦1,250,000+</div>
-        </div>
-        <div class="bg-white/5 p-4 rounded-2xl border border-white/10">
-          <div class="text-[11px] text-slate-400 uppercase font-semibold">Annual Financial Gain</div>
-          <div id="calc-annual-gain" class="text-2xl font-black text-sky-400 mt-1">₦5,625,000</div>
-        </div>
-      </div>
-
-      <div class="text-center pt-2">
-        <button onclick="openLeadModal('Savings Calculator')" class="bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs px-8 py-3.5 rounded-xl shadow-lg transition">
-          Claim These Savings for Your School This Term
-        </button>
-      </div>
-
-    </div>
-  </section>
-
-  <!-- =================================================================== -->
-  <!-- 6. PRICING PLANS                                                    -->
-  <!-- =================================================================== -->
-  <section id="pricing" class="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-16">
-    <div class="text-center max-w-2xl mx-auto space-y-3">
-      <span class="text-xs font-black text-brand-600 bg-brand-50 px-3.5 py-1 rounded-full uppercase tracking-wider">
-        Straightforward Commercial Terms
-      </span>
-      <h2 class="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
-        Transparent Pricing Built for Sustainable Growth
-      </h2>
-      <p class="text-sm text-slate-500">
-        Most schools adopt our <strong>Pupil ICT Levy model</strong>: add ₦1,500 to the student's termly bill, covering the software while providing your school with additional ICT income.
-      </p>
-    </div>
-
-    <div class="grid md:grid-cols-3 gap-8 items-stretch">
-      <!-- Starter -->
-      <div class="bg-white border border-slate-200 rounded-3xl p-8 flex flex-col justify-between shadow-xs space-y-6">
-        <div class="space-y-4">
-          <div class="text-xs font-black text-slate-400 uppercase tracking-widest">Small / Emerging Campus</div>
-          <h3 class="text-2xl font-black text-slate-900">Starter Plan</h3>
-          <div class="pt-4 border-t border-slate-100">
-            <div class="text-3xl font-black text-slate-900">₦1,000</div>
-            <div class="text-xs text-slate-400">per student / per term (or ₦75,000 flat)</div>
-          </div>
-          <ul class="space-y-2.5 text-xs text-slate-600 pt-2">
-            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-600"></i> Automated Terminal Report Generator</li>
-            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-600"></i> Parent & Student Result Checker</li>
-            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-600"></i> Teacher Gradebook & Daily Roll Call</li>
-          </ul>
-        </div>
-        <button onclick="openLeadModal('Starter Plan')" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold py-3 rounded-xl text-xs transition">
-          Choose Starter
-        </button>
-      </div>
-
-      <!-- Standard -->
-      <div class="bg-white border-2 border-brand-600 rounded-3xl p-8 flex flex-col justify-between shadow-xl relative space-y-6">
-        <span class="absolute -top-3.5 left-1/2 transform -translate-x-1/2 bg-brand-600 text-white text-[10px] font-black uppercase tracking-wider px-3.5 py-1 rounded-full shadow-md">
-          Most Popular Choice
-        </span>
-        <div class="space-y-4">
-          <div class="text-xs font-black text-brand-600 uppercase tracking-widest">Mid-Tier & Colleges</div>
-          <h3 class="text-2xl font-black text-slate-900">Standard Growth</h3>
-          <div class="pt-4 border-t border-slate-100">
-            <div class="text-3xl font-black text-brand-700">₦1,500</div>
-            <div class="text-xs text-slate-400">per student / per term (Levy Billed)</div>
-          </div>
-          <ul class="space-y-2.5 text-xs text-slate-600 pt-2">
-            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-600"></i> <strong>Everything in Starter Plan</strong></li>
-            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-600"></i> <strong>Interactive CBT Exam Engine (MCQ + Working)</strong></li>
-            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-600"></i> <strong>Tuition Recovery Result Lock & Fee Gateway</strong></li>
-            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-600"></i> <strong>Digital Lesson Plan Review & Approval</strong></li>
-          </ul>
-        </div>
-        <button onclick="openLeadModal('Standard Growth Plan')" class="w-full bg-brand-600 hover:bg-brand-700 text-white font-bold py-3 rounded-xl text-xs shadow-md transition">
-          Get Started with Standard
-        </button>
-      </div>
-
-      <!-- Enterprise -->
-      <div class="bg-white border border-slate-200 rounded-3xl p-8 flex flex-col justify-between shadow-xs space-y-6">
-        <div class="space-y-4">
-          <div class="text-xs font-black text-purple-600 uppercase tracking-widest">Multi-Campus & Colleges</div>
-          <h3 class="text-2xl font-black text-slate-900">Enterprise Elite</h3>
-          <div class="pt-4 border-t border-slate-100">
-            <div class="text-3xl font-black text-slate-900">Custom</div>
-            <div class="text-xs text-slate-400">Tailored per campus or multi-branch</div>
-          </div>
-          <ul class="space-y-2.5 text-xs text-slate-600 pt-2">
-            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-600"></i> <strong>Official .edu.ng Domain Setup</strong></li>
-            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-600"></i> Multi-Campus Central Console</li>
-            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-600"></i> Staff Payroll & HR Module</li>
-          </ul>
-        </div>
-        <button onclick="openLeadModal('Enterprise Plan')" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-3 rounded-xl text-xs transition">
-          Contact for Enterprise
-        </button>
-      </div>
-    </div>
-  </section>
-
-  <!-- =================================================================== -->
-  <!-- 7. FOOTER                                                           -->
-  <!-- =================================================================== -->
-  <footer class="bg-white border-t border-slate-200 py-10 px-4 sm:px-6 lg:px-8 text-xs text-slate-500">
-    <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+  <section id="students-showcase" class="py-12 bg-slate-900 border-y border-slate-800 overflow-hidden relative">
+    <div class="max-w-7xl mx-auto px-4 mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
       <div>
-        <span class="font-bold text-slate-800">Edvance Suite Technologies</span> &copy; 2026. All rights reserved.
+        <div class="inline-flex items-center gap-2 text-xs font-bold text-amber-400 uppercase tracking-widest">
+          <i class="fa-solid fa-computer"></i> 21st Century Digital Campus
+        </div>
+        <h3 class="text-xl sm:text-2xl font-black text-white">Equipping Tomorrow's Leaders with Technology</h3>
       </div>
-      <div class="flex items-center space-x-6">
-        <a href="https://wa.me/2347016021912" target="_blank" class="hover:text-emerald-600 transition flex items-center gap-1">
-          <i class="fa-brands fa-whatsapp text-emerald-500"></i> WhatsApp: +234 701 602 1912
-        </a>
-        <a href="mailto:info.edvancesuite@gmail.com" class="hover:text-blue-600 transition flex items-center gap-1">
-          <i class="fa-regular fa-envelope text-blue-500"></i> Email Inquiries
-        </a>
-      </div>
-    </div>
-  </footer>
-
-  <!-- =================================================================== -->
-  <!-- MODAL: INSTANT DEMO LEAD CAPTURE (WHATSAPP OR EMAIL)                -->
-  <!-- =================================================================== -->
-  <div id="demo-modal" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
-    <div class="bg-white rounded-3xl max-w-md w-full p-6 sm:p-8 space-y-5 shadow-2xl relative border border-slate-100">
-      
-      <div class="flex justify-between items-center border-b border-slate-100 pb-3">
-        <div>
-          <h3 class="text-lg font-black text-slate-900">Book a 7-Minute Demo</h3>
-          <p class="text-xs text-slate-500">We will configure a live preview for your school</p>
-        </div>
-        <button onclick="closeLeadModal()" class="text-slate-400 hover:text-slate-600 text-lg">
-          <i class="fa-solid fa-xmark"></i>
-        </button>
-      </div>
-
-      <div class="space-y-3.5 text-xs">
-        <div>
-          <label class="block font-bold text-slate-700 uppercase mb-1">Your Full Name & Role</label>
-          <input type="text" id="lead-name" placeholder="e.g., Mrs. Folashade (Proprietress)" class="w-full border border-slate-300 rounded-xl p-3 outline-none focus:ring-2 focus:ring-brand-500 font-medium" />
-        </div>
-
-        <div>
-          <label class="block font-bold text-slate-700 uppercase mb-1">School Name</label>
-          <input type="text" id="lead-school" placeholder="e.g., Apex Horizon Academy" class="w-full border border-slate-300 rounded-xl p-3 outline-none focus:ring-2 focus:ring-brand-500 font-bold" />
-        </div>
-
-        <div>
-          <label class="block font-bold text-slate-700 uppercase mb-1">School Location / State</label>
-          <input type="text" id="lead-location" placeholder="e.g., Ikeja, Lagos" class="w-full border border-slate-300 rounded-xl p-3 outline-none focus:ring-2 focus:ring-brand-500 font-medium" />
-        </div>
-
-        <div>
-          <label class="block font-bold text-slate-700 uppercase mb-1">Estimated Enrolled Students</label>
-          <select id="lead-size" class="w-full border border-slate-300 rounded-xl p-3 outline-none font-semibold">
-            <option>Under 150 Pupils</option>
-            <option>150 - 350 Pupils</option>
-            <option>350 - 600 Pupils</option>
-            <option>600+ Pupils (Multi-Campus)</option>
-          </select>
-        </div>
-
-        <div>
-          <label class="block font-bold text-slate-700 uppercase mb-1">Your Contact Phone / WhatsApp</label>
-          <input type="tel" id="lead-phone" placeholder="0803 123 4567" class="w-full border border-slate-300 rounded-xl p-3 outline-none font-mono font-bold" />
-        </div>
-      </div>
-
-      <div class="space-y-2 pt-1">
-        <!-- Button 1: WhatsApp -->
-        <button onclick="dispatchDemoLead('whatsapp')" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-xl shadow-md transition text-xs flex items-center justify-center gap-2">
-          <i class="fa-brands fa-whatsapp text-lg"></i> Send via WhatsApp to +234 701 602 1912
-        </button>
-
-        <!-- Button 2: Email -->
-        <button onclick="dispatchDemoLead('email')" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold py-2.5 rounded-xl transition text-xs flex items-center justify-center gap-2">
-          <i class="fa-regular fa-envelope text-blue-600"></i> Send via Email Instead
-        </button>
-      </div>
-
-      <p class="text-[10px] text-center text-slate-400">
-        No payment required. We will configure your school's custom preview in under 3 hours.
+      <p class="text-xs text-slate-400 max-w-sm">
+        From CBT mock examinations to homework submissions, students experience modern learning at their fingertips.
       </p>
-
     </div>
-  </div>
 
-  <!-- SCRIPT ENGINE -->
-  <script>
-    // ROI Calculator Engine
-    function updateRoiCalculation() {
-      const students = parseInt(document.getElementById('student-slider').value) || 250;
-      const printCost = parseInt(document.getElementById('print-slider').value) || 2500;
+    <!-- INFINITE LEFT-TO-RIGHT MARQUEE CONTAINER -->
+    <div class="relative w-full overflow-hidden">
+      <!-- Gradient Edge Fades -->
+      <div class="absolute left-0 top-0 bottom-0 w-24 bg-gradient-to-r from-slate-900 to-transparent z-10 pointer-events-none"></div>
+      <div class="absolute right-0 top-0 bottom-0 w-24 bg-gradient-to-l from-slate-900 to-transparent z-10 pointer-events-none"></div>
 
-      document.getElementById('calc-student-count').textContent = `${students} Pupils`;
-      document.getElementById('calc-print-cost').textContent = `₦${printCost.toLocaleString()}`;
+      <div class="marquee-track flex gap-5 py-3">
+        <!-- ITEM 1: African students in computer lab with laptops -->
+        <div class="w-80 h-56 rounded-2xl overflow-hidden relative flex-shrink-0 group shadow-lg border border-slate-700/60">
+          <img src="https://images.unsplash.com/photo-1577896851231-70ef18881754?auto=format&fit=crop&w=700&q=80" alt="Students in computer lab with laptops" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" />
+          <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent flex items-end p-4">
+            <div>
+              <span class="text-[10px] font-black uppercase text-amber-400 bg-amber-400/20 px-2 py-0.5 rounded">CBT Center</span>
+              <p class="text-xs font-bold text-white mt-1">Pupils taking digital mock assessments</p>
+            </div>
+          </div>
+        </div>
 
-      const printingSavedPerTerm = students * printCost;
-      const feesRecoveredEstimate = students * 5000;
-      const annualGain = (printingSavedPerTerm * 3) + (feesRecoveredEstimate * 3);
+        <!-- ITEM 2: African school student in uniform reading tablet -->
+        <div class="w-80 h-56 rounded-2xl overflow-hidden relative flex-shrink-0 group shadow-lg border border-slate-700/60">
+          <img src="https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=700&q=80" alt="Student in school uniform" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" />
+          <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent flex items-end p-4">
+            <div>
+              <span class="text-[10px] font-black uppercase text-blue-400 bg-blue-400/20 px-2 py-0.5 rounded">Uniform & Discipline</span>
+              <p class="text-xs font-bold text-white mt-1">Proud students representing their academy</p>
+            </div>
+          </div>
+        </div>
 
-      document.getElementById('calc-printing-saved').textContent = `₦${printingSavedPerTerm.toLocaleString()}`;
-      document.getElementById('calc-fees-recovered').textContent = `₦${feesRecoveredEstimate.toLocaleString()}+`;
-      document.getElementById('calc-annual-gain').textContent = `₦${annualGain.toLocaleString()}`;
-    }
+        <!-- ITEM 3: Students collaborating with laptop on assignment -->
+        <div class="w-80 h-56 rounded-2xl overflow-hidden relative flex-shrink-0 group shadow-lg border border-slate-700/60">
+          <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=700&q=80" alt="Students collaborating on laptop" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" />
+          <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent flex items-end p-4">
+            <div>
+              <span class="text-[10px] font-black uppercase text-emerald-400 bg-emerald-400/20 px-2 py-0.5 rounded">E-Learning Hub</span>
+              <p class="text-xs font-bold text-white mt-1">Collaborative coursework & homework downloads</p>
+            </div>
+          </div>
+        </div>
 
-    // Modal Handlers
-    let currentTriggerSource = 'General';
-    function openLeadModal(source = 'General') {
-      currentTriggerSource = source;
-      document.getElementById('demo-modal').classList.remove('hidden');
-    }
-    function closeLeadModal() {
-      document.getElementById('demo-modal').classList.add('hidden');
-    }
+        <!-- ITEM 4: Classroom students in uniform studying -->
+        <div class="w-80 h-56 rounded-2xl overflow-hidden relative flex-shrink-0 group shadow-lg border border-slate-700/60">
+          <img src="https://images.unsplash.com/photo-1588072432836-e10032774350?auto=format&fit=crop&w=700&q=80" alt="Students studying in classroom" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" />
+          <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent flex items-end p-4">
+            <div>
+              <span class="text-[10px] font-black uppercase text-purple-400 bg-purple-400/20 px-2 py-0.5 rounded">Classroom Excellence</span>
+              <p class="text-xs font-bold text-white mt-1">Holistic academic development & character</p>
+            </div>
+          </div>
+        </div>
 
-    function toggleMobileMenu() {
-      document.getElementById('mobile-menu').classList.toggle('hidden');
-    }
+        <!-- ITEM 5: Young student using digital tablet -->
+        <div class="w-80 h-56 rounded-2xl overflow-hidden relative flex-shrink-0 group shadow-lg border border-slate-700/60">
+          <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=700&q=80" alt="Child using digital tablet" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" />
+          <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent flex items-end p-4">
+            <div>
+              <span class="text-[10px] font-black uppercase text-pink-400 bg-pink-400/20 px-2 py-0.5 rounded">Smart Nursery & Primary</span>
+              <p class="text-xs font-bold text-white mt-1">Early childhood interactive computer literacy</p>
+            </div>
+          </div>
+        </div>
 
-    // YOUR CONTACT DESTINATIONS
-    const MY_WHATSAPP_PHONE = "2347016021912"; 
-    const MY_INQUIRY_EMAIL = "peteraideloje@gmail.com"; 
+        <!-- ITEM 6: Secondary school students in crisp uniforms -->
+        <div class="w-80 h-56 rounded-2xl overflow-hidden relative flex-shrink-0 group shadow-lg border border-slate-700/60">
+          <img src="https://images.unsplash.com/photo-1580582932707-520aed937b7b?auto=format&fit=crop&w=700&q=80" alt="Secondary school students in uniforms" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" />
+          <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent flex items-end p-4">
+            <div>
+              <span class="text-[10px] font-black uppercase text-amber-400 bg-amber-400/20 px-2 py-0.5 rounded">Senior Secondary</span>
+              <p class="text-xs font-bold text-white mt-1">WAEC & JAMB CBT preparation environment</p>
+            </div>
+          </div>
+        </div>
 
-    function dispatchDemoLead(channel = 'whatsapp') {
-      const name = document.getElementById('lead-name').value.trim() || "School Administrator";
-      const school = document.getElementById('lead-school').value.trim() || "My School";
-      const location = document.getElementById('lead-location').value.trim() || "Lagos";
-      const size = document.getElementById('lead-size').value;
-      const phone = document.getElementById('lead-phone').value.trim() || "N/A";
+        <!-- DUPLICATED ITEMS TO CREATE SEAMLESS INFINITE LOOP -->
+        <div class="w-80 h-56 rounded-2xl overflow-hidden relative flex-shrink-0 group shadow-lg border border-slate-700/60">
+          <img src="https://images.unsplash.com/photo-1577896851231-70ef18881754?auto=format&fit=crop&w=700&q=80" alt="Students in computer lab" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" />
+          <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent flex items-end p-4">
+            <div>
+              <span class="text-[10px] font-black uppercase text-amber-400 bg-amber-400/20 px-2 py-0.5 rounded">CBT Center</span>
+              <p class="text-xs font-bold text-white mt-1">Pupils taking digital mock assessments</p>
+            </div>
+          </div>
+        </div>
 
-      const subject = `Demo Request for ${school} (${location})`;
-      const body = `Hello Edvance Suite team! 👋\n\nI would like to request a 7-minute demonstration for our school.\n\n🏫 School: ${school}\n👤 Contact Person: ${name}\n📍 Location: ${location}\n🎒 Student Population: ${size}\n📞 Phone / WhatsApp: ${phone}\n(Source: ${currentTriggerSource})\n\nPlease share the customized demo link. Thank you!`;
-
-      closeLeadModal();
-
-      if (channel === 'whatsapp') {
-        const encodedUrl = `https://wa.me/${MY_WHATSAPP_PHONE}?text=${encodeURIComponent(body)}`;
-        window.open(encodedUrl, '_blank');
-      } else if (channel === 'email') {
-        const mailtoUrl = `mailto:${MY_INQUIRY_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-        window.location.href = mailtoUrl;
-      }
-    }
-  </script>
-</body>
-</html>
+        <div class="w-
