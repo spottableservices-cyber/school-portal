@@ -4,6 +4,10 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Edvance Suite | Nigeria's #1 All-in-One Cloud School Portal & CBT Engine</title>
+  
+  <!-- FAVICON: CRISP INLINE SVG CREST (NO FILE UPLOAD NEEDED) -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%231d4ed8'/><path d='M50 18 L88 38 L50 58 L12 38 Z' fill='%23ffffff'/><path d='M25 45 L25 65 C25 78 75 78 75 65 L75 45 L50 58 Z' fill='%23fbbf24'/><circle cx='85' cy='48' r='4' fill='%23fbbf24'/><path d='M85 52 L85 64' stroke='%23fbbf24' stroke-width='2'/></svg>" />
+
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Font Awesome Icons -->
@@ -58,18 +62,24 @@
     <div class="max-w-7xl mx-auto flex flex-wrap justify-between items-center gap-2">
       <div class="flex items-center gap-2">
         <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
-          <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 mr-1 animate-pulse"></span> Term 1 Onboarding Open
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 mr-1 animate-pulse"></span> Term 2 Onboarding Open
         </span>
         <span class="text-slate-400 hidden sm:inline">Set up your school in 48 hours with zero hardware required.</span>
       </div>
-      <div class="flex items-center space-x-4 text-[11px] font-medium">
-        <a href="tel:+2347016021912" class="hover:text-white transition flex items-center gap-1">
-          <i class="fa-solid fa-phone text-slate-400"></i> +234 701 602 1912
+      <div class="flex items-center space-x-3 text-[11px] font-medium">
+        <!-- Phone & WhatsApp -->
+        <a href="https://wa.me/2347016021912" target="_blank" class="hover:text-white transition flex items-center gap-1">
+          <i class="fa-brands fa-whatsapp text-emerald-400"></i> +234 701 602 1912
         </a>
         <span class="text-slate-700">|</span>
-        <a href="#demo-modal" onclick="openLeadModal('Header Quick Call')" class="text-amber-400 hover:text-amber-300 font-bold flex items-center gap-1">
-          <i class="fa-brands fa-whatsapp text-emerald-400"></i> Chat on WhatsApp
+        <!-- Email Option -->
+        <a href="mailto:peteraideloje@gmail.com?subject=School%20Portal%20Inquiry" class="hover:text-white transition flex items-center gap-1 text-slate-300">
+          <i class="fa-regular fa-envelope text-blue-400"></i> Send an Email
         </a>
+        <span class="text-slate-700">|</span>
+        <button onclick="openLeadModal('Header Quick Call')" class="text-amber-400 hover:text-amber-300 font-bold">
+          Book Demo
+        </button>
       </div>
     </div>
   </aside>
@@ -94,20 +104,26 @@
       </a>
 
       <!-- Desktop Nav Items -->
-      <div class="hidden lg:flex items-center space-x-8 text-sm font-semibold text-slate-600">
+      <div class="hidden lg:flex items-center space-x-6 text-sm font-semibold text-slate-600">
         <a href="#features" class="hover:text-brand-600 transition">Core Modules</a>
         <a href="#calculator" class="hover:text-brand-600 transition">Savings Calculator</a>
         <a href="#comparison" class="hover:text-brand-600 transition">Why Us</a>
         <a href="#pricing" class="hover:text-brand-600 transition">Pricing Plans</a>
-        <a href="#testimonials" class="hover:text-brand-600 transition">Proprietor Reviews</a>
       </div>
 
-      <!-- Action Buttons -->
-      <div class="hidden sm:flex items-center space-x-3">
-        <a href="/portal?school=ris" target="_blank" class="text-xs font-bold text-slate-700 hover:text-brand-600 px-3.5 py-2 rounded-xl transition">
-  Live Client Sample <i class="fa-solid fa-arrow-up-right-from-square text-[10px] ml-1"></i>
-</a>
-        <button onclick="openLeadModal('Primary Nav')" class="bg-brand-600 hover:bg-brand-700 text-white font-bold text-xs px-5 py-3 rounded-xl shadow-md shadow-brand-600/25 transition transform hover:-translate-y-0.5 flex items-center gap-2">
+      <!-- Live Client Sample Buttons (Apex Horizon & Crown Crest) -->
+      <div class="hidden sm:flex items-center space-x-2">
+        <div class="flex items-center bg-slate-100 rounded-xl p-1 border border-slate-200 text-xs font-bold">
+          <span class="text-[10px] text-slate-400 px-2 uppercase font-black">Live Portals:</span>
+          <a href="/portal?school=apex" target="_blank" class="bg-white text-blue-700 hover:text-blue-900 shadow-xs px-2.5 py-1.5 rounded-lg transition flex items-center gap-1">
+            <i class="fa-solid fa-graduation-cap text-blue-600"></i> Apex Horizon
+          </a>
+          <a href="/portal?school=crown" target="_blank" class="text-slate-600 hover:text-emerald-700 hover:bg-white px-2.5 py-1.5 rounded-lg transition flex items-center gap-1">
+            <i class="fa-solid fa-tree text-emerald-600"></i> Crown Crest
+          </a>
+        </div>
+
+        <button onclick="openLeadModal('Primary Nav')" class="bg-brand-600 hover:bg-brand-700 text-white font-bold text-xs px-4 py-2.5 rounded-xl shadow-md transition flex items-center gap-1.5 ml-2">
           <i class="fa-regular fa-calendar-check"></i> Book 7-Min Demo
         </button>
       </div>
@@ -122,9 +138,13 @@
     <div id="mobile-menu" class="hidden lg:hidden border-t border-slate-200 bg-white px-6 py-4 space-y-3 text-sm font-semibold shadow-xl">
       <a href="#features" onclick="toggleMobileMenu()" class="block py-2 text-slate-700">Core Modules</a>
       <a href="#calculator" onclick="toggleMobileMenu()" class="block py-2 text-slate-700">Savings Calculator</a>
-      <a href="#comparison" onclick="toggleMobileMenu()" class="block py-2 text-slate-700">Why Us</a>
       <a href="#pricing" onclick="toggleMobileMenu()" class="block py-2 text-slate-700">Pricing Plans</a>
-      <button onclick="toggleMobileMenu(); openLeadModal('Mobile Drawer');" class="w-full bg-brand-600 text-white font-bold py-3 rounded-xl text-xs mt-2">
+      <div class="pt-2 border-t border-slate-100 space-y-2">
+        <div class="text-xs font-bold uppercase text-slate-400">View Client Demos:</div>
+        <a href="/portal?school=apex" target="_blank" class="block py-1.5 text-blue-700 font-bold">🏫 Apex Horizon Academy</a>
+        <a href="/portal?school=crown" target="_blank" class="block py-1.5 text-emerald-700 font-bold">🌿 Crown Crest College</a>
+      </div>
+      <button onclick="toggleMobileMenu(); openLeadModal('Mobile Drawer');" class="w-full bg-brand-600 text-white font-bold py-3 rounded-xl text-xs mt-3">
         Book Free Demo
       </button>
     </div>
@@ -153,12 +173,17 @@
           The cloud platform that eliminates tedious terminal math for teachers, generates authenticated WAEC-standard A4 report sheets in seconds, and automatically withholds results until parents clear their school fees.
         </p>
 
-        <div class="flex flex-wrap items-center justify-center lg:justify-start gap-4 pt-2">
-          <button onclick="openLeadModal('Hero CTA')" class="bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black text-sm px-7 py-4 rounded-xl shadow-xl shadow-amber-500/20 transition transform hover:-translate-y-0.5 flex items-center gap-2.5">
-            <i class="fa-brands fa-whatsapp text-lg"></i> Book a 7-Minute Physical or Virtual Demo
+        <div class="flex flex-wrap items-center justify-center lg:justify-start gap-3.5 pt-2">
+          <button onclick="openLeadModal('Hero CTA')" class="bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-black text-sm px-6 py-4 rounded-xl shadow-xl shadow-amber-500/20 transition transform hover:-translate-y-0.5 flex items-center gap-2">
+            <i class="fa-brands fa-whatsapp text-lg"></i> Book a 7-Minute WhatsApp Demo
           </button>
-          <a href="#calculator" class="bg-white/10 hover:bg-white/20 text-white font-bold text-sm px-6 py-4 rounded-xl border border-white/20 backdrop-blur-md transition flex items-center gap-2">
-            <i class="fa-solid fa-calculator text-amber-400"></i> Calculate Termly Savings
+          
+          <a href="/portal?school=apex" target="_blank" class="bg-white/10 hover:bg-white/20 text-white font-bold text-sm px-5 py-4 rounded-xl border border-white/20 backdrop-blur-md transition flex items-center gap-2">
+            <i class="fa-solid fa-arrow-up-right-from-square text-amber-400 text-xs"></i> View Apex Horizon Demo
+          </a>
+
+          <a href="/portal?school=crown" target="_blank" class="bg-white/10 hover:bg-white/20 text-white font-bold text-sm px-5 py-4 rounded-xl border border-white/20 backdrop-blur-md transition flex items-center gap-2">
+            <i class="fa-solid fa-arrow-up-right-from-square text-emerald-400 text-xs"></i> View Crown Crest Demo
           </a>
         </div>
 
@@ -189,9 +214,9 @@
                 <i class="fa-solid fa-graduation-cap"></i>
               </div>
               <div>
-                <h2 class="text-xs font-black text-slate-900 uppercase">Live Proprietor Overview</h2>
+                <h2 class="text-xs font-black text-slate-900 uppercase">Live Campus Snapshot</h2>
                 <div class="text-[11px] text-emerald-600 font-bold flex items-center gap-1">
-                  <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> Academic Session 2026/2027
+                  <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> Apex Horizon Academy
                 </div>
               </div>
             </div>
@@ -231,10 +256,10 @@
               </div>
             </div>
 
-            <!-- CTA inside Mockup -->
-            <button onclick="openLeadModal('Card Simulator')" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-3 rounded-xl text-xs shadow-md transition flex items-center justify-center gap-2">
-              <i class="fa-solid fa-laptop-code"></i> Test Full Live Portal Demo
-            </button>
+            <!-- CTA inside Mockup pointing directly to Apex Horizon -->
+            <a href="/portal?school=apex" target="_blank" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-3.5 rounded-xl text-xs shadow-md transition flex items-center justify-center gap-2">
+              <i class="fa-solid fa-laptop-code"></i> Launch Apex Horizon Portal Demo
+            </a>
           </div>
 
         </div>
@@ -244,86 +269,7 @@
   </section>
 
   <!-- =================================================================== -->
-  <!-- 4. BEFORE VS AFTER (THE PROPRIETOR PAIN POINTS)                    -->
-  <!-- =================================================================== -->
-  <section class="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-    <div class="text-center max-w-3xl mx-auto space-y-3 mb-16">
-      <span class="text-xs font-black text-brand-600 bg-brand-50 px-3.5 py-1 rounded-full uppercase tracking-wider">
-        The Cost of Outdated Methods
-      </span>
-      <h2 class="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
-        Why Nigerian School Proprietors are Abandoning Paper Booklets
-      </h2>
-      <p class="text-base text-slate-500">
-        Every terminal exam period, your school loses time, money, and administrative reputation through avoidable manual stress.
-      </p>
-    </div>
-
-    <div class="grid md:grid-cols-2 gap-8">
-      
-      <!-- The Old Painful Way -->
-      <div class="bg-rose-50/50 border border-rose-200 rounded-3xl p-8 space-y-5">
-        <div class="flex items-center space-x-3 text-rose-700">
-          <div class="w-10 h-10 rounded-xl bg-rose-100 flex items-center justify-center text-xl font-bold">
-            <i class="fa-solid fa-triangle-exclamation"></i>
-          </div>
-          <h3 class="text-lg font-black">The Old, Manual Way</h3>
-        </div>
-
-        <ul class="space-y-3.5 text-xs sm:text-sm text-slate-700">
-          <li class="flex items-start gap-2.5">
-            <i class="fa-solid fa-xmark text-rose-500 font-bold mt-1"></i>
-            <span><strong>Expensive Printing:</strong> Spending ₦2,000 to ₦3,500 per child every single term on customized booklets that end up torn or lost.</span>
-          </li>
-          <li class="flex items-start gap-2.5">
-            <i class="fa-solid fa-xmark text-rose-500 font-bold mt-1"></i>
-            <span><strong>Calculation Errors:</strong> Teachers spending two exhausting weeks calculating marks, sums, averages, and class positions with calculator errors.</span>
-          </li>
-          <li class="flex items-start gap-2.5">
-            <i class="fa-solid fa-xmark text-rose-500 font-bold mt-1"></i>
-            <span><strong>Fee Defaults:</strong> Parents collecting physical report cards before clearing term tuition, leaving you with millions in bad debt.</span>
-          </li>
-          <li class="flex items-start gap-2.5">
-            <i class="fa-solid fa-xmark text-rose-500 font-bold mt-1"></i>
-            <span><strong>Paper CBT Chaos:</strong> Printing reams of exam question sheets for continuous assessments and mid-term tests.</span>
-          </li>
-        </ul>
-      </div>
-
-      <!-- The Edvance Suite Way -->
-      <div class="bg-emerald-50/50 border border-emerald-200 rounded-3xl p-8 space-y-5">
-        <div class="flex items-center space-x-3 text-emerald-800">
-          <div class="w-10 h-10 rounded-xl bg-emerald-100 flex items-center justify-center text-xl font-bold">
-            <i class="fa-solid fa-circle-check"></i>
-          </div>
-          <h3 class="text-lg font-black">With Edvance Suite</h3>
-        </div>
-
-        <ul class="space-y-3.5 text-xs sm:text-sm text-slate-700">
-          <li class="flex items-start gap-2.5">
-            <i class="fa-solid fa-check text-emerald-600 font-bold mt-1"></i>
-            <span><strong>₦0 School Expense:</strong> Add an "ICT / Portal Levy" of ₦1,500 to termly bills. Parents happily pay; your school generates extra ICT profit.</span>
-          </li>
-          <li class="flex items-start gap-2.5">
-            <i class="fa-solid fa-check text-emerald-600 font-bold mt-1"></i>
-            <span><strong>Instant Automated Grading:</strong> Teachers simply enter raw CA and exam marks or upload an Excel sheet. The engine computes averages, WAEC grades, and remarks automatically.</span>
-          </li>
-          <li class="flex items-start gap-2.5">
-            <i class="fa-solid fa-check text-emerald-600 font-bold mt-1"></i>
-            <span><strong>100% Fee Recovery Lock:</strong> A student’s report card and CBT exam portal remain inaccessible until tuition clearance is logged.</span>
-          </li>
-          <li class="flex items-start gap-2.5">
-            <i class="fa-solid fa-check text-emerald-600 font-bold mt-1"></i>
-            <span><strong>Zero Paper Waste:</strong> Built-in computer-based testing, printable A4 PDF report cards with verifiable digital QR/stamps.</span>
-          </li>
-        </ul>
-      </div>
-
-    </div>
-  </section>
-
-  <!-- =================================================================== -->
-  <!-- 5. CORE SYSTEM MODULES                                              -->
+  <!-- 4. CORE SYSTEM MODULES                                              -->
   <!-- =================================================================== -->
   <section id="features" class="py-20 bg-white border-y border-slate-200 px-4 sm:px-6 lg:px-8">
     <div class="max-w-7xl mx-auto space-y-16">
@@ -342,7 +288,6 @@
 
       <div class="grid md:grid-cols-3 gap-8">
         
-        <!-- Module 1 -->
         <div class="border border-slate-200 rounded-3xl p-7 hover:border-brand-500 hover:shadow-lg transition space-y-4">
           <div class="w-12 h-12 rounded-2xl bg-brand-50 text-brand-600 flex items-center justify-center text-2xl font-bold">
             <i class="fa-solid fa-file-invoice"></i>
@@ -353,7 +298,6 @@
           </p>
         </div>
 
-        <!-- Module 2 -->
         <div class="border border-slate-200 rounded-3xl p-7 hover:border-emerald-500 hover:shadow-lg transition space-y-4">
           <div class="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-2xl font-bold">
             <i class="fa-solid fa-lock"></i>
@@ -364,47 +308,13 @@
           </p>
         </div>
 
-        <!-- Module 3 -->
         <div class="border border-slate-200 rounded-3xl p-7 hover:border-amber-500 hover:shadow-lg transition space-y-4">
           <div class="w-12 h-12 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center text-2xl font-bold">
             <i class="fa-solid fa-laptop-code"></i>
           </div>
           <h3 class="text-lg font-black text-slate-900">Computer-Based Testing (CBT)</h3>
           <p class="text-xs text-slate-500 leading-relaxed">
-            Prepare pupils for BECE, WAEC, and JAMB with interactive timed CBT exams. Supports multiple choice, typed short answers, and camera uploads for math step-by-step solutions.
-          </p>
-        </div>
-
-        <!-- Module 4 -->
-        <div class="border border-slate-200 rounded-3xl p-7 hover:border-purple-500 hover:shadow-lg transition space-y-4">
-          <div class="w-12 h-12 rounded-2xl bg-purple-50 text-purple-600 flex items-center justify-center text-2xl font-bold">
-            <i class="fa-solid fa-user-group"></i>
-          </div>
-          <h3 class="text-lg font-black text-slate-900">Parent & Guardian Desk</h3>
-          <p class="text-xs text-slate-500 leading-relaxed">
-            Parents monitor their child's daily attendance records, homework deadlines, termly progress, and chat directly with homeroom tutors without exchanging personal WhatsApp numbers.
-          </p>
-        </div>
-
-        <!-- Module 5 -->
-        <div class="border border-slate-200 rounded-3xl p-7 hover:border-blue-500 hover:shadow-lg transition space-y-4">
-          <div class="w-12 h-12 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center text-2xl font-bold">
-            <i class="fa-solid fa-chalkboard-user"></i>
-          </div>
-          <h3 class="text-lg font-black text-slate-900">Faculty & Lesson Plan Vetting</h3>
-          <p class="text-xs text-slate-500 leading-relaxed">
-            Teachers submit weekly schemes of work and lesson notes digitally. Heads of School can approve, request edits, or leave feedback before classes commence on Monday.
-          </p>
-        </div>
-
-        <!-- Module 6 -->
-        <div class="border border-slate-200 rounded-3xl p-7 hover:border-slate-800 hover:shadow-lg transition space-y-4">
-          <div class="w-12 h-12 rounded-2xl bg-slate-100 text-slate-900 flex items-center justify-center text-2xl font-bold">
-            <i class="fa-solid fa-building-columns"></i>
-          </div>
-          <h3 class="text-lg font-black text-slate-900">White-Label & Custom Domain</h3>
-          <p class="text-xs text-slate-500 leading-relaxed">
-            Your school gets its own personalized subdomain (e.g., <code>portal.yourschool.edu.ng</code>) featuring your colors, crest, school motto, and zero external third-party branding.
+            Prepare pupils for BECE, WAEC, and JAMB with interactive timed CBT exams. Supports multiple-choice, typed short answers, and camera uploads for math step-by-step solutions.
           </p>
         </div>
 
@@ -414,7 +324,7 @@
   </section>
 
   <!-- =================================================================== -->
-  <!-- 6. INTERACTIVE SAVINGS & ROI CALCULATOR                              -->
+  <!-- 5. INTERACTIVE SAVINGS CALCULATOR                                   -->
   <!-- =================================================================== -->
   <section id="calculator" class="py-20 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto">
     <div class="bg-gradient-to-br from-slate-900 to-brand-950 text-white rounded-3xl p-8 sm:p-12 shadow-2xl border border-slate-800 space-y-8">
@@ -429,9 +339,7 @@
         </p>
       </div>
 
-      <!-- Interactive Sliders -->
       <div class="space-y-6 max-w-2xl mx-auto">
-        
         <div>
           <div class="flex justify-between items-center text-xs font-bold mb-2">
             <span>Enrolled Students in Your School:</span>
@@ -447,10 +355,8 @@
           </div>
           <input type="range" id="print-slider" min="1000" max="5000" step="250" value="2500" oninput="updateRoiCalculation()" class="w-full accent-amber-400 bg-slate-800 h-2 rounded-lg cursor-pointer" />
         </div>
-
       </div>
 
-      <!-- Real-Time Calculation Results -->
       <div class="grid sm:grid-cols-3 gap-4 pt-4 border-t border-slate-800 text-center">
         <div class="bg-white/5 p-4 rounded-2xl border border-white/10">
           <div class="text-[11px] text-slate-400 uppercase font-semibold">Paper Printing Saved / Term</div>
@@ -476,77 +382,9 @@
   </section>
 
   <!-- =================================================================== -->
-  <!-- 7. DETAILED FEATURE COMPARISON TABLE                                -->
-  <!-- =================================================================== -->
-  <section id="comparison" class="py-20 bg-slate-100/70 border-t border-slate-200 px-4 sm:px-6 lg:px-8">
-    <div class="max-w-6xl mx-auto space-y-12">
-      
-      <div class="text-center max-w-2xl mx-auto space-y-3">
-        <h2 class="text-3xl font-black text-slate-900 tracking-tight">How Edvance Suite Compares</h2>
-        <p class="text-sm text-slate-500">Compare our purpose-built platform with manual paper systems or outdated desktop software.</p>
-      </div>
-
-      <div class="bg-white rounded-3xl border border-slate-200 overflow-hidden shadow-sm">
-        <div class="overflow-x-auto">
-          <table class="w-full text-left text-xs sm:text-sm">
-            <thead class="bg-slate-900 text-white uppercase text-[11px] font-bold">
-              <tr>
-                <th class="p-4 sm:p-5">Feature Capability</th>
-                <th class="p-4 sm:p-5 bg-brand-700 text-white">Edvance Suite (Ours)</th>
-                <th class="p-4 sm:p-5 text-slate-300">Generic Old Portals</th>
-                <th class="p-4 sm:p-5 text-slate-300">Traditional Paper</th>
-              </tr>
-            </thead>
-            <tbody class="divide-y divide-slate-100 font-medium text-slate-700">
-              <tr>
-                <td class="p-4 sm:p-5 font-bold text-slate-900">Termly Cost to School</td>
-                <td class="p-4 sm:p-5 bg-brand-50/70 font-black text-emerald-700">₦0 (100% Levy Funded)</td>
-                <td class="p-4 sm:p-5 text-rose-600">High Annual License</td>
-                <td class="p-4 sm:p-5 text-rose-600">₦300k - ₦1.5M Printing</td>
-              </tr>
-              <tr>
-                <td class="p-4 sm:p-5 font-bold text-slate-900">Tuition Recovery Result Lock</td>
-                <td class="p-4 sm:p-5 bg-brand-50/70 font-bold text-emerald-700"><i class="fa-solid fa-check text-emerald-600 mr-1.5"></i> Automated & Enforced</td>
-                <td class="p-4 sm:p-5 text-slate-400">Manual / Ineffective</td>
-                <td class="p-4 sm:p-5 text-rose-600"><i class="fa-solid fa-xmark text-rose-500 mr-1.5"></i> Impossible to Lock</td>
-              </tr>
-              <tr>
-                <td class="p-4 sm:p-5 font-bold text-slate-900">Terminal A4 Report Sheet Generation</td>
-                <td class="p-4 sm:p-5 bg-brand-50/70 font-bold text-emerald-700"><i class="fa-solid fa-check text-emerald-600 mr-1.5"></i> Instant Printable PDF</td>
-                <td class="p-4 sm:p-5 text-slate-500">Basic / Clunky</td>
-                <td class="p-4 sm:p-5 text-rose-600"><i class="fa-solid fa-xmark text-rose-500 mr-1.5"></i> 2 Weeks Handwriting</td>
-              </tr>
-              <tr>
-                <td class="p-4 sm:p-5 font-bold text-slate-900">Integrated CBT Mock Engine</td>
-                <td class="p-4 sm:p-5 bg-brand-50/70 font-bold text-emerald-700"><i class="fa-solid fa-check text-emerald-600 mr-1.5"></i> Included Standard</td>
-                <td class="p-4 sm:p-5 text-rose-600"><i class="fa-solid fa-xmark text-rose-500 mr-1.5"></i> Extra Add-on Fee</td>
-                <td class="p-4 sm:p-5 text-rose-600"><i class="fa-solid fa-xmark text-rose-500 mr-1.5"></i> Paper Question Sheets</td>
-              </tr>
-              <tr>
-                <td class="p-4 sm:p-5 font-bold text-slate-900">Mobile Smartphone Accessibility</td>
-                <td class="p-4 sm:p-5 bg-brand-50/70 font-bold text-emerald-700"><i class="fa-solid fa-check text-emerald-600 mr-1.5"></i> 100% Mobile Optimized</td>
-                <td class="p-4 sm:p-5 text-amber-600">Desktop Only / Hard to Read</td>
-                <td class="p-4 sm:p-5 text-slate-400">Physical Only</td>
-              </tr>
-              <tr>
-                <td class="p-4 sm:p-5 font-bold text-slate-900">Dedicated Setup & Staff Training</td>
-                <td class="p-4 sm:p-5 bg-brand-50/70 font-bold text-emerald-700"><i class="fa-solid fa-check text-emerald-600 mr-1.5"></i> 48-Hour Onsite / Virtual</td>
-                <td class="p-4 sm:p-5 text-slate-400">Slow Email Support</td>
-                <td class="p-4 sm:p-5 text-slate-400">None</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-    </div>
-  </section>
-
-  <!-- =================================================================== -->
-  <!-- 8. TRANSPARENT PRICING PLANS                                        -->
+  <!-- 6. PRICING PLANS                                                    -->
   <!-- =================================================================== -->
   <section id="pricing" class="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto space-y-16">
-    
     <div class="text-center max-w-2xl mx-auto space-y-3">
       <span class="text-xs font-black text-brand-600 bg-brand-50 px-3.5 py-1 rounded-full uppercase tracking-wider">
         Straightforward Commercial Terms
@@ -560,190 +398,93 @@
     </div>
 
     <div class="grid md:grid-cols-3 gap-8 items-stretch">
-      
-      <!-- Tier 1: Starter Campus -->
-      <div class="bg-white border border-slate-200 rounded-3xl p-8 flex flex-col justify-between shadow-xs hover:shadow-md transition space-y-6">
+      <!-- Starter -->
+      <div class="bg-white border border-slate-200 rounded-3xl p-8 flex flex-col justify-between shadow-xs space-y-6">
         <div class="space-y-4">
           <div class="text-xs font-black text-slate-400 uppercase tracking-widest">Small / Emerging Campus</div>
           <h3 class="text-2xl font-black text-slate-900">Starter Plan</h3>
-          <p class="text-xs text-slate-500">Ideal for growing primary or nursery schools under 150 pupils.</p>
-          
           <div class="pt-4 border-t border-slate-100">
             <div class="text-3xl font-black text-slate-900">₦1,000</div>
             <div class="text-xs text-slate-400">per student / per term (or ₦75,000 flat)</div>
           </div>
-
           <ul class="space-y-2.5 text-xs text-slate-600 pt-2">
             <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-600"></i> Automated Terminal Report Generator</li>
             <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-600"></i> Parent & Student Result Checker</li>
             <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-600"></i> Teacher Gradebook & Daily Roll Call</li>
-            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-600"></i> Student Passport Photo Manager</li>
-            <li class="flex items-center gap-2 text-slate-400"><i class="fa-solid fa-xmark text-slate-300"></i> Online CBT Examination Engine</li>
           </ul>
         </div>
-
         <button onclick="openLeadModal('Starter Plan')" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold py-3 rounded-xl text-xs transition">
           Choose Starter
         </button>
       </div>
 
-      <!-- Tier 2: Standard Growth (Most Popular) -->
+      <!-- Standard -->
       <div class="bg-white border-2 border-brand-600 rounded-3xl p-8 flex flex-col justify-between shadow-xl relative space-y-6">
         <span class="absolute -top-3.5 left-1/2 transform -translate-x-1/2 bg-brand-600 text-white text-[10px] font-black uppercase tracking-wider px-3.5 py-1 rounded-full shadow-md">
           Most Popular Choice
         </span>
-
         <div class="space-y-4">
           <div class="text-xs font-black text-brand-600 uppercase tracking-widest">Mid-Tier & Colleges</div>
           <h3 class="text-2xl font-black text-slate-900">Standard Growth</h3>
-          <p class="text-xs text-slate-500">For institutions (150–500 pupils) wanting full academic and fee automation.</p>
-          
           <div class="pt-4 border-t border-slate-100">
             <div class="text-3xl font-black text-brand-700">₦1,500</div>
             <div class="text-xs text-slate-400">per student / per term (Levy Billed)</div>
           </div>
-
           <ul class="space-y-2.5 text-xs text-slate-600 pt-2">
             <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-600"></i> <strong>Everything in Starter Plan</strong></li>
             <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-600"></i> <strong>Interactive CBT Exam Engine (MCQ + Working)</strong></li>
             <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-600"></i> <strong>Tuition Recovery Result Lock & Fee Gateway</strong></li>
             <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-600"></i> <strong>Digital Lesson Plan Review & Approval</strong></li>
-            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-600"></i> <strong>Priority Onsite Staff Training in Lagos/Abuja</strong></li>
           </ul>
         </div>
-
-        <button onclick="openLeadModal('Standard Growth Plan')" class="w-full bg-brand-600 hover:bg-brand-700 text-white font-bold py-3 rounded-xl text-xs shadow-md shadow-brand-600/30 transition">
+        <button onclick="openLeadModal('Standard Growth Plan')" class="w-full bg-brand-600 hover:bg-brand-700 text-white font-bold py-3 rounded-xl text-xs shadow-md transition">
           Get Started with Standard
         </button>
       </div>
 
-      <!-- Tier 3: Enterprise International -->
-      <div class="bg-white border border-slate-200 rounded-3xl p-8 flex flex-col justify-between shadow-xs hover:shadow-md transition space-y-6">
+      <!-- Enterprise -->
+      <div class="bg-white border border-slate-200 rounded-3xl p-8 flex flex-col justify-between shadow-xs space-y-6">
         <div class="space-y-4">
-          <div class="text-xs font-black text-purple-600 uppercase tracking-widest">Large Colleges & Multi-Campus</div>
+          <div class="text-xs font-black text-purple-600 uppercase tracking-widest">Multi-Campus & Colleges</div>
           <h3 class="text-2xl font-black text-slate-900">Enterprise Elite</h3>
-          <p class="text-xs text-slate-500">For multi-campus or international schools with 500+ pupils.</p>
-          
           <div class="pt-4 border-t border-slate-100">
             <div class="text-3xl font-black text-slate-900">Custom</div>
             <div class="text-xs text-slate-400">Tailored per campus or multi-branch</div>
           </div>
-
           <ul class="space-y-2.5 text-xs text-slate-600 pt-2">
-            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-600"></i> <strong>Official .edu.ng Custom Domain Integration</strong></li>
-            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-600"></i> Multi-Campus Central Proprietor Console</li>
-            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-600"></i> Full Staff Payroll & HR Ledger Module</li>
-            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-600"></i> Custom Report Card Format & WAEC Grading Customization</li>
-            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-600"></i> Dedicated 24/7 Account Manager & WhatsApp Channel</li>
+            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-600"></i> <strong>Official .edu.ng Domain Setup</strong></li>
+            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-600"></i> Multi-Campus Central Console</li>
+            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-600"></i> Staff Payroll & HR Module</li>
           </ul>
         </div>
-
         <button onclick="openLeadModal('Enterprise Plan')" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-3 rounded-xl text-xs transition">
           Contact for Enterprise
         </button>
       </div>
-
     </div>
   </section>
 
   <!-- =================================================================== -->
-  <!-- 9. PROPRIETOR TESTIMONIALS                                          -->
-  <!-- =================================================================== -->
-  <section id="testimonials" class="py-20 bg-slate-900 text-white px-4 sm:px-6 lg:px-8">
-    <div class="max-w-7xl mx-auto space-y-14">
-      
-      <div class="text-center max-w-2xl mx-auto space-y-2">
-        <span class="text-xs font-black text-amber-400 uppercase tracking-widest">
-          Proven Institutional Success
-        </span>
-        <h2 class="text-3xl font-black">Trusted by School Leaders</h2>
-      </div>
-
-      <div class="grid md:grid-cols-3 gap-6">
-        
-        <div class="bg-white/5 border border-white/10 p-6 rounded-2xl space-y-4">
-          <div class="flex text-amber-400 text-xs gap-1">
-            <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
-          </div>
-          <p class="text-xs text-slate-300 leading-relaxed italic">
-            "Before Edvance Suite, our teachers spent two weeks at the end of every term calculating totals and averages. We always had angry parents complaining about mathematical mistakes on report cards. Now, once tests are entered, the cards are compiled in 10 minutes."
-          </p>
-          <div class="border-t border-white/10 pt-3">
-            <div class="font-bold text-sm text-white">Mrs. Folashade Adejumo</div>
-            <div class="text-[11px] text-slate-400">Directress, Crestbale Schools, Ikoyi</div>
-          </div>
-        </div>
-
-        <div class="bg-white/5 border border-white/10 p-6 rounded-2xl space-y-4">
-          <div class="flex text-amber-400 text-xs gap-1">
-            <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
-          </div>
-          <p class="text-xs text-slate-300 leading-relaxed italic">
-            "The fee-lock feature alone saved our school over ₦2.4 million in bad debts this term. Parents who usually disappear without paying final term balances were forced to clear their dues before viewing terminal promotion results."
-          </p>
-          <div class="border-t border-white/10 pt-3">
-            <div class="font-bold text-sm text-white">Chief Dr. E. Okafor</div>
-            <div class="text-[11px] text-slate-400">Proprietor, Unique College, Victoria Island</div>
-          </div>
-        </div>
-
-        <div class="bg-white/5 border border-white/10 p-6 rounded-2xl space-y-4">
-          <div class="flex text-amber-400 text-xs gap-1">
-            <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
-          </div>
-          <p class="text-xs text-slate-300 leading-relaxed italic">
-            "Setting up the CBT engine for our JSS3 and SS3 students gave our parents enormous confidence. The pupils practice on the portal weekly, which boosted our external BECE distinctions significantly."
-          </p>
-          <div class="border-t border-white/10 pt-3">
-            <div class="font-bold text-sm text-white">Pastor Andrew Balogun</div>
-            <div class="text-[11px] text-slate-400">Head of School, Living Salt Academy, Lekki</div>
-          </div>
-        </div>
-
-      </div>
-
-    </div>
-  </section>
-
-  <!-- =================================================================== -->
-  <!-- 10. FINAL CALL TO ACTION                                            -->
-  <!-- =================================================================== -->
-  <section class="py-20 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto text-center space-y-6">
-    <div class="w-16 h-16 mx-auto rounded-3xl bg-brand-50 text-brand-600 flex items-center justify-center text-3xl font-black shadow-md">
-      <i class="fa-solid fa-school"></i>
-    </div>
-    <h2 class="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
-      Ready to Upgrade Your School in 48 Hours?
-    </h2>
-    <p class="text-base text-slate-600 max-w-2xl mx-auto">
-      Book a short 7-minute demonstration. We will set up a live preview with your school's exact name, crest, and sample report cards for you to inspect.
-    </p>
-    <div class="pt-2">
-      <button onclick="openLeadModal('Bottom Banner CTA')" class="bg-gradient-to-r from-brand-600 to-blue-700 hover:from-brand-700 hover:to-blue-800 text-white font-black text-sm px-8 py-4 rounded-xl shadow-xl shadow-brand-600/30 transition transform hover:-translate-y-0.5 inline-flex items-center gap-2.5">
-        <i class="fa-brands fa-whatsapp text-lg text-emerald-300"></i> Schedule a WhatsApp or Physical Demo
-      </button>
-    </div>
-  </section>
-
-  <!-- =================================================================== -->
-  <!-- 11. FOOTER                                                          -->
+  <!-- 7. FOOTER                                                           -->
   <!-- =================================================================== -->
   <footer class="bg-white border-t border-slate-200 py-10 px-4 sm:px-6 lg:px-8 text-xs text-slate-500">
     <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
       <div>
-        <span class="font-bold text-slate-800">Edvance Suite Technologies Ltd.</span> &copy; 2026. All rights reserved.
+        <span class="font-bold text-slate-800">Edvance Suite Technologies</span> &copy; 2026. All rights reserved.
       </div>
       <div class="flex items-center space-x-6">
-        <a href="#features" class="hover:text-slate-800 transition">Features</a>
-        <a href="#pricing" class="hover:text-slate-800 transition">Pricing</a>
-        <a href="#" class="hover:text-slate-800 transition">NDPR Data Privacy</a>
-        <a href="tel:+2347016021912" class="hover:text-slate-800 transition">Support Desk</a>
+        <a href="https://wa.me/2347016021912" target="_blank" class="hover:text-emerald-600 transition flex items-center gap-1">
+          <i class="fa-brands fa-whatsapp text-emerald-500"></i> WhatsApp: +234 701 602 1912
+        </a>
+        <a href="mailto:info.edvancesuite@gmail.com" class="hover:text-blue-600 transition flex items-center gap-1">
+          <i class="fa-regular fa-envelope text-blue-500"></i> Email Inquiries
+        </a>
       </div>
     </div>
   </footer>
 
   <!-- =================================================================== -->
-  <!-- MODAL: INSTANT DEMO LEAD CAPTURE & WHATSAPP REDIRECT                -->
+  <!-- MODAL: INSTANT DEMO LEAD CAPTURE (WHATSAPP OR EMAIL)                -->
   <!-- =================================================================== -->
   <div id="demo-modal" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
     <div class="bg-white rounded-3xl max-w-md w-full p-6 sm:p-8 space-y-5 shadow-2xl relative border border-slate-100">
@@ -751,7 +492,7 @@
       <div class="flex justify-between items-center border-b border-slate-100 pb-3">
         <div>
           <h3 class="text-lg font-black text-slate-900">Book a 7-Minute Demo</h3>
-          <p class="text-xs text-slate-500">We will tailor a live preview for your school</p>
+          <p class="text-xs text-slate-500">We will configure a live preview for your school</p>
         </div>
         <button onclick="closeLeadModal()" class="text-slate-400 hover:text-slate-600 text-lg">
           <i class="fa-solid fa-xmark"></i>
@@ -766,7 +507,7 @@
 
         <div>
           <label class="block font-bold text-slate-700 uppercase mb-1">School Name</label>
-          <input type="text" id="lead-school" placeholder="e.g., Russell International College" class="w-full border border-slate-300 rounded-xl p-3 outline-none focus:ring-2 focus:ring-brand-500 font-bold" />
+          <input type="text" id="lead-school" placeholder="e.g., Apex Horizon Academy" class="w-full border border-slate-300 rounded-xl p-3 outline-none focus:ring-2 focus:ring-brand-500 font-bold" />
         </div>
 
         <div>
@@ -785,25 +526,31 @@
         </div>
 
         <div>
-          <label class="block font-bold text-slate-700 uppercase mb-1">Your WhatsApp Number</label>
+          <label class="block font-bold text-slate-700 uppercase mb-1">Your Contact Phone / WhatsApp</label>
           <input type="tel" id="lead-phone" placeholder="0803 123 4567" class="w-full border border-slate-300 rounded-xl p-3 outline-none font-mono font-bold" />
         </div>
       </div>
 
-      <button onclick="dispatchDemoLead()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3.5 rounded-xl shadow-lg shadow-emerald-600/30 transition text-xs flex items-center justify-center gap-2">
-        <i class="fa-brands fa-whatsapp text-lg"></i> Launch WhatsApp & Send Demo Request
-      </button>
+      <div class="space-y-2 pt-1">
+        <!-- Button 1: WhatsApp -->
+        <button onclick="dispatchDemoLead('whatsapp')" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-xl shadow-md transition text-xs flex items-center justify-center gap-2">
+          <i class="fa-brands fa-whatsapp text-lg"></i> Send via WhatsApp to +234 701 602 1912
+        </button>
+
+        <!-- Button 2: Email -->
+        <button onclick="dispatchDemoLead('email')" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold py-2.5 rounded-xl transition text-xs flex items-center justify-center gap-2">
+          <i class="fa-regular fa-envelope text-blue-600"></i> Send via Email Instead
+        </button>
+      </div>
 
       <p class="text-[10px] text-center text-slate-400">
-        No payment or credit card required. We will configure your school's mock demo in under 3 hours.
+        No payment required. We will configure your school's custom preview in under 3 hours.
       </p>
 
     </div>
   </div>
 
-  <!-- =================================================================== -->
-  <!-- SCRIPT ENGINE (ROI CALCULATOR & WHATSAPP DISPATCHER)                -->
-  <!-- =================================================================== -->
+  <!-- SCRIPT ENGINE -->
   <script>
     // ROI Calculator Engine
     function updateRoiCalculation() {
@@ -813,9 +560,8 @@
       document.getElementById('calc-student-count').textContent = `${students} Pupils`;
       document.getElementById('calc-print-cost').textContent = `₦${printCost.toLocaleString()}`;
 
-      // Calculations
       const printingSavedPerTerm = students * printCost;
-      const feesRecoveredEstimate = students * 5000; // estimated recovered bad debt
+      const feesRecoveredEstimate = students * 5000;
       const annualGain = (printingSavedPerTerm * 3) + (feesRecoveredEstimate * 3);
 
       document.getElementById('calc-printing-saved').textContent = `₦${printingSavedPerTerm.toLocaleString()}`;
@@ -837,22 +583,29 @@
       document.getElementById('mobile-menu').classList.toggle('hidden');
     }
 
-    // WhatsApp Dispatcher (Configure your phone number below)
-    const MY_SALES_PHONE = "2347016021912"; // REPLACE WITH YOUR REAL WHATSAPP PHONE NUMBER (e.g. 2348031234567)
+    // YOUR CONTACT DESTINATIONS
+    const MY_WHATSAPP_PHONE = "2347016021912"; 
+    const MY_INQUIRY_EMAIL = "peteraideloje@gmail.com"; 
 
-    function dispatchDemoLead() {
+    function dispatchDemoLead(channel = 'whatsapp') {
       const name = document.getElementById('lead-name').value.trim() || "School Administrator";
       const school = document.getElementById('lead-school').value.trim() || "My School";
       const location = document.getElementById('lead-location').value.trim() || "Lagos";
       const size = document.getElementById('lead-size').value;
       const phone = document.getElementById('lead-phone').value.trim() || "N/A";
 
-      const message = `Hello Edvance Suite team! 👋\n\nI would like to request a 7-minute demonstration for our school.\n\n🏫 *School:* ${school}\n👤 *Contact Person:* ${name}\n📍 *Location:* ${location}\n🎒 *Student Population:* ${size}\n📞 *WhatsApp Number:* ${phone}\n(Source: ${currentTriggerSource})\n\nPlease share the customized demo link. Thank you!`;
+      const subject = `Demo Request for ${school} (${location})`;
+      const body = `Hello Edvance Suite team! 👋\n\nI would like to request a 7-minute demonstration for our school.\n\n🏫 School: ${school}\n👤 Contact Person: ${name}\n📍 Location: ${location}\n🎒 Student Population: ${size}\n📞 Phone / WhatsApp: ${phone}\n(Source: ${currentTriggerSource})\n\nPlease share the customized demo link. Thank you!`;
 
-      const encodedUrl = `https://wa.me/${MY_SALES_PHONE}?text=${encodeURIComponent(message)}`;
-      
       closeLeadModal();
-      window.open(encodedUrl, '_blank');
+
+      if (channel === 'whatsapp') {
+        const encodedUrl = `https://wa.me/${MY_WHATSAPP_PHONE}?text=${encodeURIComponent(body)}`;
+        window.open(encodedUrl, '_blank');
+      } else if (channel === 'email') {
+        const mailtoUrl = `mailto:${MY_INQUIRY_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+        window.location.href = mailtoUrl;
+      }
     }
   </script>
 </body>
